@@ -56,7 +56,6 @@ const typeDefs = gql`
 			})
 		},
 		updateBounty: async(parent, args)=>{
-			console.log(args);
 				const bounties= await prisma.bounty.updateMany({
 				where: {bountyId: "mine"},
 				data: {tvl: args.tvl}
