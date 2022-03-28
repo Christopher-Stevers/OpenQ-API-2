@@ -1,12 +1,6 @@
 const { gql } = require('apollo-server')
 const {prisma} = require('./db')
 const typeDefs = gql`
-  type Post {
-    content: String
-    id: ID!
-    published: Boolean!
-    title: String!
-  }
   type Bounty {
 	  tvl: Int!
 	  bountyId: String!
@@ -23,8 +17,6 @@ const typeDefs = gql`
   scalar Long
 
   type Query {
-    feed: [Post!]!
-    post(id: String!): Post
 	bountiesConnection(after: ID,  limit: Int!, orderBy: String, sortOrder: String): BountyConnection
   }
   type Mutation {

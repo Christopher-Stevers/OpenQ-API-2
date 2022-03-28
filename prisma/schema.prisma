@@ -11,12 +11,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Post {
-  id		String @id @default(auto()) @map("_id") @db.ObjectId
-  title     String
-  content   String?
-  published Boolean @default(false)
-}
 model Bounty {
   id		String @id @default(auto()) @map("_id") @db.ObjectId
   bountyId  String
