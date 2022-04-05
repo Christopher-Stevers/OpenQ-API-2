@@ -4,19 +4,34 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-	"start": "nodemon ./src/server.js",
+    "start": "nodemon ./src/server.js",
+    "index-bounties": "node --experimental-fetch ./src/indexer",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@apollo/client": "^3.5.10",
     "@prisma/client": "^3.11.1",
     "apollo-server": "^3.6.6",
+    "axios": "^0.26.1",
+    "cross-fetch": "^3.1.5",
+    "ethers": "^5.6.2",
     "graphql": "^16.3.0",
-    "nodemon": "^2.0.15"
+    "graphql-request": "^4.2.0",
+    "node-fetch": "^2.6.7",
+    "nodemon": "^2.0.15",
+    "react": "^18.0.0",
+    "urql": "^2.2.0"
   },
   "devDependencies": {
+    "eslint": "^8.12.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.6.2",
     "prisma": "^3.11.1"
   }
 }
