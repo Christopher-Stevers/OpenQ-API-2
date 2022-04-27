@@ -1,14 +1,15 @@
 # Define Base
-FROM node:alpine
-RUN apk add openssl
+FROM node:lts-alpine
+RUN apk update && apk upgrade && \
+		apk add --no-cache bash git && \
+		apk add openssl
 WORKDIR /usr/src/app
 COPY package.json package-lock.json ./
 COPY prisma ./prisma/
 COPY .env ./
-RUN npm i
-RUN npm cache clean --force
+RUN yarn
 RUN npx prisma generate
 ENV NODE_ENV="development"
 COPY . .
 EXPOSE 4000
-CMD [ "npm", "start" ]
+CMD [ "yarn", "start" ]
