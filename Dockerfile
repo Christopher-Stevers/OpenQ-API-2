@@ -1,7 +1,7 @@
 FROM node:lts-alpine
 RUN apk update && apk upgrade && \
-    apk add --no-cache bash git
-RUN apk add openssl -y
+		apk add --no-cache bash git && \
+		apk add openssl -y
 WORKDIR /app
 WORKDIR /usr/src/app
 COPY package.json package-lock.json ./

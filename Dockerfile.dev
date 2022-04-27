@@ -1,8 +1,8 @@
 # Define Base
 FROM node:lts-alpine
 RUN apk update && apk upgrade && \
-    apk add --no-cache bash git
-RUN apk add openssl
+		apk add --no-cache bash git && \
+		apk add openssl
 WORKDIR /usr/src/app
 COPY package.json package-lock.json ./
 COPY prisma ./prisma/
