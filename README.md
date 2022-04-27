@@ -1,7 +1,7 @@
-# OpenQ-Api-test
+# OpenQ-Api
 
 ### Description
-Demo for OpenQ tvl-api. 
+OpenQ-API. Currently supports tvl indexing.
 
 ### Local Development
 Set DATABASE_URL env variable to mongodb connection string. (I used mongodb atlas for testing).
