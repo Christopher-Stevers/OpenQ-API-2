@@ -3,15 +3,15 @@ query{
 	 deposits{volume
 	   tokenAddress
 	   bounty{
-		   bountyId
+			contractId
 	   }
 	 
    }
 }  
 `
-const UPDATE_BOUNTY = `mutation Mutation($bountyId: String!, $tvl: Float!) {
-	updateBounty(bountyId: $bountyId, tvl: $tvl) {
-		bountyId
+const UPDATE_BOUNTY = `mutation Mutation($contractId: String!, $tvl: Float!) {
+	updateBounty(contractId: $contractId, tvl: $tvl) {
+		contractId
 	}
   }`
 

@@ -3,7 +3,7 @@ const { prisma } = require('./db')
 const resolvers = {
     Query: {
         bountiesConnection: async (parent, args) => {
-            const cursor = args.after ? { id: args.after } : undefined
+            const cursor = args.after ? { contractId: args.after } : undefined
             const bounties = await prisma.bounty.findMany({
                 cursor,
                 take: args.limit,
@@ -11,7 +11,7 @@ const resolvers = {
             })
             return {
                 bounties,
-                cursor: bounties[bounties.length - 1].id,
+                cursor: bounties[bounties.length - 1].contractId,
             }
         },
     },
@@ -20,12 +20,12 @@ const resolvers = {
             prisma.bounty.create({
                 data: {
                     tvl: Number(args.tvl),
-                    bountyId: String(args.bountyId),
+                    contractId: String(args.contractId),
                 },
             }),
         updateBounty: async (parent, args) =>
             prisma.bounty.updateMany({
-                where: { bountyId: args.bountyId },
+                where: { contractId: args.contractId },
                 data: { tvl: args.tvl },
             }),
     },

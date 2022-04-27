@@ -69,7 +69,7 @@ const fetchBounties = async () => {
             formattedVolume *
             tokenValues.tokenPrices[tokenValueAddress.toLowerCase()]
 
-        return { bountyId: tokenBalance.bounty.bountyId, totalValue }
+        return { contractId: tokenBalance.bounty.id, totalValue }
     })
     return TVLS
 }
@@ -77,11 +77,11 @@ const updateTvls = async (values) => {
     const pending = []
     for (let i = 0; i < values.length; i += 1) {
         const value = values[i]
-        const { bountyId } = value
+        const contractId = value.id
         const tvl = parseFloat(value.totalValue)
         const result = tvlClient.mutate({
             mutation: gql(UPDATE_BOUNTY),
-            variables: { bountyId, tvl },
+            variables: { contractId, tvl },
         })
         pending.push(result)
     }

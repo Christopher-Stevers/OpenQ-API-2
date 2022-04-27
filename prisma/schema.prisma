@@ -12,6 +12,6 @@ datasource db {
 
 model Bounty {
   id		String @id @default(auto()) @map("_id") @db.ObjectId
-  bountyId  String
+  contractId  String
   tvl		Float
 }
