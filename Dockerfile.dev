@@ -5,7 +5,7 @@ WORKDIR /usr/src/app
 COPY package.json package-lock.json ./
 COPY prisma ./prisma/
 COPY .env ./
-RUN npm ci
+RUN npm i
 RUN npm cache clean --force
 RUN npx prisma generate
 ENV NODE_ENV="development"
