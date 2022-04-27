@@ -1,0 +1,14 @@
+# Define Base
+FROM node:alpine
+RUN apk add openssl
+WORKDIR /usr/src/app
+COPY package.json package-lock.json ./
+COPY prisma ./prisma/
+COPY .env ./
+RUN npm i
+RUN npm cache clean --force
+RUN npx prisma generate
+ENV NODE_ENV="development"
+COPY . .
+EXPOSE 4000
+CMD [ "npm", "start" ]
