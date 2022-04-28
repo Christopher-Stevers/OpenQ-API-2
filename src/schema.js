@@ -5,6 +5,14 @@ const typeDefs = gql`
         tvl: Float!
         contractId: String!
         id: ID!
+        watchingUserIds: [String]
+        watchingUsers: [User]
+    }
+    type User {
+        id: ID!
+        userAddress: String!
+        watchedBountyIds: [String]
+        watchedBounties: [Bounty]
     }
     type BountyConnection {
         bounties: [Bounty]
@@ -23,10 +31,13 @@ const typeDefs = gql`
             orderBy: String
             sortOrder: String
         ): BountyConnection
+        Users: [User]
     }
     type Mutation {
         createBounty(tvl: Float!, contractId: String!): Bounty!
         updateBounty(tvl: Float!, contractId: String!): BatchPayload!
+        watchBounty(userAddress: String, contractId: String): User
+        unWatchBounty(userAddress: String, contractId: String): User
     }
 `
 

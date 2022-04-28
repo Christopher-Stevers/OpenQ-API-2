@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  	provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -11,7 +11,17 @@ datasource db {
 }
 
 model Bounty {
-  id		String @id @default(auto()) @map("_id") @db.ObjectId
-  contractId  String
-  tvl		Float
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  contractId      String   @unique
+  tvl             Float
+  watchingUserIds String[] @db.ObjectId
+  watchers        User[]   @relation(fields: [watchingUserIds], references: [id])
+}
+
+model User {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  userAddress      String   @unique
+  watchedBountyIds String[] @db.ObjectId
+  watchedBounties  Bounty[] @relation(fields: [watchedBountyIds], references: [id])
+
 }

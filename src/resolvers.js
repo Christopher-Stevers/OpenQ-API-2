@@ -28,6 +28,63 @@ const resolvers = {
                 where: { contractId: args.contractId },
                 data: { tvl: args.tvl },
             }),
+
+        watchBounty: async (parent, args) => {
+            const bounty = await prisma.bounty.findUnique({
+                where: { contractId: args.contractId },
+            })
+            const user = await prisma.user.upsert({
+                where: { userAddress: args.userAddress },
+                create: {
+                    userAddress: args.userAddress,
+                    watchedBountyIds: [bounty.id],
+                },
+                update: {
+                    watchedBountyIds: {
+                        push: bounty.id,
+                    },
+                },
+            })
+            return prisma.bounty.update({
+                where: { contractId: args.contractId },
+                data: {
+                    watchingUserIds: {
+                        push: user.id,
+                    },
+                },
+            })
+        },
+        unWatchBounty: async (parent, args) => {
+            const bounty = await prisma.bounty.findUnique({
+                where: { contractId: args.contractId },
+            })
+            const user = await prisma.user.findUnique({
+                where: { userAddress: args.userAddress },
+            })
+            const newBounties = user.watchedBountyIds.filter(
+                (bountyId) => bountyId !== bounty.id
+            )
+
+            const newUsers = bounty.watchingUserIds.filter(
+                (userId) => userId !== user.id
+            )
+            prisma.bounty.update({
+                where: { contractId: args.contractId },
+                data: {
+                    watchingUserIds: {
+                        set: newUsers,
+                    },
+                },
+            })
+            return prisma.user.update({
+                where: { userAddress: args.userAddress },
+                data: {
+                    watchedBounties: {
+                        set: newBounties,
+                    },
+                },
+            })
+        },
     },
 }
 module.exports = resolvers
