@@ -64,7 +64,6 @@ const fetchBounties = async () => {
             bigNumberVolume,
             decimals
         )
-        console.log(tokenValues)
         const totalValue =
             formattedVolume *
             tokenValues.tokenPrices[tokenValueAddress.toLowerCase()]
@@ -85,9 +84,7 @@ const updateTvls = async (values) => {
         })
         pending.push(result)
     }
-    console.log(await Promise.all(pending))
-    const resolved = await Promise.all(pending)
-    console.log(resolved)
+    await Promise.all(pending)
 }
 const indexer = async () => {
     const TVLS = await fetchBounties()

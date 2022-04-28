@@ -19,4 +19,4 @@ const runIndexer = async () => {
     await indexer()
     console.log('completed')
 }
-runIndexer()
+// runIndexer()
