@@ -2,7 +2,7 @@ const axios = require('axios')
 const fetch = require('cross-fetch')
 const { ethers } = require('ethers')
 const { ApolloClient, InMemoryCache, gql, HttpLink } = require('@apollo/client')
-const { GET_BOUNTY_DEPOSITS_DATA, UPDATE_BOUNTY } = require('./query/query')
+const { GET_BOUNTY_DEPOSITS_DATA, CREATE_BOUNTY } = require('./query/query')
 const tokenMetadata = require('./local.json')
 
 const subGraphClient = new ApolloClient({
@@ -33,7 +33,7 @@ const fetchBounties = async () => {
         })
 
         const params = { tokenVolumes, network: 'polygon-pos' }
-        const url = 'http://localhost:8081/tvl'
+        const url = 'http://host.docker.internal:8081/tvl'
         // only query tvl for bounties that have deposits
         if (JSON.stringify(params.tokenVolumes) !== '{}') {
             try {
@@ -64,12 +64,12 @@ const fetchBounties = async () => {
             bigNumberVolume,
             decimals
         )
-
+        console.log(tokenValues)
         const totalValue =
             formattedVolume *
             tokenValues.tokenPrices[tokenValueAddress.toLowerCase()]
 
-        return { contractId: tokenBalance.bounty.id, totalValue }
+        return { id: tokenBalance.bounty.id, totalValue }
     })
     return TVLS
 }
@@ -80,16 +80,18 @@ const updateTvls = async (values) => {
         const contractId = value.id
         const tvl = parseFloat(value.totalValue)
         const result = tvlClient.mutate({
-            mutation: gql(UPDATE_BOUNTY),
+            mutation: gql(CREATE_BOUNTY),
             variables: { contractId, tvl },
         })
         pending.push(result)
     }
-    await Promise.all(pending)
+    console.log(await Promise.all(pending))
+    const resolved = await Promise.all(pending)
+    console.log(resolved)
 }
 const indexer = async () => {
     const TVLS = await fetchBounties()
     await updateTvls(TVLS)
 }
 
-indexer()
+module.exports = indexer
