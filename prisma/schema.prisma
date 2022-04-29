@@ -15,7 +15,7 @@ model Bounty {
   contractId      String   @unique
   tvl             Float
   watchingUserIds String[] @db.ObjectId
-  watchers        User[]   @relation(fields: [watchingUserIds], references: [id])
+  watchingUsers   User[]   @relation(fields: [watchingUserIds], references: [id])
 }
 
 model User {

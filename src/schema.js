@@ -6,14 +6,30 @@ const typeDefs = gql`
         contractId: String!
         id: ID!
         watchingUserIds: [String]
-        watchingUsers: [User]
+        watchingUsers(
+            after: ID
+            limit: Int!
+            orderBy: String
+            sortOrder: String
+        ): UserConnection!
     }
     type User {
-        id: ID!
+        id: ID
         userAddress: String!
         watchedBountyIds: [String]
-        watchedBounties: [Bounty]
+        watchedBounties(
+            after: ID
+            limit: Int!
+            orderBy: String
+            sortOrder: String
+        ): BountyConnection!
     }
+
+    type UserConnection {
+        users: [User]
+        cursor: String
+    }
+
     type BountyConnection {
         bounties: [Bounty]
         cursor: String
@@ -31,7 +47,12 @@ const typeDefs = gql`
             orderBy: String
             sortOrder: String
         ): BountyConnection
-        Users: [User]
+        usersConnection(
+            after: ID
+            limit: Int!
+            orderBy: String
+            sortOrder: String
+        ): UserConnection
     }
     type Mutation {
         createBounty(tvl: Float!, contractId: String!): Bounty!

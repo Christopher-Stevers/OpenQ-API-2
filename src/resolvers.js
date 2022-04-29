@@ -8,6 +8,35 @@ const resolvers = {
                 cursor,
                 take: args.limit,
                 orderBy: { [args.orderBy]: args.sortOrder },
+                include: { watchingUsers: true },
+            })
+            return {
+                bounties,
+                cursor: bounties[bounties.length - 1].contractId,
+            }
+        },
+        usersConnection: async (parent, args) => {
+            const cursor = args.after ? { contractId: args.after } : undefined
+            const users = await prisma.user.findMany({
+                cursor,
+                take: args.limit,
+                orderBy: { [args.orderBy]: args.sortOrder },
+            })
+
+            return {
+                users,
+                cursor: users[users.length - 1].userAddress,
+            }
+        },
+    },
+    User: {
+        watchedBounties: async (parent, args) => {
+            const cursor = args.after ? { contractId: args.after } : undefined
+            const bounties = await prisma.bounty.findMany({
+                cursor,
+                take: args.limit,
+                orderBy: { [args.orderBy]: args.sortOrder },
+                include: { watchingUsers: true },
             })
             return {
                 bounties,
@@ -15,6 +44,22 @@ const resolvers = {
             }
         },
     },
+    Bounty: {
+        watchingUsers: async (parent, args) => {
+            const cursor = args.after ? { contractId: args.after } : undefined
+            const users = await prisma.user.findMany({
+                cursor,
+                take: args.limit,
+                orderBy: { [args.orderBy]: args.sortOrder },
+                include: { watchedBounties: true },
+            })
+            return {
+                users,
+                cursor: users[users.length - 1].userAddress,
+            }
+        },
+    },
+
     Mutation: {
         createBounty: (parent, args) =>
             prisma.bounty.create({
