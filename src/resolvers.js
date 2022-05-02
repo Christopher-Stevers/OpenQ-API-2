@@ -89,14 +89,14 @@ const resolvers = {
             })
             const user = await prisma.user.upsert({
                 where: { userAddress: args.userAddress },
-                create: {
-                    userAddress: args.userAddress,
-                    watchedBountyIds: [bounty.id],
-                },
                 update: {
                     watchedBountyIds: {
                         push: bounty.id,
                     },
+                },
+                create: {
+                    userAddress: args.userAddress,
+                    watchedBountyIds: [bounty.id],
                 },
             })
             return prisma.bounty.update({
