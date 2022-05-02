@@ -1,9 +1,12 @@
+const axios = require('axios')
 const { prisma } = require('./db')
 
 const resolvers = {
     Query: {
         bountiesConnection: async (parent, args) => {
-            const cursor = args.after ? { contractId: args.after } : undefined
+            const cursor = args.after
+                ? { contractAddress: args.after }
+                : undefined
             const bounties = await prisma.bounty.findMany({
                 cursor,
                 take: args.limit,
@@ -12,11 +15,13 @@ const resolvers = {
             })
             return {
                 bounties,
-                cursor: bounties[bounties.length - 1].contractId,
+                cursor: bounties[bounties.length - 1].contractAddress,
             }
         },
         usersConnection: async (parent, args) => {
-            const cursor = args.after ? { contractId: args.after } : undefined
+            const cursor = args.after
+                ? { contractAddress: args.after }
+                : undefined
             const users = await prisma.user.findMany({
                 cursor,
                 take: args.limit,
@@ -31,7 +36,9 @@ const resolvers = {
     },
     User: {
         watchedBounties: async (parent, args) => {
-            const cursor = args.after ? { contractId: args.after } : undefined
+            const cursor = args.after
+                ? { contractAddress: args.after }
+                : undefined
             const bounties = await prisma.bounty.findMany({
                 cursor,
                 take: args.limit,
@@ -40,13 +47,15 @@ const resolvers = {
             })
             return {
                 bounties,
-                cursor: bounties[bounties.length - 1].contractId,
+                cursor: bounties[bounties.length - 1].contractAddress,
             }
         },
     },
     Bounty: {
         watchingUsers: async (parent, args) => {
-            const cursor = args.after ? { contractId: args.after } : undefined
+            const cursor = args.after
+                ? { contractAddress: args.after }
+                : undefined
             const users = await prisma.user.findMany({
                 cursor,
                 take: args.limit,
@@ -65,18 +74,18 @@ const resolvers = {
             prisma.bounty.create({
                 data: {
                     tvl: Number(args.tvl),
-                    contractId: String(args.contractId),
+                    contractAddress: String(args.contractAddress),
                 },
             }),
         updateBounty: async (parent, args) =>
             prisma.bounty.updateMany({
-                where: { contractId: args.contractId },
+                where: { contractAddress: args.contractAddress },
                 data: { tvl: args.tvl },
             }),
 
         watchBounty: async (parent, args) => {
             const bounty = await prisma.bounty.findUnique({
-                where: { contractId: args.contractId },
+                where: { contractAddress: args.contractAddress },
             })
             const user = await prisma.user.upsert({
                 where: { userAddress: args.userAddress },
@@ -91,7 +100,7 @@ const resolvers = {
                 },
             })
             return prisma.bounty.update({
-                where: { contractId: args.contractId },
+                where: { contractAddress: args.contractAddress },
                 data: {
                     watchingUserIds: {
                         push: user.id,
@@ -101,7 +110,7 @@ const resolvers = {
         },
         unWatchBounty: async (parent, args) => {
             const bounty = await prisma.bounty.findUnique({
-                where: { contractId: args.contractId },
+                where: { contractAddress: args.contractAddress },
             })
             const user = await prisma.user.findUnique({
                 where: { userAddress: args.userAddress },
@@ -114,7 +123,7 @@ const resolvers = {
                 (userId) => userId !== user.id
             )
             prisma.bounty.update({
-                where: { contractId: args.contractId },
+                where: { contractAddress: args.contractAddress },
                 data: {
                     watchingUserIds: {
                         set: newUsers,

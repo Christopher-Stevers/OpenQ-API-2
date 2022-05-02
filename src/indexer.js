@@ -76,11 +76,11 @@ const updateTvls = async (values) => {
     const pending = []
     for (let i = 0; i < values.length; i += 1) {
         const value = values[i]
-        const contractId = value.id
+        const contractAddress = value.id
         const tvl = parseFloat(value.totalValue)
         const result = tvlClient.mutate({
             mutation: gql(CREATE_BOUNTY),
-            variables: { contractId, tvl },
+            variables: { contractAddress, tvl },
         })
         pending.push(result)
     }

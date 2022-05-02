@@ -9,15 +9,15 @@ query{
    }
 }  
 `
-const UPDATE_BOUNTY = `mutation Mutation($contractId: String!, $tvl: Float!) {
-	updateBounty(contractId: $contractId, tvl: $tvl) {
-		contractId
+const UPDATE_BOUNTY = `mutation Mutation($contractAddress: String!, $tvl: Float!) {
+	updateBounty(contractAddress: $contractAddress, tvl: $tvl) {
+		contractAddress
 	}
   }`
 
 const CREATE_BOUNTY = `mutation CreateBounty($tvl: Float!, $id: String!) {
-        createBounty(tvl: $tvl, contractId: $id) {
-            contractId
+        createBounty(tvl: $tvl, contractAddress: $id) {
+            contractAddress
         }
     }
 `

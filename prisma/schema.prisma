@@ -12,7 +12,7 @@ datasource db {
 
 model Bounty {
   id              String   @id @default(auto()) @map("_id") @db.ObjectId
-  contractId      String   @unique
+  contractAddress String   @unique
   tvl             Float
   watchingUserIds String[] @db.ObjectId
   watchingUsers   User[]   @relation(fields: [watchingUserIds], references: [id])

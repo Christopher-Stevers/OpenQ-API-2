@@ -3,7 +3,7 @@ const { gql } = require('apollo-server')
 const typeDefs = gql`
     type Bounty {
         tvl: Float!
-        contractId: String!
+        contractAddress: String!
         id: ID!
         watchingUserIds: [String]
         watchingUsers(
@@ -27,12 +27,12 @@ const typeDefs = gql`
 
     type UserConnection {
         users: [User]
-        cursor: String
+        cursor: ID
     }
 
     type BountyConnection {
         bounties: [Bounty]
-        cursor: String
+        cursor: ID
     }
 
     type BatchPayload {
@@ -55,10 +55,10 @@ const typeDefs = gql`
         ): UserConnection
     }
     type Mutation {
-        createBounty(tvl: Float!, contractId: String!): Bounty!
-        updateBounty(tvl: Float!, contractId: String!): BatchPayload!
-        watchBounty(userAddress: String, contractId: String): User
-        unWatchBounty(userAddress: String, contractId: String): User
+        createBounty(tvl: Float!, contractAddress: String!): Bounty!
+        updateBounty(tvl: Float!, contractAddress: String!): BatchPayload!
+        watchBounty(userAddress: String, contractAddress: String): User
+        unWatchBounty(userAddress: String, contractAddress: String): User
     }
 `
 
