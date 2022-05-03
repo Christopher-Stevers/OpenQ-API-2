@@ -9,7 +9,7 @@ const subGraphClient = new ApolloClient({
     cache: new InMemoryCache(),
     link: new HttpLink({
         fetch,
-        uri: 'http://localhost:8000/subgraphs/name/openqdev/openq',
+        uri: 'http://graph_node:8000/subgraphs/name/openqdev/openq',
     }),
 })
 
@@ -17,7 +17,7 @@ const tvlClient = new ApolloClient({
     cache: new InMemoryCache(),
     link: new HttpLink({
         fetch,
-        uri: 'http://localhost:8080/',
+        uri: 'http://openq-api:8080/',
     }),
 })
 
@@ -33,7 +33,7 @@ const fetchBounties = async () => {
         })
 
         const params = { tokenVolumes, network: 'polygon-pos' }
-        const url = 'http://host.docker.internal:8081/tvl'
+        const url = 'http://openq-coinapi:8081/tvl'
         // only query tvl for bounties that have deposits
         if (JSON.stringify(params.tokenVolumes) !== '{}') {
             try {

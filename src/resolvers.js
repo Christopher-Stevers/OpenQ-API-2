@@ -1,4 +1,3 @@
-const axios = require('axios')
 const { prisma } = require('./db')
 
 const resolvers = {
@@ -135,11 +134,10 @@ const resolvers = {
             const newBounties = user.watchedBountyIds.filter(
                 (bountyId) => bountyId !== bounty.id
             )
-
             const newUsers = bounty.watchingUserIds.filter(
                 (userId) => userId !== user.id
             )
-            prisma.bounty.update({
+            await prisma.bounty.update({
                 where: { contractAddress: args.contractAddress },
                 data: {
                     watchingUserIds: { set: newUsers },
@@ -148,7 +146,7 @@ const resolvers = {
             return prisma.user.update({
                 where: { userAddress: args.userAddress },
                 data: {
-                    watchedBounties: { set: newBounties },
+                    watchedBountyIds: { set: newBounties },
                 },
             })
         },

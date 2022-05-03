@@ -14,9 +14,10 @@ function sleep(ms) {
 }
 const runIndexer = async () => {
     console.log('init, waiting')
-    await sleep(20000)
+    await sleep(1000)
     console.log('running')
     await indexer()
     console.log('completed')
-}
-// runIndexer()
+} /*
+runIndexer()
+*/
