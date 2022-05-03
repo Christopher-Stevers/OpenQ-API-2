@@ -49,10 +49,12 @@ const typeDefs = gql`
         ): BountyConnection
         usersConnection(
             after: ID
-            limit: Int!
+            limit: Int
             orderBy: String
             sortOrder: String
         ): UserConnection
+        bounty(contractAddress: String!): Bounty
+        user(userAddress: String!): User
     }
     type Mutation {
         createBounty(tvl: Float!, contractAddress: String!): Bounty!

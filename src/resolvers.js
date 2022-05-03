@@ -33,6 +33,15 @@ const resolvers = {
                 cursor: users[users.length - 1].userAddress,
             }
         },
+
+        user: async (parent, args) =>
+            prisma.user.findUnique({
+                where: { userAddress: args.userAddress },
+            }),
+        bounty: async (parent, args) =>
+            prisma.bounty.findUnique({
+                where: { contractAddress: args.contractAddress },
+            }),
     },
     User: {
         watchedBounties: async (parent, args) => {
@@ -44,10 +53,15 @@ const resolvers = {
                 take: args.limit,
                 orderBy: { [args.orderBy]: args.sortOrder },
                 include: { watchingUsers: true },
+                where: { id: { in: parent.watchedBountyIds } },
             })
+            const newCursor =
+                bounties.length > 0
+                    ? bounties[bounties.length - 1].contractAddress
+                    : null
             return {
                 bounties,
-                cursor: bounties[bounties.length - 1].contractAddress,
+                cursor: newCursor,
             }
         },
     },
@@ -61,10 +75,13 @@ const resolvers = {
                 take: args.limit,
                 orderBy: { [args.orderBy]: args.sortOrder },
                 include: { watchedBounties: true },
+                where: { id: { in: parent.watchingUserIds } },
             })
+            const newCursor =
+                users.length > 0 ? users[users.length - 1].userAddress : null
             return {
                 users,
-                cursor: users[users.length - 1].userAddress,
+                cursor: newCursor,
             }
         },
     },
@@ -125,17 +142,13 @@ const resolvers = {
             prisma.bounty.update({
                 where: { contractAddress: args.contractAddress },
                 data: {
-                    watchingUserIds: {
-                        set: newUsers,
-                    },
+                    watchingUserIds: { set: newUsers },
                 },
             })
             return prisma.user.update({
                 where: { userAddress: args.userAddress },
                 data: {
-                    watchedBounties: {
-                        set: newBounties,
-                    },
+                    watchedBounties: { set: newBounties },
                 },
             })
         },
