@@ -92,7 +92,6 @@ const resolvers = {
                 data: {
                     tvl: Number(args.tvl),
                     contractAddress: String(args.contractAddress),
-                    claimantPullRequest: {}
                 },
             }),
         updateBounty: async (parent, args) => {
