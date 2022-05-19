@@ -93,11 +93,13 @@ const resolvers = {
                     contractAddress: String(args.contractAddress),
                 },
             }),
-        updateBounty: async (parent, args) =>
-            prisma.bounty.updateMany({
+        updateBounty: async (parent, args) => {
+            if (args.claimantPullRequest) args.claimantPullRequest['mergedAt'] = new Date(args.claimantPullRequest['mergedAt']).toDateString()
+            return prisma.bounty.updateMany({
                 where: { contractAddress: args.contractAddress },
-                data: { tvl: args.tvl },
-            }),
+                data: { tvl: args.tvl, claimantPullRequest: args.claimantPullRequest },
+            })
+        },
 
         watchBounty: async (parent, args) => {
             const bounty = await prisma.bounty.findUnique({
