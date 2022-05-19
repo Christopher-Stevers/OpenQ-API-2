@@ -1,4 +1,5 @@
 const { prisma } = require('./db')
+const { GraphQLScalarType } = require('graphql');
 
 const resolvers = {
     Query: {
@@ -93,11 +94,12 @@ const resolvers = {
                     contractAddress: String(args.contractAddress),
                 },
             }),
-        updateBounty: async (parent, args) =>
-            prisma.bounty.updateMany({
+        updateBounty: async (parent, args) => {
+            return prisma.bounty.updateMany({
                 where: { contractAddress: args.contractAddress },
-                data: { tvl: args.tvl },
-            }),
+                data: { tvl: args.tvl, claimantPullRequest: args.claimantPullRequest },
+            })
+        },
 
         watchBounty: async (parent, args) => {
             const bounty = await prisma.bounty.findUnique({
@@ -151,5 +153,12 @@ const resolvers = {
             })
         },
     },
+    Date: new GraphQLScalarType({
+        name: "Date",
+        description: "Custom Date scalar type",
+        parseValue(value) {
+            return new Date(value).toDateString()
+        }
+    })
 }
 module.exports = resolvers
