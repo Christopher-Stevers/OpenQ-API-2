@@ -92,10 +92,10 @@ const resolvers = {
                 data: {
                     tvl: Number(args.tvl),
                     contractAddress: String(args.contractAddress),
+                    claimantPullRequest: {}
                 },
             }),
         updateBounty: async (parent, args) => {
-            console.log(args.claimantPullRequest['mergedAt'])
             return prisma.bounty.updateMany({
                 where: { contractAddress: args.contractAddress },
                 data: { tvl: args.tvl, claimantPullRequest: args.claimantPullRequest },
