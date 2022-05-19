@@ -14,7 +14,7 @@ model Bounty {
   id              String   @id @default(auto()) @map("_id") @db.ObjectId
   contractAddress String   @unique
   tvl             Float
-  claimantPullRequest Json
+  claimantPullRequest Json?
   watchingUserIds String[] @db.ObjectId
   watchingUsers   User[]   @relation(fields: [watchingUserIds], references: [id])
 }
