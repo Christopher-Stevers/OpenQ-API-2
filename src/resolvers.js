@@ -1,4 +1,5 @@
 const { prisma } = require('./db')
+const { GraphQLScalarType } = require('graphql');
 
 const resolvers = {
     Query: {
@@ -94,7 +95,7 @@ const resolvers = {
                 },
             }),
         updateBounty: async (parent, args) => {
-            if (args.claimantPullRequest) args.claimantPullRequest['mergedAt'] = new Date(args.claimantPullRequest['mergedAt']).toDateString()
+            console.log(args.claimantPullRequest['mergedAt'])
             return prisma.bounty.updateMany({
                 where: { contractAddress: args.contractAddress },
                 data: { tvl: args.tvl, claimantPullRequest: args.claimantPullRequest },
@@ -153,5 +154,12 @@ const resolvers = {
             })
         },
     },
+    Date: new GraphQLScalarType({
+        name: "Date",
+        description: "Custom Date scalar type",
+        parseValue(value) {
+            return new Date(value).toDateString()
+        }
+    })
 }
 module.exports = resolvers
