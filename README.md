@@ -45,4 +45,4 @@ yarn start
 
 You can now access the GraphiQL Playground at `http://localhost:4000`.
 
-Any changes you make will trigger a live reload thanks to `nodemon`.
+Any changes you make will trigger a live reload thanks to `nodemon`. 
