@@ -7,6 +7,7 @@ Let's get you up and going in 3 easy (I hope) steps
 - Configure .env
 - Install dependencies and boot
 
+
 ### 1 Get Access to a MongoDB Instance
 
 You can provision a simple MongoDB sandbox using MongoDB Atlas by following the instructions [here](https://www.mongodb.com/docs/atlas/getting-started/).
