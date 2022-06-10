@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server')
+const { gql } = require('apollo-server');
 
 const typeDefs = gql`
     type PullRequest {
@@ -73,10 +73,10 @@ const typeDefs = gql`
     }
     type Mutation {
         createBounty(tvl: Float!, contractAddress: String!): Bounty!
-        updateBounty(tvl: Float!, contractAddress: String!, claimantPullRequest: PullRequestInput): BatchPayload!
+        updateBounty(tvl: Float!, contractAddress: String!): BatchPayload!
         watchBounty(userAddress: String, contractAddress: String): User
         unWatchBounty(userAddress: String, contractAddress: String): User
     }
-`
+`;
 
-module.exports = typeDefs
+module.exports = typeDefs;
