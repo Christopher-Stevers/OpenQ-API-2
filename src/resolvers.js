@@ -46,7 +46,7 @@ const resolvers = {
 				take: args.limit,
 				orderBy: { [args.orderBy]: args.sortOrder },
 				include: { watchingUsers: true },
-				where: { id: { in: parent.watchedBountyIds } },
+				where: { address: { in: parent.watchedBountyIds } },
 			});
 			const newCursor =
 				bounties.length > 0
@@ -66,7 +66,7 @@ const resolvers = {
 				take: args.limit,
 				orderBy: { [args.orderBy]: args.sortOrder },
 				include: { watchedBounties: true },
-				where: { id: { in: parent.watchingUserIds } },
+				where: { address: { in: parent.watchingUserIds } },
 			});
 			const newCursor =
 				users.length > 0 ? users[users.length - 1].address : null;
