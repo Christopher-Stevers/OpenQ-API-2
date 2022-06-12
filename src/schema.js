@@ -1,82 +1,65 @@
 const { gql } = require('apollo-server');
 
 const typeDefs = gql`
-    type PullRequest {
-        url: String!
-        author: String!
-        mergedAt: Date!
-    }
+	type Bounty {
+		tvl: Float
+		address: String!
+		watchingUserIds: [String]
+		watchingUsers(
+			after: ID
+			limit: Int!
+			orderBy: String
+			sortOrder: String
+		): UserConnection!
+	}
+	type User {
+		address: String!
+		watchedBountyIds: [String]
+		watchedBounties(
+			after: ID
+			limit: Int!
+			orderBy: String
+			sortOrder: String
+		): BountyConnection!
+	}
 
-    scalar Date
+	type UserConnection {
+		users: [User]
+		cursor: ID
+	}
 
-    input PullRequestInput {
-        url: String!
-        author: String!
-        mergedAt: Date!
-    }
+	type BountyConnection {
+		bounties: [Bounty]
+		cursor: ID
+	}
 
-    type Bounty {
-        tvl: Float!
-        contractAddress: String!
-        id: ID!
-        claimantPullRequest: PullRequest
-        watchingUserIds: [String]
-        watchingUsers(
-            after: ID
-            limit: Int!
-            orderBy: String
-            sortOrder: String
-        ): UserConnection!
-    }
-    type User {
-        id: ID
-        userAddress: String!
-        watchedBountyIds: [String]
-        watchedBounties(
-            after: ID
-            limit: Int!
-            orderBy: String
-            sortOrder: String
-        ): BountyConnection!
-    }
+	type BatchPayload {
+		count: Long!
+	}
+	scalar Long
 
-    type UserConnection {
-        users: [User]
-        cursor: ID
-    }
-
-    type BountyConnection {
-        bounties: [Bounty]
-        cursor: ID
-    }
-
-    type BatchPayload {
-        count: Long!
-    }
-    scalar Long
-
-    type Query {
-        bountiesConnection(
-            after: ID
-            limit: Int!
-            orderBy: String
-            sortOrder: String
-        ): BountyConnection
-        usersConnection(
-            after: ID
-            limit: Int
-            orderBy: String
-            sortOrder: String
-        ): UserConnection
-        bounty(contractAddress: String!): Bounty
-        user(userAddress: String!): User
-    }
-    type Mutation {
-        createBounty(tvl: Float!, contractAddress: String!): Bounty!
-        updateBounty(tvl: Float!, contractAddress: String!): BatchPayload!
-        watchBounty(userAddress: String, contractAddress: String): User
-        unWatchBounty(userAddress: String, contractAddress: String): User
-    }
+	type Query {
+		bountiesConnection(
+			after: ID
+			limit: Int!
+			orderBy: String
+			sortOrder: String
+		): BountyConnection
+		usersConnection(
+			after: ID
+			limit: Int
+			orderBy: String
+			sortOrder: String
+		): UserConnection
+		bounty(address: String!): Bounty
+		user(address: String!): User
+	}
+	type Mutation {
+		createBounty(address: String!): Bounty!
+		updateBounty(address: String!, tvl: String!): BatchPayload!
+		watchBounty(userAddress: String, contractAddress: String): User
+		unWatchBounty(userAddress: String, contractAddress: String): User
+	}
 `;
 
 module.exports = typeDefs;

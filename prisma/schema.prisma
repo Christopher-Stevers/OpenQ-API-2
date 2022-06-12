@@ -2,27 +2,26 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+    provider = "mongodb"
+    url      = env("DATABASE_URL")
 }
 
 model Bounty {
-  id              String   @id @default(auto()) @map("_id") @db.ObjectId
-  contractAddress String   @unique
-  tvl             Float
-  claimantPullRequest Json?
-  watchingUserIds String[] @db.ObjectId
-  watchingUsers   User[]   @relation(fields: [watchingUserIds], references: [id])
+
+    address         String   @id @map("_id")
+    tvl             Float
+    watchingUserIds String[]
+    watchingUsers   User[]   @relation(fields: [watchingUserIds], references: [address])
 }
 
 model User {
-  id               String   @id @default(auto()) @map("_id") @db.ObjectId
-  userAddress      String   @unique
-  watchedBountyIds String[] @db.ObjectId
-  watchedBounties  Bounty[] @relation(fields: [watchedBountyIds], references: [id])
+
+    address          String   @id @map("_id")
+    watchedBountyIds String[]
+    watchedBounties  Bounty[] @relation(fields: [watchedBountyIds], references: [address])
 
 }
