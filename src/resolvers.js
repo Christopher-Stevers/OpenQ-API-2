@@ -86,9 +86,13 @@ const resolvers = {
 				},
 			}),
 		updateBounty: async (parent, args) =>
-			prisma.bounty.updateMany({
+			prisma.bounty.upsert({
 				where: { address: args.address },
-				data: { tvl: args.tvl },
+				update: { tvl: args.tvl },
+				create: {
+					address: String(args.address),
+					tvl: args.tvl,
+				},
 			}),
 
 		watchBounty: async (parent, args) => {

@@ -56,7 +56,7 @@ const typeDefs = gql`
 	}
 	type Mutation {
 		createBounty(address: String!): Bounty!
-		updateBounty(address: String!, tvl: String!): BatchPayload!
+		updateBounty(address: String!, tvl: Float!): BatchPayload!
 		watchBounty(userAddress: String, contractAddress: String): User
 		unWatchBounty(userAddress: String, contractAddress: String): User
 	}
