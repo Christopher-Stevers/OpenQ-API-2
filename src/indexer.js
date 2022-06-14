@@ -1,95 +1,141 @@
 const axios = require('axios');
 const fetch = require('cross-fetch');
 const { ethers } = require('ethers');
-const {
-	ApolloClient,
-	InMemoryCache,
-	gql,
-	HttpLink,
-} = require('@apollo/client');
-const { GET_BOUNTY_DEPOSITS_DATA, CREATE_BOUNTY } = require('./query/query');
-const tokenMetadata = require('./local.json');
-
-const subGraphClient = new ApolloClient({
-	cache: new InMemoryCache(),
-	link: new HttpLink({
-		fetch,
-		uri: 'http://graph_node:8000/subgraphs/name/openqdev/openq',
-	}),
-});
+const { ApolloClient, InMemoryCache, HttpLink } = require('@apollo/client');
+const UPDATE_BOUNTY = require('./graphql/updateBounty');
+const GET_ALL_BOUNTIES = require('./graphql/getAllBounties');
+const tokenMetadata = require('../constants/local.json');
+const polygonMetadata = require('../constants/polygon-mainnet-indexable.json');
 
 const tvlClient = new ApolloClient({
 	cache: new InMemoryCache(),
 	link: new HttpLink({
 		fetch,
-		uri: 'http://openq-api:8080/',
+		uri: `${process.env.OPENQ_API_URL}`,
 	}),
 });
 
-const fetchBounties = async () => {
-	async function getTokenValues(tokenBalances) {
-		const tokenVolumes = {};
-		tokenBalances.forEach((tokenBalance) => {
-			const tokenAddress =
-				tokenMetadata[
-					ethers.utils.getAddress(tokenBalance.tokenAddress)
-				].address;
-			tokenVolumes[tokenAddress] = tokenBalance.volume;
-		});
+const subGraphClient = new ApolloClient({
+	cache: new InMemoryCache(),
+	link: new HttpLink({
+		fetch,
+		uri: `${process.env.OPENQ_SUBGRAPH_HTTP_URL}`,
+		defaultOptions: {
+			query: {
+				fetchPolicy: 'no-cache',
+			},
+		},
+	}),
+});
 
-		const params = { tokenVolumes, network: 'polygon-pos' };
-		const url = 'http://openq-coinapi:8081/tvl';
-		// only query tvl for bounties that have deposits
-		if (JSON.stringify(params.tokenVolumes) !== '{}') {
-			try {
-				const { data } = await axios.post(url, params);
-				return data;
-			} catch (error) {
-				// continue regardless
-			}
-			return [];
+// Same as in OpenQSubgraphClient
+const fetchBounties = async () => {
+	const getBounties = async (sortOrder, startAt, quantity) => {
+		try {
+			const result = await subGraphClient.query({
+				query: GET_ALL_BOUNTIES,
+				fetchPolicy: 'no-cache',
+				variables: { skip: startAt, sortOrder, quantity },
+			});
+			return result.data.bounties.filter(
+				(bounty) =>
+					bounty.bountyId.slice(0, 1) === 'I' ||
+					bounty.bountyId.slice(0, 1) === 'M'
+			);
+		} catch (e) {
+			console.log(e);
 		}
 		return [];
-	}
-	const depositResponse = await subGraphClient.query({
-		query: gql(GET_BOUNTY_DEPOSITS_DATA),
-	});
-	const { deposits } = depositResponse.data;
+	};
 
-	const tokenValues = await getTokenValues(deposits);
-	const TVLS = deposits.map((tokenBalance) => {
-		const tokenAddress = ethers.utils.getAddress(tokenBalance.tokenAddress);
-		const tokenValueAddress = tokenMetadata[tokenAddress].address;
-		const { volume } = tokenBalance;
+	const bounties = [];
+	const pricingMetadata = [];
 
-		const bigNumberVolume = ethers.BigNumber.from(volume.toString());
-		const decimals = parseInt(tokenMetadata[tokenAddress].decimals, 10);
+	// Recursive function in case we need multiple pages of bounties.
+	const getAllBounties = async () => {
+		const batch = await getBounties('asc', 0, 100);
+		batch.forEach((bounty) => {
+			bounty.bountyTokenBalances.forEach((bountyTokenBalance) => {
+				if (
+					!pricingMetadata.includes(
+						bountyTokenBalance.tokenAddress
+					) &&
+					tokenMetadata[
+					ethers.utils.getAddress(bountyTokenBalance.tokenAddress)
+					]
+				) {
+					pricingMetadata.push(
+						tokenMetadata[
+						ethers.utils.getAddress(
+							bountyTokenBalance.tokenAddress
+						)
+						]
+					);
+				} else if (
+					polygonMetadata[
+					bountyTokenBalance.tokenAddress.toLowerCase()
+					]
+				) {
+					pricingMetadata.push(
+						polygonMetadata[
+						bountyTokenBalance.tokenAddress.toLowerCase()
+						]
+					);
+				}
+			});
+		});
+		bounties.push(...batch);
+		if (batch === 100) {
+			await getAllBounties();
+		}
+	};
 
-		const formattedVolume = ethers.utils.formatUnits(
-			bigNumberVolume,
-			decimals
+	await getAllBounties();
+
+	// Get token values
+	const network = 'polygon-pos';
+	const url = `https://api.coingecko.com/api/v3/simple/token_price/${network}?contract_addresses=${pricingMetadata
+		.map((metadata) => metadata.address)
+		.join(',')}&vs_currencies=usd`;
+	const { data } = await axios.get(url);
+	// Attach USD values to addresses
+	const tvls = bounties.map((bounty) => {
+		const tvl = bounty.bountyTokenBalances.reduce(
+			(accum, tokenBalance) => {
+				if (!accum) {
+					return tokenBalance;
+				}
+
+				const currentMetadata =
+					tokenMetadata[
+					ethers.utils.getAddress(tokenBalance.tokenAddress)
+					] ||
+					polygonMetadata[tokenBalance.tokenAddress.toLowerCase()];
+
+				const multiplier =
+					tokenBalance.volume / 10 ** currentMetadata.decimals;
+				const price = data[currentMetadata.address.toLowerCase()] || 0;
+				return price.usd * multiplier + parseFloat(accum);
+			},
+			[0]
 		);
-		const totalValue =
-			formattedVolume *
-			tokenValues.tokenPrices[tokenValueAddress.toLowerCase()];
-
-		return { id: tokenBalance.bounty.id, totalValue };
+		return { address: bounty.bountyAddress, tvl };
 	});
-	return TVLS;
+	return tvls;
 };
 const updateTvls = async (values) => {
 	const pending = [];
 	for (let i = 0; i < values.length; i += 1) {
 		const value = values[i];
-		const contractAddress = value.id;
-		const tvl = parseFloat(value.totalValue);
+		const address = ethers.utils.getAddress(value.address);
+		const tvl = parseFloat(value.tvl);
 		const result = tvlClient.mutate({
-			mutation: gql(CREATE_BOUNTY),
-			variables: { contractAddress, tvl },
+			mutation: UPDATE_BOUNTY,
+			variables: { address, tvl },
 		});
 		pending.push(result);
 	}
-	await Promise.all(pending);
+	return Promise.all(pending);
 };
 const indexer = async () => {
 	const TVLS = await fetchBounties();

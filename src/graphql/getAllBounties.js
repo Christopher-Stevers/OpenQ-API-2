@@ -1,3 +1,5 @@
+const { gql } = require('@apollo/client');
+
 const GET_BOUNTY_DEPOSITS_DATA = `
 query{
 	 deposits{volume
@@ -23,3 +25,17 @@ const CREATE_BOUNTY = `mutation CreateBounty($tvl: Float!, $id: String!) {
 `;
 
 module.exports = { GET_BOUNTY_DEPOSITS_DATA, UPDATE_BOUNTY, CREATE_BOUNTY };
+
+const GET_ALL_BOUNTIES = gql`
+	query GetAllIssues($sortOrder: String!, $skip: Int!, $quantity: Int!) {
+		bounties(skip: $skip, sortOrder: $sortOrder, quantity: $quantity) {
+			bountyAddress
+			bountyId
+			bountyTokenBalances {
+				volume
+				tokenAddress
+			}
+		}
+	}
+`;
+module.exports = GET_ALL_BOUNTIES;
