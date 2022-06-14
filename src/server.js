@@ -21,7 +21,7 @@ const runIndexer = async () => {
 	console.log('completed');
 };
 
-cron.schedule('* * * * *', async () => {
+cron.schedule('30 23 * * *', async () => {
 	await runIndexer();
 	console.log('running a task every minute');
 });

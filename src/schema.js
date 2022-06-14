@@ -33,11 +33,6 @@ const typeDefs = gql`
 		cursor: ID
 	}
 
-	type BatchPayload {
-		count: Long!
-	}
-	scalar Long
-
 	type Query {
 		bountiesConnection(
 			after: ID
@@ -56,7 +51,7 @@ const typeDefs = gql`
 	}
 	type Mutation {
 		createBounty(address: String!): Bounty!
-		updateBounty(address: String!, tvl: Float!): BatchPayload!
+		updateBounty(address: String!, tvl: Float!): Bounty!
 		watchBounty(userAddress: String, contractAddress: String): User
 		unWatchBounty(userAddress: String, contractAddress: String): User
 	}

@@ -4,7 +4,8 @@ const { ethers } = require('ethers');
 const { ApolloClient, InMemoryCache, HttpLink } = require('@apollo/client');
 const UPDATE_BOUNTY = require('./graphql/updateBounty');
 const GET_ALL_BOUNTIES = require('./graphql/getAllBounties');
-const tokenMetadata = require('./local.json');
+const tokenMetadata = require('../constants/local.json');
+const polygonMetadata = require('../constants/polygon-mainnet-indexable.json');
 
 const tvlClient = new ApolloClient({
 	cache: new InMemoryCache(),
@@ -56,13 +57,28 @@ const fetchBounties = async () => {
 		batch.forEach((bounty) => {
 			bounty.bountyTokenBalances.forEach((bountyTokenBalance) => {
 				if (
-					!pricingMetadata.includes(bountyTokenBalance.tokenAddress)
+					!pricingMetadata.includes(
+						bountyTokenBalance.tokenAddress
+					) &&
+					tokenMetadata[
+					ethers.utils.getAddress(bountyTokenBalance.tokenAddress)
+					]
 				) {
 					pricingMetadata.push(
 						tokenMetadata[
 						ethers.utils.getAddress(
 							bountyTokenBalance.tokenAddress
 						)
+						]
+					);
+				} else if (
+					polygonMetadata[
+					bountyTokenBalance.tokenAddress.toLowerCase()
+					]
+				) {
+					pricingMetadata.push(
+						polygonMetadata[
+						bountyTokenBalance.tokenAddress.toLowerCase()
 						]
 					);
 				}
@@ -93,13 +109,13 @@ const fetchBounties = async () => {
 				const currentMetadata =
 					tokenMetadata[
 					ethers.utils.getAddress(tokenBalance.tokenAddress)
-					];
+					] ||
+					polygonMetadata[tokenBalance.tokenAddress.toLowerCase()];
 
 				const multiplier =
 					tokenBalance.volume / 10 ** currentMetadata.decimals;
-				const price = data[currentMetadata.address.toLowerCase()];
-
-				return price.usd * multiplier;
+				const price = data[currentMetadata.address.toLowerCase()] || 0;
+				return price.usd * multiplier + parseFloat(accum);
 			},
 			[0]
 		);
