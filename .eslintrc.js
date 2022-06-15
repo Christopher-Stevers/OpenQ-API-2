@@ -9,15 +9,4 @@ module.exports = {
 		ecmaVersion: 'latest',
 		sourceType: 'module',
 	},
-	rules: {
-		'prettier/prettier': [
-			'error',
-			{
-				singleQuote: true,
-				parser: 'flow',
-				useTabs: true,
-				semi: true,
-			},
-		],
-	},
 };
