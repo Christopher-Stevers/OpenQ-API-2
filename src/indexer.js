@@ -119,7 +119,11 @@ const fetchBounties = async () => {
 			},
 			[0]
 		);
-		return { address: bounty.bountyAddress, tvl };
+		return {
+			address: bounty.bountyAddress,
+			tvl,
+			organizationId: bounty.organization.id,
+		};
 	});
 	return tvls;
 };
@@ -129,9 +133,10 @@ const updateTvls = async (values) => {
 		const value = values[i];
 		const address = ethers.utils.getAddress(value.address);
 		const tvl = parseFloat(value.tvl);
+		const { organizationId } = value;
 		const result = tvlClient.mutate({
 			mutation: UPDATE_BOUNTY,
-			variables: { address, tvl },
+			variables: { address, tvl, organizationId },
 		});
 		pending.push(result);
 	}

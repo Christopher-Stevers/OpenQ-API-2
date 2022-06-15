@@ -6,9 +6,13 @@ const indexer = require('./indexer');
 
 const port = process.env.PORT || 4000;
 
-new ApolloServer({ resolvers, typeDefs }).listen({ port }, () =>
-	console.log(`Server ready at: ${port}`)
-);
+new ApolloServer({
+	resolvers,
+	typeDefs,
+	cors: {
+		origin: ['http://localhost:3000', 'https://studio.apollographql.com'],
+	},
+}).listen({ port }, () => console.log(`Server ready at: ${port}`));
 
 function sleep(ms) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
@@ -20,7 +24,7 @@ const runIndexer = async () => {
 	await indexer();
 	console.log('completed');
 };
-
+runIndexer();
 cron.schedule('30 23 * * *', async () => {
 	await runIndexer();
 	console.log('running a task every minute');

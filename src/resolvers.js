@@ -5,9 +5,14 @@ const resolvers = {
 		bountiesConnection: async (parent, args) => {
 			const cursor = args.after ? { address: args.after } : undefined;
 			const bounties = await prisma.bounty.findMany({
+				skip: args.after ? 1 : 0,
 				cursor,
+				where: { organizationId: args.organizationId },
 				take: args.limit,
-				orderBy: { [args.orderBy]: args.sortOrder },
+				orderBy: [
+					{ [args.orderBy]: args.sortOrder },
+					{ [args.orderBy && 'address']: args.orderBy && 'asc' },
+				],
 				include: { watchingUsers: true },
 			});
 			return {
@@ -18,6 +23,7 @@ const resolvers = {
 		usersConnection: async (parent, args) => {
 			const cursor = args.after ? { address: args.after } : undefined;
 			const users = await prisma.user.findMany({
+				skip: args.after ? 1 : 0,
 				cursor,
 				take: args.limit,
 				orderBy: { [args.orderBy]: args.sortOrder },
@@ -42,9 +48,13 @@ const resolvers = {
 		watchedBounties: async (parent, args) => {
 			const cursor = args.after ? { address: args.after } : undefined;
 			const bounties = await prisma.bounty.findMany({
+				skip: args.after ? 1 : 0,
 				cursor,
 				take: args.limit,
-				orderBy: { [args.orderBy]: args.sortOrder },
+				orderBy: [
+					{ [args.orderBy]: args.sortOrder },
+					{ [args.orderBy && 'address']: args.orderBy && 'asc' },
+				],
 				include: { watchingUsers: true },
 				where: { address: { in: parent.watchedBountyIds } },
 			});
@@ -62,9 +72,13 @@ const resolvers = {
 		watchingUsers: async (parent, args) => {
 			const cursor = args.after ? { address: args.after } : undefined;
 			const users = await prisma.user.findMany({
+				skip: args.after ? 1 : 0,
 				cursor,
 				take: args.limit,
-				orderBy: { [args.orderBy]: args.sortOrder },
+				orderBy: [
+					{ [args.orderBy]: args.sortOrder },
+					{ [args.orderBy && 'address']: args.orderBy && 'asc' },
+				],
 				include: { watchedBounties: true },
 				where: { address: { in: parent.watchingUserIds } },
 			});
@@ -83,15 +97,17 @@ const resolvers = {
 				data: {
 					tvl: 0,
 					address: String(args.address),
+					organizationId: args.organizationId,
 				},
 			}),
 		updateBounty: async (parent, args) =>
 			prisma.bounty.upsert({
 				where: { address: args.address },
-				update: { tvl: args.tvl },
+				update: { tvl: args.tvl, organizationId: args.organizationId },
 				create: {
 					address: String(args.address),
 					tvl: args.tvl,
+					organizationId: args.organizationId,
 				},
 			}),
 
