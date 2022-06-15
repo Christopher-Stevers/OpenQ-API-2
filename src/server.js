@@ -9,9 +9,6 @@ const port = process.env.PORT || 4000;
 new ApolloServer({
 	resolvers,
 	typeDefs,
-	cors: {
-		origin: ['http://localhost:3000', 'https://studio.apollographql.com'],
-	},
 }).listen({ port }, () => console.log(`Server ready at: ${port}`));
 
 function sleep(ms) {
