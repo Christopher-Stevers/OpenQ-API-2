@@ -11,17 +11,22 @@ datasource db {
 }
 
 model Bounty {
-
-    address         String   @id @map("_id")
+    address         String        @id @map("_id")
     tvl             Float
     watchingUserIds String[]
-    watchingUsers   User[]   @relation(fields: [watchingUserIds], references: [address])
+    watchingUsers   User[]        @relation(fields: [watchingUserIds], references: [address])
+    Organization    Organization? @relation(fields: [organizationId], references: [id])
+    organizationId  String?
 }
 
 model User {
-
     address          String   @id @map("_id")
     watchedBountyIds String[]
     watchedBounties  Bounty[] @relation(fields: [watchedBountyIds], references: [address])
+}
 
+model Organization {
+    id                    String   @id @map("_id")
+    organizationBountyIds String[]
+    organizationBounties  Bounty[]
 }
