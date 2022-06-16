@@ -1,6 +1,8 @@
 const { gql } = require('apollo-server');
 
 const typeDefs = gql`
+
+	scalar JSON
 	type Bounty {
 		tvl: Float
 		address: String!
@@ -47,6 +49,11 @@ const typeDefs = gql`
 		cursor: ID
 	}
 
+	type Prices {
+		timestamp: Float!
+		priceObj: JSON!
+	}
+
 	type Query {
 		bountiesConnection(
 			after: ID
@@ -63,6 +70,7 @@ const typeDefs = gql`
 		): UserConnection
 		bounty(address: String!): Bounty
 		user(address: String!): User
+		prices: [Prices]
 	}
 	type Mutation {
 		createBounty(address: String, organizationId: String): Bounty!
@@ -71,6 +79,7 @@ const typeDefs = gql`
 			tvl: Float!
 			organizationId: String
 		): Bounty!
+		updatePrices(priceObj: JSON):Prices!
 		watchBounty(userAddress: String, contractAddress: String): User
 		unWatchBounty(userAddress: String, contractAddress: String): User
 	}

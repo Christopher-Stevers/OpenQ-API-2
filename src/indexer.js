@@ -4,8 +4,10 @@ const { ethers } = require('ethers');
 const { ApolloClient, InMemoryCache, HttpLink } = require('@apollo/client');
 const UPDATE_BOUNTY = require('./graphql/updateBounty');
 const GET_ALL_BOUNTIES = require('./graphql/getAllBounties');
+const UPDATE_PRICES = require('./graphql/updatePrices');
 const tokenMetadata = require('../constants/local.json');
 const polygonMetadata = require('../constants/polygon-mainnet-indexable.json');
+const openQLocalTokens = require('../constants/openq-local-enumerable.json');
 
 const tvlClient = new ApolloClient({
 	cache: new InMemoryCache(),
@@ -142,7 +144,19 @@ const updateTvls = async (values) => {
 	}
 	return Promise.all(pending);
 };
+
+
 const indexer = async () => {
+	const firstTen = openQLocalTokens.slice(0, 11).map(elem => elem.address).concat('0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270');
+	const network = 'polygon-pos';
+	const stringifiedTokens = firstTen.join(',');
+	const firstTenPrices = await axios.get(`https://api.coingecko.com/api/v3/simple/token_price/${network}?contract_addresses=${stringifiedTokens}&vs_currencies=usd`);
+
+
+	await tvlClient.mutate({
+		mutation: UPDATE_PRICES,
+		variables: { priceObj: firstTenPrices.data }
+	});
 	const TVLS = await fetchBounties();
 	await updateTvls(TVLS);
 };

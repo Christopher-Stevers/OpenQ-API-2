@@ -30,3 +30,9 @@ model Organization {
     organizationBountyIds String[]
     organizationBounties  Bounty[]
 }
+
+model Prices {
+    id        String @id @default(auto()) @map("_id") @db.ObjectId
+    priceObj  Json?
+    timestamp Int
+}

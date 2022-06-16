@@ -1,3 +1,4 @@
+const GraphQLJSON = require('graphql-type-json');
 const { prisma } = require('./db');
 
 const resolvers = {
@@ -43,7 +44,11 @@ const resolvers = {
 			prisma.bounty.findUnique({
 				where: { address: args.address },
 			}),
+		prices: async () => prisma.prices.findMany({ take: 10, orderBy: { timestamp: 'desc' } })
+
+
 	},
+	JSON: GraphQLJSON,
 	User: {
 		watchedBounties: async (parent, args) => {
 			const cursor = args.after ? { address: args.after } : undefined;
@@ -51,10 +56,12 @@ const resolvers = {
 				skip: args.after ? 1 : 0,
 				cursor,
 				take: args.limit,
-				orderBy: [
-					{ [args.orderBy]: args.sortOrder },
-					{ [args.orderBy && 'address']: args.orderBy && 'asc' },
-				],
+				...(args.orderBy && args.sortOrder) && {
+					orderBy: [
+						{ [args.orderBy]: args.sortOrder },
+						{ [args.orderBy && 'address']: args.orderBy && 'asc' },
+					],
+				},
 				include: { watchingUsers: true },
 				where: { address: { in: parent.watchedBountyIds } },
 			});
@@ -75,10 +82,12 @@ const resolvers = {
 				skip: args.after ? 1 : 0,
 				cursor,
 				take: args.limit,
-				orderBy: [
-					{ [args.orderBy]: args.sortOrder },
-					{ [args.orderBy && 'address']: args.orderBy && 'asc' },
-				],
+				...(args.orderBy && args.sortOrder) && {
+					orderBy: [
+						{ [args.orderBy]: args.sortOrder },
+						{ [args.orderBy && 'address']: args.orderBy && 'asc' },
+					],
+				},
 				include: { watchedBounties: true },
 				where: { address: { in: parent.watchingUserIds } },
 			});
@@ -100,6 +109,7 @@ const resolvers = {
 					organizationId: args.organizationId,
 				},
 			}),
+
 		updateBounty: async (parent, args) =>
 			prisma.bounty.upsert({
 				where: { address: args.address },
@@ -110,6 +120,16 @@ const resolvers = {
 					organizationId: args.organizationId,
 				},
 			}),
+
+		updatePrices: async (parent, args) => prisma.prices.create(
+			{
+				data: {
+					timestamp: Date.now(),
+					priceObj: args.priceObj
+				}
+			}
+
+		),
 
 		watchBounty: async (parent, args) => {
 			const bounty = await prisma.bounty.findUnique({
