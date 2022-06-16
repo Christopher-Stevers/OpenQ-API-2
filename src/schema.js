@@ -52,6 +52,11 @@ const typeDefs = gql`
 	type Prices {
 		timestamp: Float!
 		priceObj: JSON!
+		id: ID!
+	}
+
+	type BatchPayload {
+  		count: Int
 	}
 
 	type Query {
@@ -79,7 +84,8 @@ const typeDefs = gql`
 			tvl: Float!
 			organizationId: String
 		): Bounty!
-		updatePrices(priceObj: JSON):Prices!
+		updatePrices(priceObj: JSON):BatchPayload!
+		createPrices(priceObj: JSON):Prices!
 		watchBounty(userAddress: String, contractAddress: String): User
 		unWatchBounty(userAddress: String, contractAddress: String): User
 	}
