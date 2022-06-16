@@ -113,7 +113,7 @@ const resolvers = {
 		updateBounty: async (parent, args) =>
 			prisma.bounty.upsert({
 				where: { address: args.address },
-				update: { tvl: args.tvl, organizationId: args.organizationId },
+				update: { tvl: args.tvl, ...(args.organizationId) && { organizationId: args.organizationId } },
 				create: {
 					address: String(args.address),
 					tvl: args.tvl,
