@@ -123,9 +123,6 @@ const resolvers = {
 
 		updatePrices: async (parent, args) => prisma.prices.updateMany(
 			{
-				where: {
-					timestamp: { gt: 0 }
-				},
 				data: {
 					timestamp: Date.now(),
 					priceObj: args.priceObj
