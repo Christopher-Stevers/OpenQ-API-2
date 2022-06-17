@@ -10,7 +10,7 @@ console.log(JSON.stringify(typeDefs));
 const server = new ApolloServer({
 	typeDefs,
 	resolvers,
-	context: createContext(),
+	context: createContext,
 	plugins: [apolloLogger],
 	cors: true
 });

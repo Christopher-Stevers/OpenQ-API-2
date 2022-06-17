@@ -9,4 +9,6 @@ const cron = require('node-cron');
 // 	console.log('running a task every minute');
 // });
 
+const port = process.env.PORT || 4000;
+
 server.listen({ port }, () => console.log(`Server ready at: ${port}`));
