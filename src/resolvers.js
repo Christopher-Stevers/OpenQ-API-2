@@ -44,7 +44,7 @@ const resolvers = {
 			prisma.bounty.findUnique({
 				where: { address: args.address },
 			}),
-		prices: async () => prisma.prices.findMany({ take: 10, orderBy: { timestamp: 'desc' } })
+		prices: async () => prisma.prices.findMany({ take: 1, orderBy: { timestamp: 'desc' } })
 
 
 	},
@@ -121,7 +121,20 @@ const resolvers = {
 				},
 			}),
 
-		updatePrices: async (parent, args) => prisma.prices.create(
+		updatePrices: async (parent, args) => prisma.prices.updateMany(
+			{
+				data: {
+					timestamp: Date.now(),
+					priceObj: args.priceObj
+				}
+
+			}
+
+		),
+
+
+
+		createPrices: async (parent, args) => prisma.prices.create(
 			{
 				data: {
 					timestamp: Date.now(),
@@ -130,6 +143,7 @@ const resolvers = {
 			}
 
 		),
+
 
 		watchBounty: async (parent, args) => {
 			const bounty = await prisma.bounty.findUnique({

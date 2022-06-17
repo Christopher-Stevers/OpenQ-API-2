@@ -3,6 +3,7 @@ const fetch = require('cross-fetch');
 const { ethers } = require('ethers');
 const { ApolloClient, InMemoryCache, HttpLink } = require('@apollo/client');
 const UPDATE_BOUNTY = require('./graphql/updateBounty');
+const CREATE_PRICES = require("./graphql/createPrices");
 const GET_ALL_BOUNTIES = require('./graphql/getAllBounties');
 const UPDATE_PRICES = require('./graphql/updatePrices');
 const tokenMetadata = require('../constants/local.json');
@@ -152,13 +153,25 @@ const indexer = async () => {
 	const stringifiedTokens = firstTen.join(',');
 	const firstTenPrices = await axios.get(`https://api.coingecko.com/api/v3/simple/token_price/${network}?contract_addresses=${stringifiedTokens}&vs_currencies=usd`);
 
-
-	await tvlClient.mutate({
+	const updated = await tvlClient.mutate({
 		mutation: UPDATE_PRICES,
 		variables: { priceObj: firstTenPrices.data }
 	});
-	const TVLS = await fetchBounties();
-	await updateTvls(TVLS);
+	if (updated.data.updatePrices.count === 0) {
+
+		await tvlClient.mutate({
+			mutation: CREATE_PRICES,
+			variables: { priceObj: firstTenPrices.data }
+		});
+	}
+
+	try {
+		const TVLS = await fetchBounties();
+		await updateTvls(TVLS);
+	}
+	catch (err) {
+		console.log("could not update bounties");
+	}
 };
 
 module.exports = indexer;
