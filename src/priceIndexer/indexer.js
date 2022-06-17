@@ -2,13 +2,13 @@ const axios = require('axios');
 const fetch = require('cross-fetch');
 const { ethers } = require('ethers');
 const { ApolloClient, InMemoryCache, HttpLink } = require('@apollo/client');
-const UPDATE_BOUNTY = require('./graphql/updateBounty');
-const CREATE_PRICES = require('./graphql/createPrices');
-const GET_ALL_BOUNTIES = require('./graphql/getAllBounties');
-const UPDATE_PRICES = require('./graphql/updatePrices');
-const tokenMetadata = require('../constants/local.json');
-const polygonMetadata = require('../constants/polygon-mainnet-indexable.json');
-const openQLocalTokens = require('../constants/openq-local-enumerable.json');
+const UPDATE_BOUNTY = require('../graphql/updateBounty');
+const CREATE_PRICES = require('../graphql/createPrices');
+const GET_ALL_BOUNTIES = require('../graphql/getAllBounties');
+const UPDATE_PRICES = require('../graphql/updatePrices');
+const tokenMetadata = require('../../constants/local.json');
+const polygonMetadata = require('../../constants/polygon-mainnet-indexable.json');
+const openQLocalTokens = require('../../constants/openq-local-enumerable.json');
 
 const tvlClient = new ApolloClient({
 	cache: new InMemoryCache(),
@@ -64,24 +64,24 @@ const fetchBounties = async () => {
 						bountyTokenBalance.tokenAddress
 					) &&
 					tokenMetadata[
-						ethers.utils.getAddress(bountyTokenBalance.tokenAddress)
+					ethers.utils.getAddress(bountyTokenBalance.tokenAddress)
 					]
 				) {
 					pricingMetadata.push(
 						tokenMetadata[
-							ethers.utils.getAddress(
-								bountyTokenBalance.tokenAddress
-							)
+						ethers.utils.getAddress(
+							bountyTokenBalance.tokenAddress
+						)
 						]
 					);
 				} else if (
 					polygonMetadata[
-						bountyTokenBalance.tokenAddress.toLowerCase()
+					bountyTokenBalance.tokenAddress.toLowerCase()
 					]
 				) {
 					pricingMetadata.push(
 						polygonMetadata[
-							bountyTokenBalance.tokenAddress.toLowerCase()
+						bountyTokenBalance.tokenAddress.toLowerCase()
 						]
 					);
 				}
@@ -111,7 +111,7 @@ const fetchBounties = async () => {
 
 				const currentMetadata =
 					tokenMetadata[
-						ethers.utils.getAddress(tokenBalance.tokenAddress)
+					ethers.utils.getAddress(tokenBalance.tokenAddress)
 					] ||
 					polygonMetadata[tokenBalance.tokenAddress.toLowerCase()];
 

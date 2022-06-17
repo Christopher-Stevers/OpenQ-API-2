@@ -1,28 +1,18 @@
 const { ApolloServer } = require('apollo-server');
-const cron = require('node-cron');
-const typeDefs = require('./schema');
+
+const typeDefs = require('./typeDefs');
 const resolvers = require('./resolvers');
-const indexer = require('./indexer');
+const createContext = require('./context');
+const apolloLogger = require('./plugins/index.js');
 
-const port = process.env.PORT || 4000;
+console.log(JSON.stringify(typeDefs));
 
-new ApolloServer({
-	resolvers,
+const server = new ApolloServer({
 	typeDefs,
-}).listen({ port }, () => console.log(`Server ready at: ${port}`));
-
-function sleep(ms) {
-	return new Promise((resolve) => setTimeout(resolve, ms));
-}
-const runIndexer = async () => {
-	console.log('init, waiting');
-	await sleep(1000);
-	console.log('running');
-	await indexer();
-	console.log('completed');
-};
-runIndexer();
-cron.schedule('30 23 * * *', async () => {
-	await runIndexer();
-	console.log('running a task every minute');
+	resolvers,
+	context: createContext(),
+	plugins: [apolloLogger],
+	cors: true
 });
+
+module.exports = server;
