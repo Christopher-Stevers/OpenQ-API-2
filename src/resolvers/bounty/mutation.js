@@ -5,6 +5,7 @@ const Mutation = {
 				tvl: 0,
 				address: String(args.address),
 				organizationId: args.organizationId,
+				bountyId: args.bountyId
 			},
 		}),
 	updateBounty: async (parent, args, { req, prisma }) =>
@@ -42,7 +43,7 @@ const Mutation = {
 			},
 		});
 	},
-	unWatchBounty: async (parent, args, { req, prisma }) => {
+	unWatchBounty: async (parent, args, { _, prisma }) => {
 		const bounty = await prisma.bounty.findUnique({
 			where: { address: args.contractAddress },
 		});
