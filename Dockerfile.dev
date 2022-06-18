@@ -2,10 +2,9 @@ FROM node:lts-alpine
 WORKDIR /usr/src/app
 COPY . .
 RUN apk update && apk upgrade && \
-		apk add --no-cache bash git && \
-		apk add openssl
+	apk add --no-cache bash git && \
+	apk add openssl
 RUN yarn
-RUN npx prisma generate
 ENV NODE_ENV="development"
 EXPOSE 4000
-ENTRYPOINT yarn start
+ENTRYPOINT yarn start:dev
