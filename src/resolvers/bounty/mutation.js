@@ -1,13 +1,19 @@
+const { AuthenticationError } = require('apollo-server');
+
 const Mutation = {
-	createBounty: (parent, args, { req, prisma }) =>
-		prisma.bounty.create({
+	createBounty: async (parent, args, { req, prisma }) => {
+		if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
+			throw new AuthenticationError();
+		}
+		return prisma.bounty.create({
 			data: {
 				tvl: 0,
 				address: String(args.address),
 				organizationId: args.organizationId,
 				bountyId: args.bountyId
 			},
-		}),
+		});
+	},
 	updateBounty: async (parent, args, { req, prisma }) =>
 		prisma.bounty.upsert({
 			where: { address: args.address },
