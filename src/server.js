@@ -5,14 +5,15 @@ const resolvers = require('./resolvers');
 const createContext = require('./context');
 const apolloLogger = require('./plugins/index.js');
 
-// console.log(JSON.stringify(typeDefs));
 
 const server = new ApolloServer({
 	typeDefs,
 	resolvers,
 	context: createContext,
 	plugins: [apolloLogger],
-	cors: true
+	cors: {
+		origin: ["http://localhost:3000", "https://studio.apollographql.com", "http://openq-frontend:3000", "http://docker.host.internal:3000"]
+	}
 });
 
 module.exports = server;
