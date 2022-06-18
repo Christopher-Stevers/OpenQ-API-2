@@ -1,6 +1,6 @@
 const Mutation = require('./mutation');
 const Query = require('./query');
-const Bounty = require('./Bounty');
+const Bounty = require('./bounty');
 
 const bountyResolvers = {
 	Mutation,
