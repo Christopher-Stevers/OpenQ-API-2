@@ -5,7 +5,6 @@ const resolvers = require('./resolvers');
 const createContext = require('./context');
 const apolloLogger = require('./plugins/index.js');
 
-// console.log(JSON.stringify(typeDefs));
 
 const server = new ApolloServer({
 	typeDefs,
