@@ -1,4 +1,4 @@
-const { AuthenticationError } = require('apollo-server');
+const calculateTvl = require('./calculateTvl');
 
 const Mutation = {
 	createBounty: async (parent, args, { req, prisma }) => {
@@ -72,6 +72,21 @@ const Mutation = {
 			where: { address: args.userAddress },
 			data: {
 				watchedBountyIds: { set: newBounties },
+			},
+		});
+	},
+
+	addToTvl: async (parent, args, { req, prisma }) => {
+		const { tokenBalance, address } = args;
+		const bounty = await prisma.bounty.findUnique({
+			where: { address },
+		});
+		const currentTvl = bounty.tvl;
+		const tvl = await calculateTvl(tokenBalance, currentTvl);
+		return prisma.bounty.update({
+			where: { address },
+			data: {
+				tvl
 			},
 		});
 	}
