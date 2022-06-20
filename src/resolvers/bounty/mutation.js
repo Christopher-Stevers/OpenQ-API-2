@@ -77,12 +77,12 @@ const Mutation = {
 	},
 
 	addToTvl: async (parent, args, { req, prisma }) => {
-		const { tokenBalance, address } = args;
+		const { tokenBalance, address, add } = args;
 		const bounty = await prisma.bounty.findUnique({
 			where: { address },
 		});
 		const currentTvl = bounty.tvl;
-		const tvl = await calculateTvl(tokenBalance, currentTvl);
+		const tvl = await calculateTvl(tokenBalance, currentTvl, add);
 		return prisma.bounty.update({
 			where: { address },
 			data: {

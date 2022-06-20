@@ -6,7 +6,7 @@ const polygonMetadata = require('../../../constants/polygon-mainnet-indexable.js
 
 
 
-const calculateTvl = async (change, currentTvl) => {
+const calculateTvl = async (change, currentTvl, add) => {
 	const { volume, tokenAddress } = change;
 	const currentMetadata =
 		tokenMetadata[
@@ -20,7 +20,8 @@ const calculateTvl = async (change, currentTvl) => {
 	const multiplier =
 		volume / 10 ** currentMetadata.decimals;
 	const price = data[currentMetadata.address.toLowerCase()] || 0;
-	return price.usd * multiplier + currentTvl;
+	const changeTvl = price.usd * multiplier * (add ? 1 : -1);
+	return currentTvl + changeTvl;
 
 };
 

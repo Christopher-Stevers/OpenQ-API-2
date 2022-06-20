@@ -10,7 +10,7 @@ const mutationDefs = gql`
 		): Bounty!
 		watchBounty(userAddress: String, contractAddress: String): User
 		unWatchBounty(userAddress: String, contractAddress: String): User
-		addToTvl(address: String, tokenBalance: JSON): Bounty
+		addToTvl(address: String, tokenBalance: JSON, add: Boolean): Bounty
   }
 `;
 
