@@ -11,9 +11,7 @@ const server = new ApolloServer({
 	resolvers,
 	context: createContext,
 	plugins: [apolloLogger],
-	cors: {
-		origin: ["http://localhost:3000", "https://studio.apollographql.com", "http://openq-frontend:3000", "http://docker.host.internal:3000"]
-	}
+	cors: true
 });
 
 module.exports = server;
