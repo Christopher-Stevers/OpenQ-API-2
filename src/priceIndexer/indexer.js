@@ -64,24 +64,24 @@ const fetchBounties = async () => {
 						bountyTokenBalance.tokenAddress
 					) &&
 					tokenMetadata[
-					ethers.utils.getAddress(bountyTokenBalance.tokenAddress)
+						ethers.utils.getAddress(bountyTokenBalance.tokenAddress)
 					]
 				) {
 					pricingMetadata.push(
 						tokenMetadata[
-						ethers.utils.getAddress(
-							bountyTokenBalance.tokenAddress
-						)
+							ethers.utils.getAddress(
+								bountyTokenBalance.tokenAddress
+							)
 						]
 					);
 				} else if (
 					polygonMetadata[
-					bountyTokenBalance.tokenAddress.toLowerCase()
+						bountyTokenBalance.tokenAddress.toLowerCase()
 					]
 				) {
 					pricingMetadata.push(
 						polygonMetadata[
-						bountyTokenBalance.tokenAddress.toLowerCase()
+							bountyTokenBalance.tokenAddress.toLowerCase()
 						]
 					);
 				}
@@ -111,7 +111,7 @@ const fetchBounties = async () => {
 
 				const currentMetadata =
 					tokenMetadata[
-					ethers.utils.getAddress(tokenBalance.tokenAddress)
+						ethers.utils.getAddress(tokenBalance.tokenAddress)
 					] ||
 					polygonMetadata[tokenBalance.tokenAddress.toLowerCase()];
 

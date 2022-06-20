@@ -2,7 +2,7 @@ const { gql } = require('apollo-server');
 
 const mutationDefs = gql`
   extend type Mutation {
-		createBounty(address: String, organizationId: String): Bounty!
+		createBounty(address: String!, bountyId: String!, organizationId: String!): Bounty!
 		updateBounty(
 			address: String!
 			tvl: Float!

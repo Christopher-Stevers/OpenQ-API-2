@@ -1,6 +1,6 @@
 const server = require('./server');
-const runIndexer = require('./priceIndexer/runIndexer');
-const cron = require('node-cron');
+// const runIndexer = require('./priceIndexer/runIndexer');
+// const cron = require('node-cron');
 
 // runIndexer();
 
