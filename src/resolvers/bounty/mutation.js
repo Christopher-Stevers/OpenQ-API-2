@@ -1,10 +1,11 @@
 const calculateTvl = require('./calculateTvl');
+const { AuthenticationError } = require('apollo-server');
 
 const Mutation = {
 	createBounty: async (parent, args, { req, prisma }) => {
-		// if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
-		// 	throw new AuthenticationError();
-		// }
+		if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
+			throw new AuthenticationError();
+		}
 		return prisma.bounty.create({
 			data: {
 				tvl: 0,
@@ -75,7 +76,6 @@ const Mutation = {
 			},
 		});
 	},
-
 	addToTvl: async (parent, args, { req, prisma }) => {
 		const { tokenBalance, address, add } = args;
 		const bounty = await prisma.bounty.findUnique({
