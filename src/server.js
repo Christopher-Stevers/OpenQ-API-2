@@ -14,6 +14,7 @@ const server = new ApolloServer({
 	resolvers,
 	context: createContext,
 	plugins: [apolloLogger, ApolloServerPluginLandingPageGraphQLPlayground],
+	introspection: true,
 	cors: true
 });
 
