@@ -1,4 +1,7 @@
 const { ApolloServer } = require('apollo-server');
+const {
+	ApolloServerPluginLandingPageGraphQLPlayground
+} = require('apollo-server-core');
 
 const typeDefs = require('./typeDefs');
 const resolvers = require('./resolvers');
@@ -10,9 +13,8 @@ const server = new ApolloServer({
 	typeDefs,
 	resolvers,
 	context: createContext,
-	plugins: [apolloLogger],
-	cors: true,
-	playground: true
+	plugins: [apolloLogger, ApolloServerPluginLandingPageGraphQLPlayground],
+	cors: true
 });
 
 module.exports = server;
