@@ -11,7 +11,8 @@ const server = new ApolloServer({
 	resolvers,
 	context: createContext,
 	plugins: [apolloLogger],
-	cors: true
+	cors: true,
+	playground: true
 });
 
 module.exports = server;

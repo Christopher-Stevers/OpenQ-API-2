@@ -10,7 +10,7 @@ const calculateTvl = async (change, currentTvl, add) => {
 	const { volume, tokenAddress } = change;
 	const currentMetadata =
 		tokenMetadata[
-		ethers.utils.getAddress(tokenAddress)
+			ethers.utils.getAddress(tokenAddress)
 		] ||
 		polygonMetadata[tokenAddress.toLowerCase()];
 
