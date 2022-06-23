@@ -1,13 +1,5 @@
 const Mutation = {
-	updatePrices: async (parent, args, { req, prisma }) => prisma.prices.updateMany(
-		{
-			data: {
-				timestamp: Date.now(),
-				priceObj: args.priceObj
-			}
-		}
-	),
-	createPrices: async (parent, args, { req, prisma }) => prisma.prices.create(
+	updatePrices: async (parent, args, { req, prisma }) => prisma.prices.upsert(
 		{
 			data: {
 				timestamp: Date.now(),
