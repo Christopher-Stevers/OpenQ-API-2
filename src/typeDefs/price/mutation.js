@@ -2,7 +2,7 @@ const { gql } = require('apollo-server');
 
 const mutationDefs = gql`
   extend type Mutation {
-		updatePrices(priceObj: JSON): Prices!
+		updatePrices(priceObj: JSON!, pricesId: String!): Prices!
   }
 `;
 

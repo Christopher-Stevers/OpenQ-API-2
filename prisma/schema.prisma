@@ -34,6 +34,7 @@ model Organization {
 
 model Prices {
   id        String @id @default(auto()) @map("_id") @db.ObjectId
+  pricesId  String @unique
   priceObj  Json?
   timestamp Int
 }

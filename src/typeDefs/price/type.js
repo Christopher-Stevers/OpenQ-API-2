@@ -5,6 +5,7 @@ const typeDef = gql`
 		timestamp: Float!
 		priceObj: JSON!
 		id: ID!
+		pricesId: String!
 	}
 `;
 
