@@ -15,8 +15,11 @@ const Mutation = {
 			},
 		});
 	},
-	updateBounty: async (parent, args, { req, prisma }) =>
-		prisma.bounty.upsert({
+	updateBounty: async (parent, args, { req, prisma }) => {
+		if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
+			throw new AuthenticationError();
+		}
+		return prisma.bounty.upsert({
 			where: { address: args.address },
 			update: { tvl: args.tvl, ...(args.organizationId) && { organizationId: args.organizationId } },
 			create: {
@@ -24,7 +27,8 @@ const Mutation = {
 				tvl: args.tvl,
 				organizationId: args.organizationId,
 			},
-		}),
+		});
+	},
 	watchBounty: async (parent, args, { req, prisma }) => {
 		const bounty = await prisma.bounty.findUnique({
 			where: { address: args.contractAddress },
