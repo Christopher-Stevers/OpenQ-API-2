@@ -29,6 +29,23 @@ const Mutation = {
 			},
 		});
 	},
+	addToTvl: async (parent, args, { req, prisma }) => {
+		if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
+			throw new AuthenticationError();
+		}
+		const { tokenBalance, address, add } = args;
+		const bounty = await prisma.bounty.findUnique({
+			where: { address },
+		});
+		const currentTvl = bounty.tvl;
+		const tvl = await calculateTvl(tokenBalance, currentTvl, add);
+		return prisma.bounty.update({
+			where: { address },
+			data: {
+				tvl
+			},
+		});
+	},
 	watchBounty: async (parent, args, { req, prisma }) => {
 		const bounty = await prisma.bounty.findUnique({
 			where: { address: args.contractAddress },
@@ -77,20 +94,6 @@ const Mutation = {
 			where: { address: args.userAddress },
 			data: {
 				watchedBountyIds: { set: newBounties },
-			},
-		});
-	},
-	addToTvl: async (parent, args, { req, prisma }) => {
-		const { tokenBalance, address, add } = args;
-		const bounty = await prisma.bounty.findUnique({
-			where: { address },
-		});
-		const currentTvl = bounty.tvl;
-		const tvl = await calculateTvl(tokenBalance, currentTvl, add);
-		return prisma.bounty.update({
-			where: { address },
-			data: {
-				tvl
 			},
 		});
 	}
