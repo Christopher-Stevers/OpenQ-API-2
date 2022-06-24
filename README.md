@@ -18,15 +18,7 @@ In the root of `OpenQ-API`, create a `.env` file.
 Copy the following from `.env.sample` to `.env`.
 
 ```bash
-DATABASE_URL="mongodb+srv://<USER>:<PASSWORD>@<CLUSTER>/openqdb?retryWrites=true&w=majority"
-```
-
-This connects MongoDB `USER` with `PASSWORD` to a database in `CLUSTER` called `openqdb`.
-
-An example complete `DATABASE_URL` would look like:
-
-```bash
-DATABASE_URL="mongodb+srv://admin:admin123!@local.9kxsm.mongodb.net/openqdb?retryWrites=true&w=majority"
+DATABASE_URL="mongodb://root:root@mongo:27018/openqdb?authSource=admin"
 ```
 
 ### 3 Boot and Access

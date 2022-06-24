@@ -1,10 +1,7 @@
-
 const { ethers } = require('ethers');
 const axios = require('axios');
 const tokenMetadata = require('../../../constants/local.json');
 const polygonMetadata = require('../../../constants/polygon-mainnet-indexable.json');
-
-
 
 const calculateTvl = async (change, currentTvl, add) => {
 	const { volume, tokenAddress } = change;
@@ -22,7 +19,6 @@ const calculateTvl = async (change, currentTvl, add) => {
 	const price = data[currentMetadata.address.toLowerCase()] || 0;
 	const changeTvl = price.usd * multiplier * (add ? 1 : -1);
 	return currentTvl + changeTvl;
-
 };
 
 
