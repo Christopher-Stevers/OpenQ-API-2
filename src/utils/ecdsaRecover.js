@@ -1,6 +1,6 @@
 const ethers = require('ethers');
 
-function ecdsaRecover(signature, address) {
+function ecdsaRecover(signature) {
 	let message = 'OpenQ';
 	try {
 		const recoveredAddress = ethers.utils.verifyMessage(message, signature);
