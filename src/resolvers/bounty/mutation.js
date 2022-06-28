@@ -50,8 +50,12 @@ const Mutation = {
 		});
 	},
 	watchBounty: async (parent, args, { req, prisma }) => {
-		if (ecdsaRecover(args.signature) === args.userAddress) {
-
+		if (ecdsaRecover(args.signature) !== args.userAddress) {
+			return prisma.bounty.findUnique({
+				where: { address: args.contractAddress },
+			});
+		}
+		else {
 			const bounty = await prisma.bounty.findUnique({
 				where: { address: args.contractAddress },
 			});
@@ -76,15 +80,16 @@ const Mutation = {
 				},
 			});
 		}
-		else {
+	},
+	unWatchBounty: async (parent, args, { _, prisma }) => {
+
+		if (ecdsaRecover(args.signature) !== args.userAddress) {
 			return prisma.bounty.findUnique({
 				where: { address: args.contractAddress },
 			});
 		}
-	},
-	unWatchBounty: async (parent, args, { _, prisma }) => {
+		else {
 
-		if (ecdsaRecover(args.signature) === args.userAddress) {
 			const bounty = await prisma.bounty.findUnique({
 				where: { address: args.contractAddress },
 			});
@@ -110,14 +115,6 @@ const Mutation = {
 					watchingUserIds: { set: newUsers },
 				},
 			});
-		}
-
-		else {
-			return prisma.bounty.findUnique({
-				where: { address: args.contractAddress },
-
-			},
-			);
 		}
 	}
 };
