@@ -26,6 +26,7 @@ const Mutation = {
 				address: String(args.address),
 				tvl: args.tvl,
 				organizationId: args.organizationId,
+				bountyId: args.bountyId
 			},
 		});
 	},
