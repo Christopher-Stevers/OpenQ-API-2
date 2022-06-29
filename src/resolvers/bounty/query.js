@@ -18,7 +18,7 @@ const Query = {
 		});
 		return {
 			bounties,
-			cursor: bounties[bounties.length - 1].address,
+			cursor: bounties[bounties.length - 1]?.address,
 		};
 	},
 };
