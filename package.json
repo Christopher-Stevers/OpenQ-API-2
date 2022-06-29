@@ -6,18 +6,43 @@
 	"scripts": {
 		"start": "node ./src/index.js",
 		"start:dev": "prisma generate && nodemon ./src/index.js",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"beforeRun": "docker-compose stop",
+		"env:dev": "cd utils && python3 env_script.py ../configuration/development.env",
+		"env:test": "cd utils && python3 env_script.py ../configuration/test.env && cd ..",
+		"dev:docker:build": "npm run env:dev && docker-compose up --build",
+		"test:docker:build": "npm run beforeRun && npm run env:test && docker-compose up --build",
+		"test:docker": "npm run beforeRun && npm run env:test && docker-compose up",
+		"test:local": "npm run beforeRun && docker-compose up -d db && npm run apollo:test",
+		"apollo:test": "jest --runInBand --watchAll",
+		"development": "ls && nodemon --exec babel-node src/index.js",
+		"development:local": "env-cmd -f ../configuration/development.env nodemon --exec babel-node src/index.js",
+		"prisma:mgs": "npx prisma migrate save --experimental --schema=./prisma/schema.prisma",
+		"prisma:mgu": "npx prisma migrate up --experimental --schema=./prisma/schema.prisma ",
+		"prisma:gen": "npx prisma generate --schema=./prisma/schema.prisma"
 	},
 	"keywords": [],
 	"author": "Christopher-Stevers",
 	"license": "ISC",
+	"jest": {
+		"globalSetup": "./src/__tests__/config/globalSetup.js",
+		"globalTeardown": "./src/__tests__/config/globalTeardown.js",
+		"testTimeout": 20000,
+		"testPathIgnorePatterns": [
+			"src/__tests__/config/",
+			"src/__tests__/utils/",
+			"src/__tests__/queries/"
+		]
+	},
 	"dependencies": {
-		"@apollo/client": "^3.5.10",
+		"@apollo/client": "^3.6.9",
 		"@prisma/client": "^3.13.0",
+		"apollo-boost": "^0.4.9",
 		"apollo-server": "^3.6.6",
 		"axios": "^0.26.1",
 		"cross-fetch": "^3.1.5",
+		"env-cmd": "^10.1.0",
 		"ethers": "^5.6.2",
+		"gql": "^1.1.2",
 		"graphql": "^16.3.0",
 		"graphql-type-json": "^0.3.2",
 		"node-cron": "^3.0.1",
