@@ -1,6 +1,6 @@
 const { ApolloClient, HttpLink, InMemoryCache, ApolloLink } = require('@apollo/client');
 const fetch = require('cross-fetch');
-const uri = 'http://localhost:4001';
+const uri = process.env.OPENQ_API_URL;
 
 const getClient = () => {
 	return new ApolloClient({

@@ -1,7 +1,7 @@
 const server = require('../../server');
 
 const options = {
-	port: '4001'
+	port: process.env.PORT
 };
 
 
