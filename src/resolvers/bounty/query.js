@@ -6,7 +6,7 @@ const Query = {
 	bountiesConnection: async (parent, args, { req, prisma }) => {
 		const cursor = args.after ? { address: args.after } : undefined;
 		const bounties = await prisma.bounty.findMany({
-			skip: 0,
+			skip: (args.orderBy === 'address' || !args.after) ? 0 : 1,
 			cursor,
 			where: { organizationId: args.organizationId },
 			take: args.limit,

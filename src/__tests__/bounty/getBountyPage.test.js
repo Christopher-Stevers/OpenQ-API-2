@@ -1,4 +1,5 @@
 
+const bounty = require('../../typeDefs/bounty');
 const { CREATE_NEW_BOUNTY, GET_BOUNTY_PAGE } = require('../queries');
 const { getAuthenticatedClient, getClient } = require('../utils/getClient');
 const autoTaskClient = getAuthenticatedClient('secret123!');
@@ -26,7 +27,9 @@ beforeEach(async () => {
 
 describe('Get Paginated Bounties.', () => {
 	const client = getClient();
-	const test = (sortOrder) => {
+	const orders = ['asc', 'desc'];
+	const fields = ['tvl', 'address'];
+	const test = (sortOrder, field) => {
 
 		it('Should watch and unwatch when signed user attempts.', async () => {
 			const getPage = async (after) => {
@@ -34,20 +37,24 @@ describe('Get Paginated Bounties.', () => {
 				const { data } = await client.query({
 
 					query: GET_BOUNTY_PAGE,
-					variables: { limit: 5, sortOrder, orderBy: 'address', after }
+					variables: { limit: 5, sortOrder, orderBy: field, after }
 				});
 				return data;
 			};
 			const firstPage = await getPage();
 			expect(firstPage.bountiesConnection.bounties.length).toBe(5);
+			console.log(field, sortOrder);
+			console.log(firstPage.bountiesConnection.bounties.map(bounty => bounty.address));
 			const secondPage = await getPage(firstPage.bountiesConnection.cursor);
 			expect(secondPage.bountiesConnection.bounties.length).toBe(5);
+			console.log(secondPage.bountiesConnection.bounties.map(bounty => bounty.address));
 			const thirdPage = await getPage(secondPage.bountiesConnection.cursor);
+			console.log(thirdPage.bountiesConnection.bounties.map(bounty => bounty.address));
 			expect(thirdPage.bountiesConnection.bounties.length).toBe(2);
 
 		});
 	};
-	['asc', 'desc'].forEach(order => test(order));
+	orders.forEach(order => fields.forEach(field => test(order, field)));
 
 
 });
