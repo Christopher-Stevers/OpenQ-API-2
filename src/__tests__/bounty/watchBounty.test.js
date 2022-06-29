@@ -1,16 +1,15 @@
-
-const { WATCH_BOUNTY } = require('../queries');
+const { WATCH_BOUNTY, GET_USER_BY_HASH } = require('../queries');
 const { getAuthenticatedClient, getClient } = require('../utils/getClient');
 const { CREATE_NEW_BOUNTY, UNWATCH_BOUNTY } = require('../queries');
 const autoTaskClient = getAuthenticatedClient('secret123!');
 const userAddress = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
 const contractAddress = '0x8daf17a20c9dba35f005b6324f493785d239719d';
 beforeAll(async () => {
+	jest.setTimeout(100000);
 	const { PrismaClient } = require('@prisma/client');
 
 	const prisma = new PrismaClient();
 	await prisma.bounty.deleteMany({});
-	jest.setTimeout(60000);
 	await autoTaskClient.mutate({
 		mutation: CREATE_NEW_BOUNTY,
 		variables: { address: contractAddress, organizationId: 'mdp', bountyId: 'sdf' }
@@ -38,7 +37,13 @@ describe('Watch and unwatch respond properly to user.', () => {
 			mutation: UNWATCH_BOUNTY,
 			variables: { userAddress: input.signer, contractAddress, signature: input.signature }
 		});
+		const userData = await client.query({
+			query: GET_USER_BY_HASH,
+			variables: { userAddress }
+		});
+		console.log(userData);
 		expect(unWatchData.data.unWatchBounty.watchingUserIds).not.toContain(input.signer);
+		expect(userData.data).toMatchObject({ user: { __typename: 'User', watchedBountyIds: [] } });
 
 	});
 

@@ -1,6 +1,6 @@
 const { ApolloClient, HttpLink, InMemoryCache, ApolloLink } = require('@apollo/client');
 const fetch = require('cross-fetch');
-const uri = 'http://localhost:4000';
+const uri = 'http://localhost:4001';
 
 const getClient = () => {
 	return new ApolloClient({
