@@ -4,7 +4,6 @@ const ecdsaRecover = require('../../utils/ecdsaRecover');
 
 const Mutation = {
 	createBounty: async (parent, args, { req, prisma }) => {
-		console.log(req.headers.authorization, process.env.OPENQ_API_SECRET);
 		if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
 			throw new AuthenticationError();
 		}
@@ -50,7 +49,8 @@ const Mutation = {
 		});
 	},
 	watchBounty: async (parent, args, { req, prisma }) => {
-		if (ecdsaRecover(args.signature) !== args.userAddress) {
+		const signedAddress = ecdsaRecover(args.signature);
+		if (!req.headers.cookie.includes(`signature=${signedAddress}`)) {
 			return prisma.bounty.findUnique({
 				where: { address: args.contractAddress },
 			});
@@ -81,9 +81,9 @@ const Mutation = {
 			});
 		}
 	},
-	unWatchBounty: async (parent, args, { _, prisma }) => {
-
-		if (ecdsaRecover(args.signature) !== args.userAddress) {
+	unWatchBounty: async (parent, args, { req, prisma }) => {
+		const signedAddress = ecdsaRecover(args.signature);
+		if (!req.headers.cookie.includes(`signature=${signedAddress}`)) {
 			return prisma.bounty.findUnique({
 				where: { address: args.contractAddress },
 			});

@@ -15,7 +15,10 @@ const server = new ApolloServer({
 	context: createContext,
 	plugins: [apolloLogger, ApolloServerPluginLandingPageGraphQLPlayground],
 	introspection: true,
-	cors: true
+	cors: {
+		origin: ['http://localhost:3000', 'http://openq-frontend:3000', 'http://localhost:8075', 'http://openq-bounty-actions-autotask:8075', 'http://localhost:4000', 'http://openq-api:4000'],
+		credentials: true
+	}
 });
 
 module.exports = server;
