@@ -49,9 +49,11 @@ const Mutation = {
 		});
 	},
 	watchBounty: async (parent, args, { req, prisma }) => {
-		const signedAddress = ecdsaRecover(args.signature);
-		if (!req.headers.cookie.includes(`signature=${signedAddress}`)) {
-			return prisma.bounty.findUnique({
+		const signatureRegex = /^signature=\w+/;
+		const signature = req.headers.cookie.match(signatureRegex)[0].slice(10);
+		const address = ecdsaRecover(signature);
+		if (address !== args.userAddress) {
+			prisma.bounty.findUnique({
 				where: { address: args.contractAddress },
 			});
 		}
@@ -82,9 +84,11 @@ const Mutation = {
 		}
 	},
 	unWatchBounty: async (parent, args, { req, prisma }) => {
-		const signedAddress = ecdsaRecover(args.signature);
-		if (!req.headers.cookie.includes(`signature=${signedAddress}`)) {
-			return prisma.bounty.findUnique({
+		const signatureRegex = /^signature=\w+/;
+		const signature = req.headers.cookie.match(signatureRegex)[0].slice(10);
+		const address = ecdsaRecover(signature);
+		if (address !== args.userAddress) {
+			prisma.bounty.findUnique({
 				where: { address: args.contractAddress },
 			});
 		}
