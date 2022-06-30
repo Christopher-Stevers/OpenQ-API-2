@@ -10,22 +10,20 @@ mutation CreateBounty( $address: String!, $organizationId: String!, $bountyId: S
   }
 }`;
 
-const WATCH_BOUNTY = gql` mutation AddUser($contractAddress: String, $userAddress: String, $signature: String) {
+const WATCH_BOUNTY = gql` mutation AddUser($contractAddress: String, $userAddress: String) {
   watchBounty(
     contractAddress: $contractAddress
     userAddress: $userAddress
-    signature: $signature
   ) {
     address
 	watchingUserIds
   }
 }
 `;
-const UNWATCH_BOUNTY = gql` mutation AddUser($contractAddress: String, $userAddress: String, $signature: String) {
+const UNWATCH_BOUNTY = gql` mutation AddUser($contractAddress: String, $userAddress: String) {
   unWatchBounty(
     contractAddress: $contractAddress
     userAddress: $userAddress
-    signature: $signature
   ) {
     address
 	watchingUserIds

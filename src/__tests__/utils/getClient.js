@@ -3,22 +3,27 @@ const fetch = require('cross-fetch');
 const uri = process.env.OPENQ_API_URL;
 
 const getClient = () => {
+	const httpLink = new HttpLink({
+		uri: uri + '/graphql', fetch,
+		credentials: 'include'
+	});
 	return new ApolloClient({
-		link: new HttpLink({ uri: uri + '/graphql', fetch }),
+		link: httpLink,
 		onError: (e) => { console.log(e); },
 		cache: new InMemoryCache()
 	});
 };
 
 
-const getAuthenticatedClient = (token) => {
+const getAuthenticatedClient = (token, signature) => {
 	const authLink = new ApolloLink((operation, forward) => {
 		// Retrieve the authorization token from local storage.
 
 		// Use the setContext method to set the HTTP headers.
 		operation.setContext({
 			headers: {
-				authorization: token
+				authorization: token,
+				...(signature && { cookie: `signature=${signature}` })
 			}
 		});
 

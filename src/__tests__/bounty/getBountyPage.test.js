@@ -1,5 +1,4 @@
 
-const bounty = require('../../typeDefs/bounty');
 const { CREATE_NEW_BOUNTY, GET_BOUNTY_PAGE } = require('../queries');
 const { getAuthenticatedClient, getClient } = require('../utils/getClient');
 const autoTaskClient = getAuthenticatedClient('secret123!');

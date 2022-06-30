@@ -1,5 +1,5 @@
 const { WATCH_BOUNTY, GET_USER_BY_HASH } = require('../queries');
-const { getAuthenticatedClient, getClient } = require('../utils/getClient');
+const { getAuthenticatedClient } = require('../utils/getClient');
 const { CREATE_NEW_BOUNTY, UNWATCH_BOUNTY } = require('../queries');
 const autoTaskClient = getAuthenticatedClient('secret123!');
 const userAddress = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
@@ -20,7 +20,6 @@ beforeAll(async () => {
 
 
 describe('Watch and unwatch respond properly to user.', () => {
-	const client = getClient();
 
 	it('Should watch and unwatch when signed user attempts.', async () => {
 		const input = {
@@ -28,6 +27,7 @@ describe('Watch and unwatch respond properly to user.', () => {
 			signer: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
 			value: 'OpenQ'
 		};
+		const client = getAuthenticatedClient('_', input.signature);
 		const watchData = await client.mutate({
 			mutation: WATCH_BOUNTY,
 			variables: { userAddress, contractAddress, signature: input.signature }
@@ -41,7 +41,6 @@ describe('Watch and unwatch respond properly to user.', () => {
 			query: GET_USER_BY_HASH,
 			variables: { userAddress }
 		});
-		console.log(userData);
 		expect(unWatchData.data.unWatchBounty.watchingUserIds).not.toContain(input.signer);
 		expect(userData.data).toMatchObject({ user: { __typename: 'User', watchedBountyIds: [] } });
 
@@ -53,11 +52,12 @@ describe('Watch and unwatch respond properly to user.', () => {
 			signer: '0xa7b7DcBb35A58294Ba9E51cC9AA20670E124536b',
 			value: 'OpenQ'
 		};
+		const client = getAuthenticatedClient('_', input.signature);
 		const watchData = await client.mutate({
 			mutation: WATCH_BOUNTY,
 			variables: { userAddress: input.signer, contractAddress, signature: input.signature }
 		});
-		expect(watchData.data.watchBounty.watchingUserIds).not.toContain(input.signer);
+		expect(watchData.data.watchBounty).toBe(null);
 
 	});
 
@@ -68,6 +68,7 @@ describe('Watch and unwatch respond properly to user.', () => {
 			unsigned: '0xa7b7DcBb35A58294Ba9E51cC9AA20670E124536b',
 			value: 'OpenQ'
 		};
+		const client = getAuthenticatedClient('_', input.signature);
 		const watchData = await client.mutate({
 			mutation: WATCH_BOUNTY,
 			variables: { userAddress: input.signer, contractAddress, signature: input.signature }
@@ -78,7 +79,7 @@ describe('Watch and unwatch respond properly to user.', () => {
 			mutation: UNWATCH_BOUNTY,
 			variables: { userAddress: input.unsigned, contractAddress, signature: input.signature }
 		});
-		expect(unWatchData.data.unWatchBounty.watchingUserIds).toContain(input.signer);
+		expect(unWatchData.data.unWatchBounty).toBe(null);
 
 	});
 
