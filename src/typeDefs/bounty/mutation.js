@@ -9,8 +9,8 @@ const mutationDefs = gql`
 			organizationId: String
 			bountyId: String!
 		): Bounty!
-		watchBounty(userAddress: String, contractAddress: String, signature: String): Bounty
-		unWatchBounty(userAddress: String, contractAddress: String, signature: String): Bounty
+		watchBounty(userAddress: String, contractAddress: String): Bounty
+		unWatchBounty(userAddress: String, contractAddress: String): Bounty
 		addToTvl(address: String, tokenBalance: JSON, add: Boolean): Bounty
   }
 `;
