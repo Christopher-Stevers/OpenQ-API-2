@@ -16,7 +16,7 @@ const server = new ApolloServer({
 	plugins: [apolloLogger, ApolloServerPluginLandingPageGraphQLPlayground],
 	introspection: true,
 	cors: {
-		origin: ['http://localhost:3000', 'http://openq-frontend:3000', 'http://localhost:8075', 'http://openq-bounty-actions-autotask:8075', 'http://localhost:4000', 'http://openq-api:4000'],
+		origin: process.env.ORIGINS.split(','),
 		credentials: true
 	}
 });
