@@ -1,5 +1,6 @@
-const calculateTvl = require('./calculateTvl');
+const calculateTvl = require('../../utils/calculateTvl');
 const { AuthenticationError } = require('apollo-server');
+const ecdsaRecover = require('../../utils/ecdsaRecover');
 
 const Mutation = {
 	createBounty: async (parent, args, { req, prisma }) => {
@@ -48,55 +49,73 @@ const Mutation = {
 		});
 	},
 	watchBounty: async (parent, args, { req, prisma }) => {
-		const bounty = await prisma.bounty.findUnique({
-			where: { address: args.contractAddress },
-		});
-		const user = await prisma.user.upsert({
-			where: { address: args.userAddress },
-			update: {
-				watchedBountyIds: {
-					push: bounty.address,
+		const signatureRegex = /^signature=\w+/;
+		const signature = req.headers.cookie.match(signatureRegex)[0].slice(10);
+		const address = ecdsaRecover(signature);
+		if (address !== args.userAddress) {
+			throw new AuthenticationError();
+		}
+		else {
+			const bounty = await prisma.bounty.findUnique({
+				where: { address: args.contractAddress },
+			});
+			const user = await prisma.user.upsert({
+				where: { address: args.userAddress },
+				update: {
+					watchedBountyIds: {
+						push: bounty.address,
+					},
 				},
-			},
-			create: {
-				address: args.userAddress,
-				watchedBountyIds: [bounty.address],
-			},
-		});
-		return prisma.bounty.update({
-			where: { address: args.contractAddress },
-			data: {
-				watchingUserIds: {
-					push: user.address,
+				create: {
+					address: args.userAddress,
+					watchedBountyIds: [bounty.address],
 				},
-			},
-		});
+			});
+			return prisma.bounty.update({
+				where: { address: args.contractAddress },
+				data: {
+					watchingUserIds: {
+						push: user.address,
+					},
+				},
+			});
+		}
 	},
-	unWatchBounty: async (parent, args, { _, prisma }) => {
-		const bounty = await prisma.bounty.findUnique({
-			where: { address: args.contractAddress },
-		});
-		const user = await prisma.user.findUnique({
-			where: { address: args.userAddress },
-		});
-		const newBounties = user.watchedBountyIds.filter(
-			(bountyId) => bountyId !== bounty.address
-		);
-		const newUsers = bounty.watchingUserIds.filter(
-			(userId) => userId !== user.address
-		);
-		await prisma.bounty.update({
-			where: { address: args.contractAddress },
-			data: {
-				watchingUserIds: { set: newUsers },
-			},
-		});
-		return prisma.user.update({
-			where: { address: args.userAddress },
-			data: {
-				watchedBountyIds: { set: newBounties },
-			},
-		});
+	unWatchBounty: async (parent, args, { req, prisma }) => {
+		const signatureRegex = /^signature=\w+/;
+		const signature = req.headers.cookie.match(signatureRegex)[0].slice(10);
+		const address = ecdsaRecover(signature);
+		if (address !== args.userAddress) {
+			throw new AuthenticationError();
+		}
+		else {
+
+			const bounty = await prisma.bounty.findUnique({
+				where: { address: args.contractAddress },
+			});
+			const user = await prisma.user.findUnique({
+				where: { address: args.userAddress },
+			});
+			const newBounties = user.watchedBountyIds.filter(
+				(bountyId) => bountyId !== bounty.address
+			);
+			const newUsers = bounty.watchingUserIds.filter(
+				(userId) => userId !== user.address
+			);
+
+			await prisma.user.update({
+				where: { address: args.userAddress },
+				data: {
+					watchedBountyIds: { set: newBounties },
+				},
+			});
+			return prisma.bounty.update({
+				where: { address: args.contractAddress },
+				data: {
+					watchingUserIds: { set: newUsers },
+				},
+			});
+		}
 	}
 };
 

@@ -6,19 +6,19 @@ const Query = {
 	bountiesConnection: async (parent, args, { req, prisma }) => {
 		const cursor = args.after ? { address: args.after } : undefined;
 		const bounties = await prisma.bounty.findMany({
-			skip: args.after ? 1 : 0,
+			skip: (args.orderBy === 'address' || !args.after) ? 0 : 1,
 			cursor,
 			where: { organizationId: args.organizationId },
 			take: args.limit,
 			orderBy: [
 				{ [args.orderBy]: args.sortOrder },
-				{ [args.orderBy && 'address']: args.orderBy && 'asc' },
+				{ [args.orderBy && 'address']: args.orderBy && args.sortOrder },
 			],
 			include: { watchingUsers: true },
 		});
 		return {
 			bounties,
-			cursor: bounties[bounties.length - 1].address,
+			cursor: bounties[bounties.length - 1]?.address,
 		};
 	},
 };

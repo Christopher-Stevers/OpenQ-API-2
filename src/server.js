@@ -15,7 +15,10 @@ const server = new ApolloServer({
 	context: createContext,
 	plugins: [apolloLogger, ApolloServerPluginLandingPageGraphQLPlayground],
 	introspection: true,
-	cors: true
+	cors: {
+		origin: process.env.ORIGINS.split(','),
+		credentials: true
+	}
 });
 
 module.exports = server;
