@@ -53,9 +53,7 @@ const Mutation = {
 		const signature = req.headers.cookie.match(signatureRegex)[0].slice(10);
 		const address = ecdsaRecover(signature);
 		if (address !== args.userAddress) {
-			prisma.bounty.findUnique({
-				where: { address: args.contractAddress },
-			});
+			throw new AuthenticationError();
 		}
 		else {
 			const bounty = await prisma.bounty.findUnique({
@@ -88,9 +86,7 @@ const Mutation = {
 		const signature = req.headers.cookie.match(signatureRegex)[0].slice(10);
 		const address = ecdsaRecover(signature);
 		if (address !== args.userAddress) {
-			prisma.bounty.findUnique({
-				where: { address: args.contractAddress },
-			});
+			throw new AuthenticationError();
 		}
 		else {
 
