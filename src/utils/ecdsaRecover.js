@@ -5,10 +5,13 @@ function ecdsaRecover(signature) {
 	try {
 		const recoveredAddress = ethers.utils.verifyMessage(message, signature);
 		return recoveredAddress;
-	}
-	catch (err) {
+	} catch (err) {
 		return false;
 	}
 }
 
-module.exports = ecdsaRecover;
+const compareAddress = (addr1, addr2) => {
+	return addr1.toLowerCase() === addr2.toLowerCase();
+};
+
+module.exports = { ecdsaRecover, compareAddress };
