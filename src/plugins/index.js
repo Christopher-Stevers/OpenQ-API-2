@@ -1,6 +1,6 @@
 const apolloLogger = {
 	requestDidStart({ request }) {
-		const { query, http } = request;
+		const { http } = request;
 		const httpSymbols = Object.getOwnPropertySymbols(http);
 		// creates object from 'Request internals' symbol in http obj -- this is quite sizable when GraphQL playground is inspecting the Apollo Server
 		const requestInternals = http[httpSymbols[1]];
@@ -11,10 +11,10 @@ const apolloLogger = {
 		const info = `${requestInternals.method} --  ${date}`;
 		console.log('==========', info, '==========');
 		return {
-			parsingDidStart(ctx) {
+			parsingDidStart() {
 				console.log('Parsing Started');
 			},
-			validationDidStart(ctx) {
+			validationDidStart() {
 				console.log('Validation started.');
 			},
 			didEncounterErrors(ctx) {
