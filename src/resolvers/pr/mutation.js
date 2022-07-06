@@ -13,7 +13,6 @@ const Mutation = {
 	},
 	updatePr: async (parent, args, { prisma }) => {
 		const { prId, contributorIds } = args;
-		console.log(args);
 		return prisma.pr.update({
 			where: { prId },
 			data: {
@@ -45,8 +44,7 @@ const Mutation = {
 	},
 
 	removeContributor: async (parent, args, { prisma }) => {
-		const { prId, userId, address } = args;
-
+		const { prId, userId } = args;
 
 		const contributor = await prisma.contributor.findUnique({
 			where: { userId },
@@ -54,20 +52,14 @@ const Mutation = {
 		const pr = await prisma.pr.findUnique({
 			where: { prId },
 		});
-		await prisma.contributor.upsert({
-
+		await prisma.contributor.update({
 			where: { userId },
-			update: {
+			data: {
 				prIds: { push: prId }
 			},
-			create: {
-				userId, address, prIds: { set: [prId] }
-			}
-
 		});
 		const newContributorIds = pr.contributorIds.filter(id => id !== userId);
 		const newPrIds = contributor.prIds.filter(id => id !== prId);
-		console.log(newPrIds);
 		await prisma.contributor.update({
 			where: { userId },
 			data: {
