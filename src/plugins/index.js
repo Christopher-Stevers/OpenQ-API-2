@@ -18,6 +18,7 @@ const apolloLogger = {
 				console.log('Validation started.');
 			},
 			didEncounterErrors(ctx) {
+				console.log(ctx);
 			}
 		};
 	}

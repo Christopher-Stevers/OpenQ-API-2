@@ -2,17 +2,6 @@
 const validateOwnership = require('./validateOwnership');
 
 const Mutation = {
-	createPr: async (parent, args, { prisma }) => {
-		const { thumbnail, bountyAddress, prId } = args;
-		return prisma.pr.create({
-			data: {
-				prId,
-				thumbnail,
-				bountyAddress,
-
-			},
-		});
-	},
 	updatePr: async (parent, args, { req, prisma }) => {
 		const cookie = req.headers.cookie;
 		await validateOwnership(prId, cookie);
