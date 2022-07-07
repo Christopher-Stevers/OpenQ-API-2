@@ -8,7 +8,6 @@ const resolvers = require('./resolvers');
 const createContext = require('./context');
 const apolloLogger = require('./plugins/index.js');
 
-
 const server = new ApolloServer({
 	typeDefs,
 	resolvers,
@@ -16,7 +15,7 @@ const server = new ApolloServer({
 	plugins: [apolloLogger, ApolloServerPluginLandingPageGraphQLPlayground],
 	introspection: true,
 	cors: {
-		origin: process.env.ORIGINS.split(','),
+		origin: process.env.ORIGIN,
 		credentials: true
 	}
 });
