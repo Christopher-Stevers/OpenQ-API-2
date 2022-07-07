@@ -1,9 +1,6 @@
-const axios = require('axios');
-const GET_VIEWER = require('./GET_VIEWER');
-const GET_OWNER = require('./GET_OWNER');
 
-const cookie = require('cookie-signature');
-const { AuthenticationError } = require('apollo-server');
+const validateOwnership = require('./validateOwnership');
+
 const Mutation = {
 	createPr: async (parent, args, { prisma }) => {
 		const { thumbnail, bountyAddress, prId } = args;
@@ -16,7 +13,9 @@ const Mutation = {
 			},
 		});
 	},
-	updatePr: async (parent, args, { prisma }) => {
+	updatePr: async (parent, args, { req, prisma }) => {
+		const cookie = req.headers.cookie;
+		await validateOwnership(prId, cookie);
 		const { prId, contributorIds } = args;
 		return prisma.pr.update({
 			where: { prId },
@@ -28,62 +27,28 @@ const Mutation = {
 
 	addContributor: async (parent, args, { req, prisma }) => {
 		const { prId, userId, address } = args;
-		try {
-			const tokenRegex = /github_oauth_token=[^\s;]+/;
-			const signedGithubOauthToken = req.headers.cookie.match(tokenRegex)[0].slice(19);
-			console.log(signedGithubOauthToken.slice(2), process.env.COOKIE_SIGNER);
-			const githubOauthToken = cookie.unsign(signedGithubOauthToken.slice(4), process.env.COOKIE_SIGNER);
-			console.log(githubOauthToken);
-			console.log(prId);
-			const resultViewer = await axios
-				.post(
-					'https://api.github.com/graphql',
-					{
-						query: GET_VIEWER
-					},
-					{
-						headers: {
-							'Authorization': 'token ' + githubOauthToken,
-						},
-					}
-				);
-
-			const viewer = resultViewer.data.data.viewer.login;
-			const ownerResult = await axios
-				.post(
-					'https://api.github.com/graphql',
-					{
-						query: GET_OWNER,
-						variables: { id: prId }
-					},
-					{
-						headers: {
-							'Authorization': 'token ' + githubOauthToken,
-						},
-					}
-				);
-			const owner = ownerResult.data.data.node.author.login;
-			if (owner !== viewer) {
-				throw new AuthenticationError();
-			}
-		} catch (err) {
-			throw new AuthenticationError();
-		}
+		const cookie = req.headers.cookie;
+		await validateOwnership(prId, cookie);
 		await prisma.contributor.upsert({
 
 			where: { userId },
-			update: {
-				prIds: { push: prId }
-			},
 			create: {
 				userId, address, prIds: { set: [prId] }
+			},
+			update: {
+				prIds: { push: prId }
 			}
 
 		});
 
-		return prisma.pr.update({
+		return prisma.pr.upsert({
 			where: { prId },
-			data: {
+			create: {
+				prId,
+				contributorIds: { set: [userId] }
+
+			},
+			update: {
 				contributorIds: { push: userId }
 			},
 		});
@@ -91,48 +56,8 @@ const Mutation = {
 
 	removeContributor: async (parent, args, { req, prisma }) => {
 		const { prId, userId } = args;
-		try {
-			const tokenRegex = /github_oauth_token=[^\s;]+/;
-			const signedGithubOauthToken = req.headers.cookie.match(tokenRegex)?.[0].slice(19);
-
-			console.log(signedGithubOauthToken.slice(2), process.env.COOKIE_SIGNER);
-			const githubOauthToken = cookie.unsign(signedGithubOauthToken.slice(2), process.env.COOKIE_SIGNER);
-			console.log(githubOauthToken);
-			console.log(prId);
-			const resultViewer = await axios
-				.post(
-					'https://api.github.com/graphql',
-					{
-						query: GET_VIEWER
-					},
-					{
-						headers: {
-							'Authorization': 'token ' + githubOauthToken,
-						},
-					}
-				);
-			const viewer = resultViewer.data.data.viewer.login;
-			const ownerResult = await axios
-				.post(
-					'https://api.github.com/graphql',
-					{
-						query: GET_OWNER,
-						variables: { id: prId }
-					},
-					{
-						headers: {
-							'Authorization': 'token ' + githubOauthToken,
-						},
-					}
-				);
-			const owner = ownerResult.data.data.node.author.login;
-			if (owner !== viewer) {
-				throw new AuthenticationError();
-			}
-		}
-		catch (err) {
-			throw new AuthenticationError();
-		}
+		const cookie = req.headers.cookie;
+		await validateOwnership(prId, cookie);
 		const contributor = await prisma.contributor.findUnique({
 			where: { userId },
 		});

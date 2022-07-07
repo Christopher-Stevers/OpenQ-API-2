@@ -31,7 +31,7 @@ model Contributor {
 
 model Pr {
     prId           String        @id @map("_id")
-    thumbnail      String
+    thumbnail      String?
     contributorIds String[]
     contributors   Contributor[] @relation(fields: [contributorIds], references: [userId])
     Bounty         Bounty?       @relation(fields: [bountyAddress], references: [address])
