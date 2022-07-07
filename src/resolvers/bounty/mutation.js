@@ -49,9 +49,12 @@ const Mutation = {
 		});
 	},
 	watchBounty: async (parent, args, { req, prisma }) => {
-		const signatureRegex = /^signature=\w+/;
+		const signatureRegex = /signature=\w+/;
+		console.log(req.headers.cookie);
+		console.log(req.headers.cookie.match(signatureRegex));
 		const signature = req.headers.cookie.match(signatureRegex)[0].slice(10);
 		const address = ecdsaRecover(signature);
+		console.log(address, args.userAddress);
 		if (address !== args.userAddress) {
 			throw new AuthenticationError();
 		}
@@ -82,7 +85,7 @@ const Mutation = {
 		}
 	},
 	unWatchBounty: async (parent, args, { req, prisma }) => {
-		const signatureRegex = /^signature=\w+/;
+		const signatureRegex = /signature=\w+/;
 		const signature = req.headers.cookie.match(signatureRegex)[0].slice(10);
 		const address = ecdsaRecover(signature);
 		if (address !== args.userAddress) {
