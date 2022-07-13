@@ -19,6 +19,7 @@ model Bounty {
     Organization    Organization? @relation(fields: [organizationId], references: [id])
     organizationId  String?
     prs             Pr[]
+    views           Int           @default(0)
 
 }
 

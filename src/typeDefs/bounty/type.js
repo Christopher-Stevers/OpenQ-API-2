@@ -4,6 +4,7 @@ const typeDef = gql`
 	type Bounty {
 		tvl: Float
 		address: String!
+		views: Int
 		bountyId: String!
 		watchingUserIds: [String]
 		organization: Organization

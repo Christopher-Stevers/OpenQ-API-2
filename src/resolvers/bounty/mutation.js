@@ -9,6 +9,7 @@ const Mutation = {
 		}
 		return prisma.bounty.create({
 			data: {
+				views: 0,
 				tvl: 0,
 				address: String(args.address),
 				organizationId: args.organizationId,
@@ -31,6 +32,17 @@ const Mutation = {
 			},
 		});
 	},
+	addView: async (parent, args, { prisma }) => {
+
+
+		return prisma.bounty.update(
+			{
+				where: { address: args.address },
+				data: { views: { increment: 1 } }
+			}
+		);
+	},
+
 	addToTvl: async (parent, args, { req, prisma }) => {
 		if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
 			throw new AuthenticationError();
