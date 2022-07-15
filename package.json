@@ -5,7 +5,7 @@
 	"main": "index.js",
 	"scripts": {
 		"start": "node ./src/index.js",
-		"start:dev": "prisma generate && nodemon ./src/index.js",
+		"start:dev": "nodemon --ignore generated --exec 'prisma generate && node ./src/index.js'",
 		"beforeRun": "docker-compose stop",
 		"env:dev": "cd utils && python3 env_script.py ../configuration/development.env",
 		"env:test": "cd utils && python3 env_script.py ../configuration/test.env && cd ..",
