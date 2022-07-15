@@ -2,8 +2,9 @@ const { gql } = require('apollo-server');
 
 const typeDef = gql`
 	type Organization {
-		address: String!
+		id: String!
 		organizationBountyIds: [String]
+		blacklisted: Boolean
 		organizationBounties(
 			after: ID
 			limit: Int!

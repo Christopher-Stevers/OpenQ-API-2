@@ -34,16 +34,6 @@ const Mutation = {
 			},
 		});
 	},
-	addView: async (parent, args, { prisma }) => {
-
-
-		return prisma.bounty.update(
-			{
-				where: { address: args.address },
-				data: { views: { increment: 1 } }
-			}
-		);
-	},
 
 	blackList: async (parent, args, { req, prisma }) => {
 		if (req.headers.authorization !== process.env.BANHAMMER) {
@@ -51,7 +41,7 @@ const Mutation = {
 		}
 		return prisma.bounty.update(
 			{
-				where: { address: args.address },
+				where: { bountyId: args.bountyId },
 				data: { blacklisted: args.blackList }
 			}
 		);

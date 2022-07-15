@@ -2,10 +2,9 @@ const { gql } = require('apollo-server');
 
 const queryDef = gql`
 	extend type Query{
-		contributor(userId: String!): Contributor
+		organization(organizationId: String!): Organization
 	}
 `;
-
 
 
 module.exports = queryDef;
