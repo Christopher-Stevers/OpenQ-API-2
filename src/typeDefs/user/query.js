@@ -9,6 +9,7 @@ const queryDef = gql`
 			sortOrder: String
 		): UserConnection
 		user(address: String!): User
+		other: String
 	}
 `;
 

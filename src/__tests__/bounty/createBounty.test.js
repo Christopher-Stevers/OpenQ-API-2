@@ -3,7 +3,7 @@ const { getAuthenticatedClient, getClient } = require('../utils/getClient');
 const { CREATE_NEW_BOUNTY, GET_BOUNTY_BY_HASH } = require('../queries');
 beforeEach(async () => {
 	jest.setTimeout(100000);
-	const { PrismaClient } = require('@prisma/client');
+	const { PrismaClient } = require('../../../generated/client');
 
 	const prisma = new PrismaClient();
 	await prisma.bounty.deleteMany({});

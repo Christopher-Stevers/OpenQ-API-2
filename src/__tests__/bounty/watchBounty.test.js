@@ -6,7 +6,7 @@ const userAddress = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
 const contractAddress = '0x8daf17a20c9dba35f005b6324f493785d239719d';
 beforeAll(async () => {
 	jest.setTimeout(100000);
-	const { PrismaClient } = require('@prisma/client');
+	const { PrismaClient } = require('../../../generated/client');
 
 	const prisma = new PrismaClient();
 	await prisma.bounty.deleteMany({});

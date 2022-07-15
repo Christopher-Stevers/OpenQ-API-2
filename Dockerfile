@@ -1,5 +1,5 @@
 FROM node:lts-alpine
-WORKDIR /usr/src/app
+WORKDIR /app
 RUN apk update && apk upgrade && \
 	apk add --no-cache bash git && \
 	apk add openssl
