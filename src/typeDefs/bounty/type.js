@@ -3,6 +3,7 @@ const { gql } = require('apollo-server');
 const typeDef = gql`
 	type Bounty {
 		tvl: Float
+		blacklisted: Boolean
 		address: String!
 		views: Int
 		bountyId: String!
