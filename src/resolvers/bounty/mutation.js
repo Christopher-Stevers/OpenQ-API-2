@@ -9,6 +9,8 @@ const Mutation = {
 		}
 		return prisma.bounty.create({
 			data: {
+				blacklisted: false,
+				views: 0,
 				tvl: 0,
 				address: String(args.address),
 				organizationId: args.organizationId,
@@ -24,6 +26,7 @@ const Mutation = {
 			where: { address: args.address },
 			update: { tvl: args.tvl, ...(args.organizationId) && { organizationId: args.organizationId } },
 			create: {
+				blacklisted: false,
 				address: String(args.address),
 				tvl: args.tvl,
 				organizationId: args.organizationId,
@@ -31,6 +34,19 @@ const Mutation = {
 			},
 		});
 	},
+
+	blackList: async (parent, args, { req, prisma }) => {
+		if (req.headers.authorization !== process.env.BANHAMMER) {
+			throw new AuthenticationError();
+		}
+		return prisma.bounty.update(
+			{
+				where: { bountyId: args.bountyId },
+				data: { blacklisted: args.blackList }
+			}
+		);
+	},
+
 	addToTvl: async (parent, args, { req, prisma }) => {
 		if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
 			throw new AuthenticationError();
