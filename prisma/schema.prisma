@@ -22,7 +22,6 @@ model Bounty {
     prs             Pr[]
     views           Int           @default(0)
     blacklisted     Boolean
-
 }
 
 model Contributor {
@@ -42,9 +41,11 @@ model Pr {
 }
 
 model User {
-    address          String   @id @map("_id")
-    watchedBountyIds String[]
-    watchedBounties  Bounty[] @relation(fields: [watchedBountyIds], references: [address])
+    address                String         @id @map("_id")
+    watchedBountyIds       String[]
+    watchedBounties        Bounty[]       @relation(fields: [watchedBountyIds], references: [address])
+    starredOrganizationIds String[]
+    starredOrganizations   Organization[] @relation(fields: [starredOrganizationIds], references: [id])
 }
 
 model Organization {
@@ -52,6 +53,8 @@ model Organization {
     organizationBountyIds String[]
     organizationBounties  Bounty[]
     blacklisted           Boolean
+    starringUserIds       String[]
+    starringUsers         User[]   @relation(fields: [starringUserIds], references: [address])
 }
 
 model Prices {

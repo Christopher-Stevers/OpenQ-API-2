@@ -11,6 +11,7 @@ const queryDef = gql`
 			views: Int
 		): BountyConnection
 		bounty(address: String!): Bounty
+		bounties(addresses: [String]!):[Bounty]
 	}
 `;
 

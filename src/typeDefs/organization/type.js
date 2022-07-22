@@ -5,6 +5,7 @@ const typeDef = gql`
 		id: String!
 		organizationBountyIds: [String]
 		blacklisted: Boolean
+		starringUserIds: [String]
 		organizationBounties(
 			after: ID
 			limit: Int!
