@@ -65,7 +65,7 @@ const Mutation = {
 		});
 	},
 	watchBounty: async (parent, args, { req, prisma }) => {
-		if (!verifySignature(req, args)) {
+		if (!verifySignature(req, args.userAddress)) {
 			throw new AuthenticationError();
 		}
 		const bounty = await prisma.bounty.findUnique({
@@ -93,7 +93,7 @@ const Mutation = {
 		});
 	},
 	unWatchBounty: async (parent, args, { req, prisma }) => {
-		if (!verifySignature(req, args)) {
+		if (!verifySignature(req, args.userAddress)) {
 			throw new AuthenticationError();
 		}
 		const bounty = await prisma.bounty.findUnique({

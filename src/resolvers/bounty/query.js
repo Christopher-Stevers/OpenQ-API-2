@@ -1,9 +1,13 @@
 const Query = {
-	bounty: async (_, args, { req, prisma }) =>
+	bounty: async (_, args, { prisma }) =>
 		prisma.bounty.findUnique({
 			where: { address: args.address },
 		}),
-	bountiesConnection: async (parent, args, { req, prisma }) => {
+	bounties: async (_, args, { prisma }) =>
+		prisma.bounty.findMany({
+			where: { address: { in: args.addresses } },
+		}),
+	bountiesConnection: async (parent, args, { prisma }) => {
 		const cursor = args.after ? { address: args.after } : undefined;
 		const bounties = await prisma.bounty.findMany({
 			skip: (args.orderBy === 'address' || !args.after) ? 0 : 1,
