@@ -10,6 +10,8 @@ const typeDef = gql`
 			orderBy: String
 			sortOrder: String
 		): BountyConnection!
+		starredOrganizations: [Organization]
+		starredOrganizationIds: [String]
 	}
 
 	type UserConnection {
