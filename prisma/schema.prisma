@@ -46,6 +46,12 @@ model User {
     watchedBounties        Bounty[]       @relation(fields: [watchedBountyIds], references: [address])
     starredOrganizationIds String[]
     starredOrganizations   Organization[] @relation(fields: [starredOrganizationIds], references: [id])
+    company                String
+    email                  String
+    city                   String
+    streetAddress          String
+    country                String
+    province               String
 }
 
 model Organization {

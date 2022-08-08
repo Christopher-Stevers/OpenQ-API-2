@@ -12,6 +12,12 @@ const typeDef = gql`
 		): BountyConnection!
 		starredOrganizations: [Organization]
 		starredOrganizationIds: [String]
+		company: String
+    	email: String
+    	city: String
+    	streetAddress: String
+   	 	country: String
+    	province: String
 	}
 
 	type UserConnection {
