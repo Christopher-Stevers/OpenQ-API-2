@@ -10,6 +10,7 @@ const Mutation = {
 		return prisma.bounty.create({
 			data: {
 				blacklisted: false,
+				type: args.type,
 				views: 0,
 				tvl: 0,
 				address: String(args.address),
@@ -24,8 +25,12 @@ const Mutation = {
 		}
 		return prisma.bounty.upsert({
 			where: { address: args.address },
-			update: { tvl: args.tvl, ...(args.organizationId) && { organizationId: args.organizationId } },
+			update: {
+				tvl: args.tvl,
+				type: args.type, ...(args.organizationId) && { organizationId: args.organizationId }
+			},
 			create: {
+				type: args.type,
 				blacklisted: false,
 				address: String(args.address),
 				tvl: args.tvl,
