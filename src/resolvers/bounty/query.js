@@ -12,7 +12,7 @@ const Query = {
 		const bounties = await prisma.bounty.findMany({
 			skip: (args.orderBy === 'address' || !args.after) ? 0 : 1,
 			cursor,
-			where: { organizationId: args.organizationId },
+			where: { organizationId: args.organizationId, type: args.type },
 			take: args.limit,
 			orderBy: [
 				{ [args.orderBy]: args.sortOrder },
