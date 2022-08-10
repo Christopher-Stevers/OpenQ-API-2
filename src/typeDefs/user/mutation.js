@@ -5,11 +5,11 @@ const mutationDefs = gql`
 		updateUser(
 			address: String!
 			company: String
-    		email: String
-    		city: String
-    		streetAddress: String
-   	 		country: String
-    		province: String		
+			email: String
+			city: String
+			streetAddress: String
+			country: String
+			province: String
 		): User!		
   }
 `;

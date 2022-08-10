@@ -13,11 +13,11 @@ const typeDef = gql`
 		starredOrganizations: [Organization]
 		starredOrganizationIds: [String]
 		company: String
-    	email: String
-    	city: String
-    	streetAddress: String
-   	 	country: String
-    	province: String
+		email: String
+		city: String
+		streetAddress: String
+		country: String
+		province: String
 	}
 
 	type UserConnection {
