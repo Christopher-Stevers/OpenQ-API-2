@@ -1,6 +1,6 @@
 
 const AuthenticationError = require('apollo-server');
-const { verifySignature } = require('../utils');
+const { verifySignature } = require('../../utils/auth/verifySignature');
 
 const Mutation = {
 	blackListOrg: async (parent, args, { req, prisma }) => {

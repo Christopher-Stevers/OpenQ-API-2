@@ -8,7 +8,8 @@ const queryDef = gql`
 			orderBy: String
 			sortOrder: String
 			organizationId: String
-			views: Int
+			views: Int,
+			types: [String]
 		): BountyConnection
 		bounty(address: String!): Bounty
 		bounties(addresses: [String]!):[Bounty]
