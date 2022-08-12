@@ -1,6 +1,6 @@
 const calculateTvl = require('../../utils/calculateTvl');
 const { AuthenticationError } = require('apollo-server');
-const { verifySignature } = require('../utils');
+const { verifySignature } = require('../../utils/auth/verifySignature');
 
 const Mutation = {
 	createBounty: async (parent, args, { req, prisma }) => {

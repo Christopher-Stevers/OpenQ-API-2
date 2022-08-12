@@ -8,15 +8,8 @@ const typeDef = gql`
 		address: String!
 		views: Int
 		bountyId: String!
-		watchingUserIds: [String]
 		organization: Organization
 		organizationId: String
-		watchingUsers(
-			after: ID
-			limit: Int!
-			orderBy: String
-			sortOrder: String
-		): UserConnection!
 	}
 
 	type BountyConnection {

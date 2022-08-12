@@ -7,10 +7,18 @@ const typeDefs = require('./typeDefs');
 const resolvers = require('./resolvers');
 const createContext = require('./context');
 const apolloLogger = require('./plugins/index.js');
+const authDirectiveTransformer = require('./utils/auth/authDirectiveTransformer');
+const { makeExecutableSchema } = require('@graphql-tools/schema');
+
+let schema = makeExecutableSchema({
+	typeDefs,
+	resolvers
+});
+
+schema = authDirectiveTransformer(schema, 'auth');
 
 const server = new ApolloServer({
-	typeDefs,
-	resolvers,
+	schema,
 	context: createContext,
 	plugins: [apolloLogger, ApolloServerPluginLandingPageGraphQLPlayground],
 	introspection: true,
