@@ -42,13 +42,9 @@ describe('Get Paginated Bounties.', () => {
 			};
 			const firstPage = await getPage();
 			expect(firstPage.bountiesConnection.bounties.length).toBe(5);
-			console.log(field, sortOrder);
-			console.log(firstPage.bountiesConnection.bounties.map(bounty => bounty.address));
 			const secondPage = await getPage(firstPage.bountiesConnection.cursor);
 			expect(secondPage.bountiesConnection.bounties.length).toBe(5);
-			console.log(secondPage.bountiesConnection.bounties.map(bounty => bounty.address));
 			const thirdPage = await getPage(secondPage.bountiesConnection.cursor);
-			console.log(thirdPage.bountiesConnection.bounties.map(bounty => bounty.address));
 			expect(thirdPage.bountiesConnection.bounties.length).toBe(2);
 
 		});
