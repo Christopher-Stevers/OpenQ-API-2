@@ -13,7 +13,6 @@ function authDirectiveTransformer(schema, directiveName) {
 				fieldConfig.resolve = async function (parent, args, context, info) {
 					try {
 						const isUser = verifySignature(context.req, parent.address);
-						console.log(isUser);
 
 						if (isUser) {
 							const result = await resolve(parent, args, context, info);
