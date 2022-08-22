@@ -9,7 +9,8 @@ const typeDef = gql`
 			limit: Int!
 			orderBy: String
 			sortOrder: String
-		): BountyConnection! @auth
+			category: String
+		): Bounties! @auth
 		starredOrganizations: [Organization]
 		starredOrganizationIds: [String]
 		company: String

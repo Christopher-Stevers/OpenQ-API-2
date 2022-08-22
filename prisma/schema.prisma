@@ -17,12 +17,13 @@ model Bounty {
     bountyId        String        @unique
     watchingUserIds String[]
     watchingUsers   User[]        @relation(fields: [watchingUserIds], references: [address])
-    Organization    Organization? @relation(fields: [organizationId], references: [id])
+    organization    Organization? @relation(fields: [organizationId], references: [id])
     organizationId  String?
     prs             Pr[]
     views           Int           @default(0)
     blacklisted     Boolean
     type            String
+    category        String?
 }
 
 model Contributor {

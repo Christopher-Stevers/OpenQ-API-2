@@ -7,13 +7,19 @@ const typeDef = gql`
 		blacklisted: Boolean
 		address: String!
 		views: Int
+		watchingCount: Int
 		bountyId: String!
 		organization: Organization
 		organizationId: String
+		category: String
+	}
+	type Bounties {
+		bountyConnection: BountyConnection
+		nodes: [Bounty]
 	}
 
 	type BountyConnection {
-		bounties: [Bounty]
+		nodes:[Bounty]
 		cursor: ID
 	}
 `;

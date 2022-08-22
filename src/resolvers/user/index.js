@@ -1,9 +1,11 @@
 const Query = require('./query');
 const Mutation = require('./mutation');
+const User = require('./user');
 
 const bountyResolvers = {
 	Query,
-	Mutation
+	Mutation,
+	User
 };
 
 module.exports = bountyResolvers;
