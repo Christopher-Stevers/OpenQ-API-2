@@ -1,3 +1,4 @@
+
 const runReport = require('./runReport');
 
 const Bounty = {
@@ -10,7 +11,10 @@ const Bounty = {
 		});
 		const viewers = rows.find(row => row.page === matchingStr)?.viewers || 0;
 		return viewers;
-	}
+	},
+	watchingCount: async (parent) => {
+		return parent.watchingUserIds.length;
+	},
 };
 
 module.exports = Bounty;

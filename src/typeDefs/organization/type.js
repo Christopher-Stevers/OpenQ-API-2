@@ -6,12 +6,13 @@ const typeDef = gql`
 		organizationBountyIds: [String]
 		blacklisted: Boolean
 		starringUserIds: [String]
-		organizationBounties(
+		bounties(
 			after: ID
 			limit: Int!
 			orderBy: String
 			sortOrder: String
-		): BountyConnection!
+			category: String
+		): Bounties
 	}
 `;
 

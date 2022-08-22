@@ -2,12 +2,24 @@ const Query = {
 	organization: async (_, args, { prisma }) =>
 		prisma.organization.findUnique({
 			where: { id: args.organizationId },
+			include: { organizationBounties: true }
 		}),
 
-	organizations: async (_, args, { prisma }) =>
-		prisma.organization.findMany({
-			where: { id: { in: args.organizationIds } },
-		}),
+	organizations: async (_, args, { prisma }) => {
+		return prisma.organization.findMany({
+			where: {
+				id: { in: args.organizationIds },
+				...(args.category && {
+					organizationBounties: {
+						some: {
+							category: args.category
+						}
+					}
+				})
+			},
+		});
+	},
+
 };
 
 module.exports = Query;

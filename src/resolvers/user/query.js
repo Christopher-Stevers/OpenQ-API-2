@@ -1,6 +1,6 @@
 const Query = {
 	user: async (parent, args, { prisma }) => {
-		const value = prisma.user.findUnique({
+		const value = await prisma.user.findUnique({
 			where: { address: args.address },
 		});
 		return value;
