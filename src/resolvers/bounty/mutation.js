@@ -10,6 +10,7 @@ const Mutation = {
 		return prisma.bounty.create({
 			data: {
 				blacklisted: false,
+				category: args.category,
 				type: args.type,
 				views: 0,
 				tvl: 0,
