@@ -12,6 +12,7 @@ const typeDef = gql`
 		organization: Organization
 		organizationId: String
 		category: String
+		createdAt: String
 	}
 	type Bounties {
 		bountyConnection: BountyConnection
