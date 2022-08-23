@@ -19,6 +19,7 @@ model Bounty {
     watchingUsers   User[]        @relation(fields: [watchingUserIds], references: [address])
     organization    Organization? @relation(fields: [organizationId], references: [id])
     organizationId  String?
+    createdAt       DateTime      @default(now())
     prs             Pr[]
     views           Int           @default(0)
     blacklisted     Boolean
