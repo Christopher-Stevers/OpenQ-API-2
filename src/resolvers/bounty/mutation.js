@@ -7,15 +7,27 @@ const Mutation = {
 		if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
 			throw new AuthenticationError();
 		}
+
 		return prisma.bounty.create({
 			data: {
-				blacklisted: false,
-				category: args.category,
 				type: args.type,
-				views: 0,
-				tvl: 0,
+				category: args.category || null,
+				blacklisted: false,
 				address: String(args.address),
-				organizationId: args.organizationId,
+				tvl: 0,
+				organization: {
+					connectOrCreate: {
+						where: {
+							id: args.organizationId
+						},
+						create: {
+							id: args.organizationId,
+							blacklisted: false
+						},
+					},
+
+
+				},
 				bountyId: args.bountyId
 			},
 		});
