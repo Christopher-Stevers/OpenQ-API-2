@@ -10,6 +10,7 @@ const queryDef = gql`
 			sortOrder: String
 			category: String
 			organizationId: String
+			types: [String]
 			):Bounties
 	}
 `;

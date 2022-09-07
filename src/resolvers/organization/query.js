@@ -9,10 +9,10 @@ const Query = {
 		return prisma.organization.findMany({
 			where: {
 				id: { in: args.organizationIds },
-				...(args.category && {
+				...(args.types && {
 					organizationBounties: {
 						some: {
-							category: args.category
+							type: { in: args.types }
 						}
 					}
 				})
