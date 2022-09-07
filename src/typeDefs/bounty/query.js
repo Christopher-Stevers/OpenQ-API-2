@@ -8,7 +8,6 @@ const queryDef = gql`
 			limit: Int!
 			orderBy: String
 			sortOrder: String
-			category: String
 			organizationId: String
 			types: [String]
 			):Bounties
