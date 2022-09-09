@@ -10,6 +10,7 @@ const typeDef = gql`
 			orderBy: String
 			sortOrder: String
 			category: String
+			types: [String]
 		): Bounties! @auth
 		starredOrganizations: [Organization]
 		starredOrganizationIds: [String]
