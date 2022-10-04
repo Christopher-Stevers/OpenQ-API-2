@@ -1,7 +1,7 @@
 const { gql } = require('apollo-server');
 
 const queryDef = gql`
-	extend type Query{
+	extend type Query {
 		bounty(address: String!): Bounty
 		bounties(
 			after: ID
@@ -10,9 +10,9 @@ const queryDef = gql`
 			sortOrder: String
 			organizationId: String
 			types: [String]
-			):Bounties
+			category: String
+		): Bounties
 	}
 `;
-
 
 module.exports = queryDef;
