@@ -15,7 +15,15 @@ const Query = {
 							type: { in: args.types }
 						}
 					}
-				})
+				}),
+				...(args.category ? {
+					organizationBounties: {
+						some: {
+							category: args.category
+						}
+					}
+				} :
+					{})
 			},
 		});
 	},
