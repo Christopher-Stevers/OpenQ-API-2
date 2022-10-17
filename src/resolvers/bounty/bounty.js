@@ -3,7 +3,7 @@ const runReport = require('./runReport');
 
 const Bounty = {
 	views: async (parent, args, { gAnalyticsDataClient }) => {
-		const matchingStr = `/bounty/${parent.bountyId}/${parent.address}`;
+		const matchingStr = `/contract/${parent.bountyId}/${parent.address}`;
 		const propertyId = process.env.PROPERTY_ID;
 		const response = await runReport(gAnalyticsDataClient, propertyId, matchingStr);
 		const rows = response.rows.map(row => {
