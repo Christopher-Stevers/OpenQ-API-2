@@ -2,7 +2,7 @@ const { gql } = require('apollo-server');
 
 const typeDef = gql`
 	type User {
-		address: String!
+		address: String!		@auth
 		watchedBountyIds: [String] @auth
 		watchedBounties(
 			after: ID
