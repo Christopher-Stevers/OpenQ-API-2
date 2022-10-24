@@ -14,12 +14,15 @@ const typeDef = gql`
 		): Bounties! @auth
 		starredOrganizations: [Organization]
 		starredOrganizationIds: [String]
-		company: String
-		email: String
-		city: String
-		streetAddress: String
-		country: String
-		province: String
+		company: String 		@auth
+		email: String			@auth
+		city: String			@auth
+		streetAddress: String	@auth
+		country: String			@auth	
+		province: String		@auth
+		github: String 			@auth
+		twitter:String
+		discord: String
 	}
 
 	type UserConnection {

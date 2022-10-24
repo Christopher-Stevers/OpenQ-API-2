@@ -55,6 +55,9 @@ model User {
     streetAddress          String?
     country                String?
     province               String?
+    discord                String?
+    github                 String?
+    twitter                String?
 }
 
 model Organization {
