@@ -10,7 +10,14 @@ const mutationDefs = gql`
 			streetAddress: String
 			country: String
 			province: String
-		): User!		
+			github: String
+			twitter:String
+			discord: String
+		): User!
+		updateUserSimple(
+			address: String!
+			email: String		
+			github: String)	: User!
   }
 `;
 

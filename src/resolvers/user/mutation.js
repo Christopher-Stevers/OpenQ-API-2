@@ -5,32 +5,51 @@ const { verifySignature } = require('../../utils/auth/verifySignature');
 const Mutation = {
 	updateUser: async (parent, args, { req, prisma }) => {
 		if (!verifySignature(req, args.address)) {
-			throw new AuthenticationError('please sign in with ethereum');
+			throw new AuthenticationError();
 		}
+		const mutableArgs = { ...args };
+		delete mutableArgs.address;
+
+
 		return prisma.user.upsert(
 			{
-				where: { address: args.address },
-				create: {
+				where: {
 					address: args.address,
-					company: args.company,
-					email: args.email,
-					city: args.city,
-					streetAddress: args.streetAddress,
-					country: args.country,
-					province: args.province
-
 				},
+				create: {
+					watchedBountyIds: [],
+					starredOrganizationIds: [],
+					...args
+				}
+				,
 				update: {
-					company: args.company,
-					email: args.email,
-					city: args.city,
-					streetAddress: args.streetAddress,
-					country: args.country,
-					province: args.province
+					...mutableArgs,
 				}
 			}
 		);
 	},
+	updateUserSimple: async (parent, args, { prisma }) => {
+
+		const mutableArgs = { ...args };
+		delete mutableArgs.address;
+
+		return prisma.user.upsert(
+			{
+				where: {
+					address: args.address,
+				},
+				create: {
+					watchedBountyIds: [],
+					starredOrganizationIds: [],
+					...args
+				}
+				,
+				update: {
+					...mutableArgs,
+				}
+			}
+		);
+	}
 };
 
 module.exports = Mutation;

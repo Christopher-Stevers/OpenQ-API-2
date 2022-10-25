@@ -2,6 +2,7 @@ const Query = {
 	user: async (parent, args, { prisma }) => {
 		const value = await prisma.user.findUnique({
 			where: { address: args.address },
+			include: { starredOrganizations: true }
 		});
 		return value;
 	},

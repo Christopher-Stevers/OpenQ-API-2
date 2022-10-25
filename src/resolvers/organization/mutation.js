@@ -20,31 +20,33 @@ const Mutation = {
 		if (!verifySignature(req, args.address)) {
 			throw new AuthenticationError();
 		}
-		const organization = await prisma.organization.upsert({
-			where: { id: args.id },
-			update: {},
-			create: { id: args.id, blacklisted: false }
-		});
-		const user = await prisma.user.upsert({
+
+		await prisma.user.upsert({
 			where: { address: args.address },
 			update: {
 				starredOrganizationIds: {
-					push: organization.id,
+					push: args.id,
 				},
 			},
 			create: {
 				address: args.address,
-				starredOrganizationIds: [organization.id],
+				starredOrganizationIds: [args.id],
 			},
 		});
-		return prisma.organization.update({
+
+		const organization = await prisma.organization.update({
 			where: { id: args.id },
 			data: {
 				starringUserIds: {
-					push: user.address,
+					push: args.address,
 				},
 			},
 		});
+
+		return organization;
+
+
+
 	},
 	unStarOrg: async (parent, args, { req, prisma }) => {
 		if (!verifySignature(req, args.address)) {
