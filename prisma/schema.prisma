@@ -14,6 +14,7 @@ datasource db {
 model Bounty {
     address         String        @id @map("_id")
     tvl             Float
+    tvc             Float
     bountyId        String        @unique
     watchingUserIds String[]
     watchingUsers   User[]        @relation(fields: [watchingUserIds], references: [address])
