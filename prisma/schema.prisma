@@ -2,77 +2,77 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
-    output   = "../generated/client"
+  provider = "prisma-client-js"
+  output   = "../generated/client"
 }
 
 datasource db {
-    provider = "mongodb"
-    url      = env("DATABASE_URL")
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 model Bounty {
-    address         String        @id @map("_id")
-    tvl             Float
-    tvc             Float
-    bountyId        String        @unique
-    watchingUserIds String[]
-    watchingUsers   User[]        @relation(fields: [watchingUserIds], references: [address])
-    organization    Organization? @relation(fields: [organizationId], references: [id])
-    organizationId  String?
-    createdAt       DateTime      @default(now())
-    prs             Pr[]
-    views           Int           @default(0)
-    blacklisted     Boolean
-    type            String
-    category        String?
+  address         String        @id @map("_id")
+  tvl             Float
+  tvc             Float?
+  bountyId        String        @unique
+  watchingUserIds String[]
+  watchingUsers   User[]        @relation(fields: [watchingUserIds], references: [address])
+  organization    Organization? @relation(fields: [organizationId], references: [id])
+  organizationId  String?
+  createdAt       DateTime      @default(now())
+  prs             Pr[]
+  views           Int           @default(0)
+  blacklisted     Boolean
+  type            String
+  category        String?
 }
 
 model Contributor {
-    userId  String   @id @map("_id")
-    address String
-    prIds   String[]
-    prs     Pr[]     @relation(fields: [prIds], references: [prId])
+  userId  String   @id @map("_id")
+  address String
+  prIds   String[]
+  prs     Pr[]     @relation(fields: [prIds], references: [prId])
 }
 
 model Pr {
-    prId           String        @id @map("_id")
-    thumbnail      String?
-    contributorIds String[]
-    contributors   Contributor[] @relation(fields: [contributorIds], references: [userId])
-    Bounty         Bounty?       @relation(fields: [bountyAddress], references: [address])
-    bountyAddress  String?
+  prId           String        @id @map("_id")
+  thumbnail      String?
+  contributorIds String[]
+  contributors   Contributor[] @relation(fields: [contributorIds], references: [userId])
+  Bounty         Bounty?       @relation(fields: [bountyAddress], references: [address])
+  bountyAddress  String?
 }
 
 model User {
-    address                String         @id @map("_id")
-    watchedBountyIds       String[]
-    watchedBounties        Bounty[]       @relation(fields: [watchedBountyIds], references: [address])
-    starredOrganizationIds String[]
-    starredOrganizations   Organization[] @relation(fields: [starredOrganizationIds], references: [id])
-    company                String?
-    email                  String?
-    city                   String?
-    streetAddress          String?
-    country                String?
-    province               String?
-    discord                String?
-    github                 String?
-    twitter                String?
+  address                String         @id @map("_id")
+  watchedBountyIds       String[]
+  watchedBounties        Bounty[]       @relation(fields: [watchedBountyIds], references: [address])
+  starredOrganizationIds String[]
+  starredOrganizations   Organization[] @relation(fields: [starredOrganizationIds], references: [id])
+  company                String?
+  email                  String?
+  city                   String?
+  streetAddress          String?
+  country                String?
+  province               String?
+  discord                String?
+  github                 String?
+  twitter                String?
 }
 
 model Organization {
-    id                    String   @id @map("_id")
-    organizationBountyIds String[]
-    organizationBounties  Bounty[]
-    blacklisted           Boolean
-    starringUserIds       String[]
-    starringUsers         User[]   @relation(fields: [starringUserIds], references: [address])
+  id                    String   @id @map("_id")
+  organizationBountyIds String[]
+  organizationBounties  Bounty[]
+  blacklisted           Boolean
+  starringUserIds       String[]
+  starringUsers         User[]   @relation(fields: [starringUserIds], references: [address])
 }
 
 model Prices {
-    id        String @id @default(auto()) @map("_id") @db.ObjectId
-    pricesId  String @unique
-    priceObj  Json?
-    timestamp Int
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  pricesId  String @unique
+  priceObj  Json?
+  timestamp Int
 }
