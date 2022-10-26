@@ -20,7 +20,7 @@ const typeDef = gql`
 		streetAddress: String	@auth
 		country: String			@auth	
 		province: String		@auth
-		github: String 			@auth
+		github: String 			
 		twitter:String
 		discord: String
 	}

@@ -1,4 +1,5 @@
 const calculateTvl = require('../../utils/calculateTvl');
+const calculateTvc = require('../../utils/calculateTvc');
 const { AuthenticationError } = require('apollo-server');
 const { verifySignature } = require('../../utils/auth/verifySignature');
 
@@ -15,6 +16,7 @@ const Mutation = {
 				blacklisted: false,
 				address: String(args.address),
 				tvl: 0,
+				tvc: -0,
 				organization: {
 					connectOrCreate: {
 						where: {
@@ -41,19 +43,22 @@ const Mutation = {
 			where: { address: args.address },
 			update: {
 				category: args.category || null,
-				tvl: args.tvl,
-				organization: {
-					connectOrCreate: {
-						where: {
-							id: args.organizationId
+				...args.tvl && { tvl: args.tvl },
+				...args.tvc && { tvc: args.tvc },
+				...args.organizationId && {
+					organization: {
+						connectOrCreate: {
+							where: {
+								id: args.organizationId
+							},
+							create: {
+								id: args.organizationId,
+								blacklisted: false
+							}
 						},
-						create: {
-							id: args.organizationId,
-							blacklisted: false
-						}
-					},
 
 
+					}
 				},
 				type: args.type,
 			},
@@ -62,19 +67,22 @@ const Mutation = {
 				category: args.category || null,
 				blacklisted: false,
 				address: String(args.address),
-				tvl: args.tvl,
-				organization: {
-					connectOrCreate: {
-						where: {
-							id: args.organizationId
+				tvl: args.tvl || 0,
+				tvc: args.tvc || 0,
+				...args.organizationId && {
+					organization: {
+						connectOrCreate: {
+							where: {
+								id: args.organizationId
+							},
+							create: {
+								id: args.organizationId,
+								blacklisted: false
+							},
 						},
-						create: {
-							id: args.organizationId,
-							blacklisted: false
-						},
+
+
 					},
-
-
 				},
 				bountyId: args.bountyId
 			},
@@ -107,6 +115,22 @@ const Mutation = {
 			where: { address },
 			data: {
 				tvl
+			},
+		});
+	},
+
+	addToTvc: async (parent, args, { req, prisma }) => {
+		if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
+			throw new AuthenticationError();
+		}
+		const { tokenAddress, volume, address, add } = args;
+		const tvc = await calculateTvc(tokenAddress, volume, add);
+		return prisma.bounty.update({
+			where: { address },
+			data: {
+				tvc: {
+					increment: tvc
+				}
 			},
 		});
 	},

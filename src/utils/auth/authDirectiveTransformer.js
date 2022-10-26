@@ -7,7 +7,6 @@ function authDirectiveTransformer(schema, directiveName) {
 
 	return mapSchema(schema, {
 		[MapperKind.OBJECT_FIELD]: (fieldConfig) => {
-
 			const upperDirective = getDirective(schema, fieldConfig, directiveName)?.[0];
 			if (upperDirective) {
 				const { resolve = defaultFieldResolver } = fieldConfig;
@@ -29,9 +28,9 @@ function authDirectiveTransformer(schema, directiveName) {
 						}
 					}
 					catch (err) {
-						throw new AuthenticationError();
+						throw new AuthenticationError(err);
 					}
-					throw new AuthenticationError();
+					throw new AuthenticationError('Auth error b');
 
 				};
 				return fieldConfig;
