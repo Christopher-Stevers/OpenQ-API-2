@@ -6,14 +6,11 @@ const Mutation = {
 			throw new AuthenticationError();
 		}
 
+		console.log('in resolver');
+
 		return prisma.contest.create({
 			data: {
 				id: args.repositoryId,
-				update: {
-					bountyIds: {
-						push: args.bountyId,
-					},
-				},
 				organization: {
 					connectOrCreate: {
 						where: {
@@ -24,7 +21,7 @@ const Mutation = {
 							blacklisted: false
 						},
 					},
-				}
+				},
 			},
 		});
 	},
