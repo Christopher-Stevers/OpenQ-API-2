@@ -26,6 +26,8 @@ model Bounty {
   blacklisted     Boolean
   type            String
   category        String?
+  Contest         Contest?      @relation(fields: [contestId], references: [id])
+  contestId       String?
 }
 
 model Contributor {
@@ -44,12 +46,23 @@ model Pr {
   bountyAddress  String?
 }
 
+model Contest {
+  id             String       @id @map("_id") // this would be the repository node ID in the Github API
+  bounties       Bounty[]
+  participantIds String[]
+  participants   User[]       @relation(fields: [participantIds], references: [address])
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+}
+
 model User {
   address                String         @id @map("_id")
   watchedBountyIds       String[]
   watchedBounties        Bounty[]       @relation(fields: [watchedBountyIds], references: [address])
   starredOrganizationIds String[]
   starredOrganizations   Organization[] @relation(fields: [starredOrganizationIds], references: [id])
+  contestIds             String[]
+  participantContests    Contest[]      @relation(fields: [contestIds], references: [id])
   company                String?
   email                  String?
   city                   String?
@@ -59,15 +72,17 @@ model User {
   discord                String?
   github                 String?
   twitter                String?
+  role                   String?
 }
 
 model Organization {
-  id                    String   @id @map("_id")
+  id                    String    @id @map("_id")
   organizationBountyIds String[]
   organizationBounties  Bounty[]
   blacklisted           Boolean
   starringUserIds       String[]
-  starringUsers         User[]   @relation(fields: [starringUserIds], references: [address])
+  starringUsers         User[]    @relation(fields: [starringUserIds], references: [address])
+  Contest               Contest[]
 }
 
 model Prices {

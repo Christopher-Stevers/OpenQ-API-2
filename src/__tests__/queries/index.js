@@ -10,6 +10,26 @@ mutation CreateBounty( $address: String!, $organizationId: String!, $bountyId: S
   }
 }`;
 
+const CREATE_NEW_CONTEST = gql`
+mutation CreateContest( $organizationId: String!, $repositoryId: String!, $bountyId: String!) {
+  createBounty(organizationId: $organizationId, repositoryId: $repositoryId, bountyId: $bountyId) {
+    id
+		participants
+		organization
+		bounties
+  }
+}`;
+
+const GET_CONTEST = gql`
+mutation GetContest( $id: String!) {
+  getContest(id: $id) {
+    id
+		participants
+		organization
+		bounties
+  }
+}`;
+
 const WATCH_BOUNTY = gql` mutation AddUser($contractAddress: String, $userAddress: String) {
   watchBounty(
     contractAddress: $contractAddress
@@ -62,4 +82,4 @@ query BountiesConnection($after: ID, $limit: Int!, $orderBy: String, $sortOrder:
 }
 `;
 
-module.exports = { CREATE_NEW_BOUNTY, WATCH_BOUNTY, UNWATCH_BOUNTY, GET_BOUNTY_BY_HASH, GET_USER_BY_HASH, GET_BOUNTY_PAGE };
+module.exports = { CREATE_NEW_BOUNTY, WATCH_BOUNTY, UNWATCH_BOUNTY, GET_BOUNTY_BY_HASH, GET_USER_BY_HASH, GET_BOUNTY_PAGE, CREATE_NEW_CONTEST, GET_CONTEST };
