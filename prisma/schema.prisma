@@ -47,13 +47,14 @@ model Pr {
 }
 
 model Repository {
-  id             String       @id @map("_id") // this would be the repository node ID in the Github API
+  id             String       @id @map("_id")
   // connect to bounties, users and organizations
   participantIds String[]
   participants   User[]       @relation(fields: [participantIds], references: [address])
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
   Bounty         Bounty[]
+  isContest      Boolean      @default(false)
 }
 
 model User {
