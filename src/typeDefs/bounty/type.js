@@ -15,6 +15,7 @@ const typeDef = gql`
 		category: String
 		createdAt: String
 		repositoryId: String
+		repository: Repository
 	}
 	
 	type Bounties {

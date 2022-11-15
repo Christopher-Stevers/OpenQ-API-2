@@ -26,8 +26,8 @@ model Bounty {
   category        String?
   organization    Organization? @relation(fields: [organizationId], references: [id])
   organizationId  String?
-  repository      Repository?   @relation(fields: [repositoryId], references: [id])
   repositoryId    String?
+  repository      Repository?   @relation(fields: [repositoryId], references: [id])
 }
 
 model Contributor {
@@ -48,11 +48,12 @@ model Pr {
 
 model Repository {
   id             String       @id @map("_id") // this would be the repository node ID in the Github API
+  // connect to bounties, users and organizations
   participantIds String[]
   participants   User[]       @relation(fields: [participantIds], references: [address])
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
-  bounties       Bounty[]
+  Bounty         Bounty[]
 }
 
 model User {
@@ -82,7 +83,7 @@ model Organization {
   blacklisted           Boolean      @default(false)
   starringUserIds       String[]
   starringUsers         User[]       @relation(fields: [starringUserIds], references: [address])
-  repository            Repository[]
+  repositories          Repository[]
 }
 
 model Prices {

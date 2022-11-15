@@ -18,16 +18,16 @@ const Mutation = {
 				tvl: 0,
 				tvc: -0,
 				bountyId: args.bountyId,
-				repository: {
-					connectOrCreate: {
-						where: {
-							id: args.repositoryId
-						},
-						create: {
-							id: args.repositoryId
-						}
-					},
-				},
+				// repository: {
+				// 	connectOrCreate: {
+				// 		where: {
+				// 			id: args.repositoryId
+				// 		},
+				// 		create: {
+				// 			id: args.repositoryId
+				// 		}
+				// 	},
+				// },
 				organization: {
 					connectOrCreate: {
 						where: {
