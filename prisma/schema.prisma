@@ -12,22 +12,22 @@ datasource db {
 }
 
 model Bounty {
-  address         String        @id @map("_id")
+  address         String       @id @map("_id")
   tvl             Float
   tvc             Float?
-  bountyId        String        @unique
+  bountyId        String       @unique
   watchingUserIds String[]
-  watchingUsers   User[]        @relation(fields: [watchingUserIds], references: [address])
-  createdAt       DateTime      @default(now())
+  watchingUsers   User[]       @relation(fields: [watchingUserIds], references: [address])
+  createdAt       DateTime     @default(now())
   prs             Pr[]
-  views           Int           @default(0)
-  blacklisted     Boolean       @default(false)
+  views           Int          @default(0)
+  blacklisted     Boolean      @default(false)
   type            String
   category        String?
-  organization    Organization? @relation(fields: [organizationId], references: [id])
-  organizationId  String?
-  repositoryId    String?
-  repository      Repository?   @relation(fields: [repositoryId], references: [id])
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  organizationId  String
+  repositoryId    String
+  repository      Repository   @relation(fields: [repositoryId], references: [id])
 }
 
 model Contributor {
@@ -81,7 +81,7 @@ model Organization {
   blacklisted     Boolean      @default(false)
   starringUserIds String[]
   starringUsers   User[]       @relation(fields: [starringUserIds], references: [address])
-  repositories    Repository[]
+  Repositories    Repository[]
   Bounty          Bounty[]
 }
 
