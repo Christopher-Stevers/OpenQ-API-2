@@ -1,18 +1,18 @@
 const { gql } = require('apollo-server');
 
 const typeDef = gql`
-	type Contest {
+	type Repository {
 		id: ID!
 		participants: [User]
 		organization: Organization
 		bounties: [Bounty]
 	}
-	type Contests {
-		contestConnection: ContestsConnection
-		nodes: [Contest]
+	type Repositories {
+		repositoryConnection: RepositoriesConnection
+		nodes: [Repository]
 	}
-	type ContestsConnection {
-		nodes:[Contest]
+	type RepositoriesConnection {
+		nodes:[Repository]
 		cursor: ID
 	}
 `;

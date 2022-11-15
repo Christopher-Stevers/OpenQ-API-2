@@ -17,9 +17,27 @@ const Mutation = {
 				address: String(args.address),
 				tvl: 0,
 				tvc: -0,
-				organizationId: args.organizationId,
-				repositoryId: args.repositoryId,
-				bountyId: args.bountyId
+				bountyId: args.bountyId,
+				repository: {
+					connectOrCreate: {
+						where: {
+							id: args.repositoryId
+						},
+						create: {
+							id: args.repositoryId
+						}
+					},
+				},
+				organization: {
+					connectOrCreate: {
+						where: {
+							id: args.organizationId
+						},
+						create: {
+							id: args.organizationId
+						}
+					},
+				}
 			},
 		});
 	},

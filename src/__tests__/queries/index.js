@@ -10,8 +10,8 @@ mutation CreateBounty( $address: String!, $organizationId: String!, $bountyId: S
   }
 }`;
 
-const CREATE_NEW_CONTEST = gql`
-mutation CreateContest( $organizationId: String!, $repositoryId: String!, $bountyId: String!) {
+const CREATE_NEW_REPOSITORY = gql`
+mutation CreateRepository( $organizationId: String!, $repositoryId: String!, $bountyId: String!) {
   createBounty(organizationId: $organizationId, repositoryId: $repositoryId, bountyId: $bountyId) {
     id
 		participants
@@ -20,9 +20,9 @@ mutation CreateContest( $organizationId: String!, $repositoryId: String!, $bount
   }
 }`;
 
-const GET_CONTEST = gql`
-mutation GetContest( $id: String!) {
-  getContest(id: $id) {
+const GET_REPOSITORY = gql`
+mutation GetRepository( $id: String!) {
+  getRepository(id: $id) {
     id
 		participants
 		organization

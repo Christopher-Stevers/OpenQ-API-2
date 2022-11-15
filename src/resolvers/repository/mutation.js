@@ -1,14 +1,12 @@
 const { AuthenticationError } = require('apollo-server');
 
 const Mutation = {
-	createContest: async (parent, args, { req, prisma }) => {
+	createRepository: async (parent, args, { req, prisma }) => {
 		if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
 			throw new AuthenticationError();
 		}
 
-		console.log('in resolver');
-
-		return prisma.contest.create({
+		return prisma.repository.create({
 			data: {
 				id: args.repositoryId,
 				organization: {
@@ -17,8 +15,7 @@ const Mutation = {
 							id: args.organizationId
 						},
 						create: {
-							id: args.organizationId,
-							blacklisted: false
+							id: args.organizationId
 						},
 					},
 				}

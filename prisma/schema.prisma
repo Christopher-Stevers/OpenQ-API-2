@@ -56,30 +56,30 @@ model Repository {
 }
 
 model User {
-  address                String         @id @map("_id")
-  watchedBountyIds       String[]
-  watchedBounties        Bounty[]       @relation(fields: [watchedBountyIds], references: [address])
-  starredOrganizationIds String[]
-  starredOrganizations   Organization[] @relation(fields: [starredOrganizationIds], references: [id])
-  repositoryIds          String[]
-  participantRepositorys Repository[]   @relation(fields: [repositoryIds], references: [id])
-  company                String?
-  email                  String?
-  city                   String?
-  streetAddress          String?
-  country                String?
-  province               String?
-  discord                String?
-  github                 String?
-  twitter                String?
-  role                   String?
+  address                 String         @id @map("_id")
+  watchedBountyIds        String[]
+  watchedBounties         Bounty[]       @relation(fields: [watchedBountyIds], references: [address])
+  starredOrganizationIds  String[]
+  starredOrganizations    Organization[] @relation(fields: [starredOrganizationIds], references: [id])
+  repositoryIds           String[]
+  participantRepositories Repository[]   @relation(fields: [repositoryIds], references: [id])
+  company                 String?
+  email                   String?
+  city                    String?
+  streetAddress           String?
+  country                 String?
+  province                String?
+  discord                 String?
+  github                  String?
+  twitter                 String?
+  role                    String?
 }
 
 model Organization {
   id                    String       @id @map("_id")
   organizationBountyIds String[]
   organizationBounties  Bounty[]
-  blacklisted           Boolean
+  blacklisted           Boolean      @default(false)
   starringUserIds       String[]
   starringUsers         User[]       @relation(fields: [starringUserIds], references: [address])
   repository            Repository[]
