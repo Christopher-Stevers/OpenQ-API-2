@@ -21,7 +21,7 @@ const Mutation = {
 							blacklisted: false
 						},
 					},
-				},
+				}
 			},
 		});
 	},

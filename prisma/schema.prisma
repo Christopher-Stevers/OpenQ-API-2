@@ -18,23 +18,23 @@ model Bounty {
   bountyId        String        @unique
   watchingUserIds String[]
   watchingUsers   User[]        @relation(fields: [watchingUserIds], references: [address])
-  organization    Organization? @relation(fields: [organizationId], references: [id])
-  organizationId  String?
   createdAt       DateTime      @default(now())
   prs             Pr[]
   views           Int           @default(0)
-  blacklisted     Boolean
+  blacklisted     Boolean       @default(false)
   type            String
   category        String?
-  Contest         Contest?      @relation(fields: [contestId], references: [id])
-  contestId       String?
+  organization    Organization? @relation(fields: [organizationId], references: [id])
+  organizationId  String?
+  repository      Repository?   @relation(fields: [repositoryId], references: [id])
+  repositoryId    String?
 }
 
 model Contributor {
   userId  String   @id @map("_id")
   address String
-  prIds   String[]
   prs     Pr[]     @relation(fields: [prIds], references: [prId])
+  prIds   String[]
 }
 
 model Pr {
@@ -46,13 +46,13 @@ model Pr {
   bountyAddress  String?
 }
 
-model Contest {
+model Repository {
   id             String       @id @map("_id") // this would be the repository node ID in the Github API
-  bounties       Bounty[]
   participantIds String[]
   participants   User[]       @relation(fields: [participantIds], references: [address])
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
+  bounties       Bounty[]
 }
 
 model User {
@@ -61,8 +61,8 @@ model User {
   watchedBounties        Bounty[]       @relation(fields: [watchedBountyIds], references: [address])
   starredOrganizationIds String[]
   starredOrganizations   Organization[] @relation(fields: [starredOrganizationIds], references: [id])
-  contestIds             String[]
-  participantContests    Contest[]      @relation(fields: [contestIds], references: [id])
+  repositoryIds          String[]
+  participantRepositorys Repository[]   @relation(fields: [repositoryIds], references: [id])
   company                String?
   email                  String?
   city                   String?
@@ -76,13 +76,13 @@ model User {
 }
 
 model Organization {
-  id                    String    @id @map("_id")
+  id                    String       @id @map("_id")
   organizationBountyIds String[]
   organizationBounties  Bounty[]
   blacklisted           Boolean
   starringUserIds       String[]
-  starringUsers         User[]    @relation(fields: [starringUserIds], references: [address])
-  Contest               Contest[]
+  starringUsers         User[]       @relation(fields: [starringUserIds], references: [address])
+  repository            Repository[]
 }
 
 model Prices {

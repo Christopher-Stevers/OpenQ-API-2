@@ -14,7 +14,9 @@ const typeDef = gql`
 		organizationId: String
 		category: String
 		createdAt: String
+		repositoryId: String
 	}
+	
 	type Bounties {
 		bountyConnection: BountyConnection
 		nodes: [Bounty]
