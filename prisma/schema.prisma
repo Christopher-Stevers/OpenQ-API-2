@@ -77,13 +77,12 @@ model User {
 }
 
 model Organization {
-  id                    String       @id @map("_id")
-  organizationBountyIds String[]
-  organizationBounties  Bounty[]
-  blacklisted           Boolean      @default(false)
-  starringUserIds       String[]
-  starringUsers         User[]       @relation(fields: [starringUserIds], references: [address])
-  repositories          Repository[]
+  id              String       @id @map("_id")
+  blacklisted     Boolean      @default(false)
+  starringUserIds String[]
+  starringUsers   User[]       @relation(fields: [starringUserIds], references: [address])
+  repositories    Repository[]
+  Bounty          Bounty[]
 }
 
 model Prices {
