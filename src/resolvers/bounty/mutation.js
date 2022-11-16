@@ -40,6 +40,7 @@ const Mutation = {
 					},
 				}
 			},
+			include: { repository: true }
 		});
 	},
 	updateBounty: async (parent, args, { req, prisma }) => {
@@ -64,8 +65,6 @@ const Mutation = {
 								blacklisted: false
 							}
 						},
-
-
 					}
 				},
 				type: args.type,
@@ -88,15 +87,12 @@ const Mutation = {
 								blacklisted: false
 							},
 						},
-
-
 					},
 				},
 				bountyId: args.bountyId
 			},
 		});
 	},
-
 	blackList: async (parent, args, { req, prisma }) => {
 		if (req.headers.authorization !== process.env.BANHAMMER) {
 			throw new AuthenticationError();
@@ -126,7 +122,6 @@ const Mutation = {
 			},
 		});
 	},
-
 	addToTvc: async (parent, args, { req, prisma }) => {
 		if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
 			throw new AuthenticationError();
