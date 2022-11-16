@@ -7,6 +7,7 @@ const Mutation = {
 		if (!verifySignature(req, args.address)) {
 			throw new AuthenticationError();
 		}
+
 		const mutableArgs = { ...args };
 		delete mutableArgs.address;
 

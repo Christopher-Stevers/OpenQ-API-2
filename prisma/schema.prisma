@@ -52,8 +52,8 @@ model Repository {
   participants   User[]       @relation(fields: [participantIds], references: [address])
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
-  Bounty         Bounty[]
   isContest      Boolean      @default(false)
+  Bounties       Bounty[]
 }
 
 model User {
