@@ -3,7 +3,6 @@ const { gql } = require('apollo-server');
 const typeDef = gql`
 	type Organization {
 		id: String!
-		organizationBountyIds: [String]
 		blacklisted: Boolean
 		starringUserIds: [String]
 		bounties(
@@ -14,6 +13,14 @@ const typeDef = gql`
 			category: String
 			types: [String]
 		): Bounties
+		repositories(
+			after: ID
+			limit: Int!
+			orderBy: String
+			sortOrder: String
+			category: String
+			types: [String]
+		): [Repository]
 	}
 `;
 

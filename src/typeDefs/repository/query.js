@@ -9,7 +9,7 @@ const queryDef = gql`
 			orderBy: String
 			sortOrder: String
 			organizationId: String
-		): Repositories
+		): [Repository]
 	}
 `;
 

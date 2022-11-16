@@ -5,15 +5,14 @@ const typeDef = gql`
 		id: ID!
 		participants: [User]
 		organization: Organization
-		bounties: [Bounty]
-	}
-	type Repositories {
-		repositoryConnection: RepositoriesConnection
-		nodes: [Repository]
-	}
-	type RepositoriesConnection {
-		nodes:[Repository]
-		cursor: ID
+		bounties(
+			after: ID
+			limit: Int!
+			orderBy: String
+			sortOrder: String
+			category: String
+			types: [String]
+		): Bounties
 	}
 `;
 

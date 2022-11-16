@@ -3,7 +3,6 @@ const Query = {
 		prisma.organization.findUnique({
 			where: { id: args.organizationId }
 		}),
-
 	organizations: async (_, args, { prisma }) => {
 		return prisma.organization.findMany({
 			where: {
@@ -23,7 +22,7 @@ const Query = {
 					}
 				} :
 					{})
-			},
+			}
 		});
 	},
 
