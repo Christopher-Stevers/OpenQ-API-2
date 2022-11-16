@@ -113,7 +113,7 @@ const Mutation = {
 		const bounty = await prisma.bounty.findUnique({
 			where: { address },
 		});
-		const currentTvl = bounty.tvl;
+		const currentTvl = bounty?.tvl || 0;
 		const tvl = await calculateTvl(tokenBalance, currentTvl, add);
 		return prisma.bounty.update({
 			where: { address },
