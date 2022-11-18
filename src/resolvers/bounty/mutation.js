@@ -54,6 +54,7 @@ const Mutation = {
 				category: args.category || null,
 				...args.tvl && { tvl: args.tvl },
 				...args.tvc && { tvc: args.tvc },
+				type: args.type,
 				...args.organizationId && {
 					organization: {
 						connectOrCreate: {
@@ -78,8 +79,7 @@ const Mutation = {
 							}
 						},
 					}
-				},
-				type: args.type,
+				}
 			},
 			create: {
 				type: args.type,
@@ -88,6 +88,7 @@ const Mutation = {
 				address: String(args.address),
 				tvl: args.tvl || 0,
 				tvc: args.tvc || 0,
+				bountyId: args.bountyId,
 				...args.organizationId && {
 					organization: {
 						connectOrCreate: {
@@ -112,8 +113,7 @@ const Mutation = {
 							},
 						},
 					},
-				},
-				bountyId: args.bountyId
+				}
 			},
 		});
 	},
@@ -128,7 +128,6 @@ const Mutation = {
 			}
 		);
 	},
-
 	addToTvl: async (parent, args, { req, prisma }) => {
 		if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
 			throw new AuthenticationError();
