@@ -2,7 +2,7 @@ const { gql } = require('@apollo/client');
 
 
 const CREATE_NEW_BOUNTY = gql`
-mutation CreateBounty( $address: String!, $organizationId: String!, $bountyId: String!, repositoryId: String!) {
+mutation CreateBounty( $address: String!, $organizationId: String!, $bountyId: String!, $repositoryId: String!) {
   createBounty(address: $address, organizationId: $organizationId, bountyId: $bountyId, repositoryId: $repositoryId) {
     address
 		bountyId
@@ -53,7 +53,7 @@ const UNWATCH_BOUNTY = gql` mutation AddUser($contractAddress: String, $userAddr
 `;
 
 
-const GET_BOUNTY_BY_HASH = gql`query bounty($contractAddress: String! ) {
+const GET_BOUNTY_BY_ID = gql`query bounty($contractAddress: String! ) {
   bounty(address: $contractAddress) {
     tvl
 		bountyId
@@ -81,4 +81,4 @@ query BountiesConnection($after: ID, $limit: Int!, $orderBy: String, $sortOrder:
 }
 `;
 
-module.exports = { CREATE_NEW_BOUNTY, WATCH_BOUNTY, UNWATCH_BOUNTY, GET_BOUNTY_BY_HASH, GET_USER_BY_HASH, GET_BOUNTY_PAGE, CREATE_NEW_CONTEST, GET_CONTEST };
+module.exports = { CREATE_NEW_BOUNTY, WATCH_BOUNTY, UNWATCH_BOUNTY, GET_BOUNTY_BY_ID, GET_USER_BY_HASH, GET_BOUNTY_PAGE, CREATE_NEW_REPOSITORY, GET_REPOSITORY };

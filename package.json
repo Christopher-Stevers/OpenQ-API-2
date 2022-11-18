@@ -5,23 +5,13 @@
 	"main": "index.js",
 	"scripts": {
 		"start": "node ./src/index.js",
-		"start:dev": "nodemon --ignore generated --exec 'npx prisma generate && node ./src/index.js'",
+		"start:dev": "nodemon --ignore generated --ignore src/__tests__/ --exec 'npx prisma generate && node ./src/index.js'",
 		"boot:test": "docker-compose down && docker-compose up",
-		"test:docker": "jest"
+		"test": "jest"
 	},
 	"keywords": [],
 	"author": "Christopher-Stevers",
 	"license": "ISC",
-	"jest": {
-		"globalSetup": "./src/__tests__/config/globalSetup.js",
-		"globalTeardown": "./src/__tests__/config/globalTeardown.js",
-		"testTimeout": 20000,
-		"testPathIgnorePatterns": [
-			"src/__tests__/config/",
-			"src/__tests__/utils/",
-			"src/__tests__/queries/"
-		]
-	},
 	"dependencies": {
 		"@google-analytics/data": "^3.0.0",
 		"@graphql-tools/schema": "^9.0.1",
@@ -30,6 +20,7 @@
 		"apollo-server": "^3.6.6",
 		"axios": "^0.27.2",
 		"cookie-signature": "^1.2.0",
+		"dotenv": "^16.0.3",
 		"env-cmd": "^10.1.0",
 		"ethers": "^5.6.2",
 		"gql": "^1.1.2",
