@@ -6,19 +6,7 @@
 	"scripts": {
 		"start": "node ./src/index.js",
 		"start:dev": "nodemon --ignore generated --exec 'npx prisma generate && node ./src/index.js'",
-		"beforeRun": "docker-compose stop",
-		"env:dev": "cd utils && python3 env_script.py ../configuration/development.env",
-		"env:test": "cd utils && python3 env_script.py ../configuration/test.env && cd ..",
-		"dev:docker:build": "npm run env:dev && docker-compose up --build",
-		"test:docker:build": "npm run beforeRun && npm run env:test && docker-compose up --build",
-		"test:docker": "npm run beforeRun && npm run env:test && docker-compose up",
-		"test:local": "npm run beforeRun &&  npm run apollo:test",
-		"apollo:test": "jest --runInBand --watchAll",
-		"development": "ls && nodemon --exec babel-node src/index.js",
-		"development:local": "env-cmd -f ../configuration/development.env nodemon --exec babel-node src/index.js",
-		"prisma:mgs": "npx prisma migrate save --experimental --schema=./prisma/schema.prisma",
-		"prisma:mgu": "npx prisma migrate up --experimental --schema=./prisma/schema.prisma ",
-		"prisma:gen": "npx prisma generate --schema=./prisma/schema.prisma"
+		"test:local": "npm run jest --runInBand --watchAll"
 	},
 	"keywords": [],
 	"author": "Christopher-Stevers",

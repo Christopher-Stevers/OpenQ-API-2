@@ -67,8 +67,6 @@ const GET_USER_BY_HASH = gql`query($userAddress: String!) {
   }
 }`;
 
-
-
 const GET_BOUNTY_PAGE = gql`
 query BountiesConnection($after: ID, $limit: Int!, $orderBy: String, $sortOrder: String, $organizationId: String) {
   bountiesConnection(after: $after, limit: $limit, orderBy: $orderBy, sortOrder: $sortOrder, organizationId: $organizationId) {

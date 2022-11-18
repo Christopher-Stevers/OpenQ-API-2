@@ -16,7 +16,7 @@ describe('Authenticated Client can create bounties.', () => {
 	const client = getClient();
 
 	it('Should watch and unwatch when signed user attempts.', async () => {
-
+		const mockDBMock = mockDb.reset();
 
 		const autoTaskClient = getAuthenticatedClient('secret123!');
 		const contractAddress = '0x8daf17a20c9dba35f005b6324f493785d239719d';
@@ -42,7 +42,6 @@ describe('Not authenticated client cannot create bounties.', () => {
 	const client = getClient();
 
 	it('Should watch and unwatch when signed user attempts.', async () => {
-
 
 		const contractAddress = '0x8daf17a20c9dba35f005b6324f493785d239719d';
 		const createBounty = async () => {

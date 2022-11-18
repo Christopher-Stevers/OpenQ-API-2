@@ -30,7 +30,6 @@ const Mutation = {
 		);
 	},
 	updateUserSimple: async (parent, args, { prisma }) => {
-
 		const mutableArgs = { ...args };
 		delete mutableArgs.address;
 
