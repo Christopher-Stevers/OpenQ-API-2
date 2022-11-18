@@ -10,6 +10,7 @@ const mutationDefs = gql`
 			tvc: Float,
 			organizationId: String,
 			bountyId: String!,
+			repositoryId: String,
 			category: String
 		): Bounty!
 		watchBounty(userAddress: String, contractAddress: String): Bounty

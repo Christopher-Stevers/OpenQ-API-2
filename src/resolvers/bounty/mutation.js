@@ -67,6 +67,18 @@ const Mutation = {
 						},
 					}
 				},
+				...args.repositoryId && {
+					organization: {
+						connectOrCreate: {
+							where: {
+								id: args.repositoryId
+							},
+							create: {
+								id: args.repositoryId
+							}
+						},
+					}
+				},
 				type: args.type,
 			},
 			create: {
@@ -85,6 +97,18 @@ const Mutation = {
 							create: {
 								id: args.organizationId,
 								blacklisted: false
+							},
+						},
+					},
+				},
+				...args.repositoryId && {
+					repository: {
+						connectOrCreate: {
+							where: {
+								id: args.repositoryId
+							},
+							create: {
+								id: args.repositoryId
 							},
 						},
 					},
