@@ -6,7 +6,8 @@
 	"scripts": {
 		"start": "node ./src/index.js",
 		"start:dev": "nodemon --ignore generated --exec 'npx prisma generate && node ./src/index.js'",
-		"test:local": "npm run jest --runInBand --watchAll"
+		"boot:test": "docker-compose down && docker-compose up",
+		"test:docker": "jest"
 	},
 	"keywords": [],
 	"author": "Christopher-Stevers",

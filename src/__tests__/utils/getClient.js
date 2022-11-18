@@ -14,7 +14,6 @@ const getClient = () => {
 	});
 };
 
-
 const getAuthenticatedClient = (token, signature) => {
 	const authLink = new ApolloLink((operation, forward) => {
 		// Retrieve the authorization token from local storage.
