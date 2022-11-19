@@ -13,6 +13,10 @@ const mutationDefs = gql`
 			github: String
 			twitter:String
 			discord: String
+			devRoles: [String]
+			frameworks: [String]
+			languages: [String]
+			otherRoles: [String]
 		): User!
 		updateUserSimple(
 			address: String!
