@@ -21,6 +21,7 @@ const mutationDefs = gql`
 		updateUserSimple(
 			address: String!
 			email: String		
+			twitter:String
 			github: String)	: User!
   }
 `;
