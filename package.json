@@ -5,34 +5,13 @@
 	"main": "index.js",
 	"scripts": {
 		"start": "node ./src/index.js",
-		"start:dev": "nodemon --ignore generated --exec 'npx prisma generate && node ./src/index.js'",
-		"beforeRun": "docker-compose stop",
-		"env:dev": "cd utils && python3 env_script.py ../configuration/development.env",
-		"env:test": "cd utils && python3 env_script.py ../configuration/test.env && cd ..",
-		"dev:docker:build": "npm run env:dev && docker-compose up --build",
-		"test:docker:build": "npm run beforeRun && npm run env:test && docker-compose up --build",
-		"test:docker": "npm run beforeRun && npm run env:test && docker-compose up",
-		"test:local": "npm run beforeRun &&  npm run apollo:test",
-		"apollo:test": "jest --runInBand --watchAll",
-		"development": "ls && nodemon --exec babel-node src/index.js",
-		"development:local": "env-cmd -f ../configuration/development.env nodemon --exec babel-node src/index.js",
-		"prisma:mgs": "npx prisma migrate save --experimental --schema=./prisma/schema.prisma",
-		"prisma:mgu": "npx prisma migrate up --experimental --schema=./prisma/schema.prisma ",
-		"prisma:gen": "npx prisma generate --schema=./prisma/schema.prisma"
+		"start:dev": "nodemon --ignore generated --ignore src/__tests__/ --exec 'npx prisma generate && node ./src/index.js'",
+		"boot:test": "docker-compose down && docker-compose up",
+		"test": "jest"
 	},
 	"keywords": [],
 	"author": "Christopher-Stevers",
 	"license": "ISC",
-	"jest": {
-		"globalSetup": "./src/__tests__/config/globalSetup.js",
-		"globalTeardown": "./src/__tests__/config/globalTeardown.js",
-		"testTimeout": 20000,
-		"testPathIgnorePatterns": [
-			"src/__tests__/config/",
-			"src/__tests__/utils/",
-			"src/__tests__/queries/"
-		]
-	},
 	"dependencies": {
 		"@google-analytics/data": "^3.0.0",
 		"@graphql-tools/schema": "^9.0.1",
@@ -41,11 +20,13 @@
 		"apollo-server": "^3.6.6",
 		"axios": "^0.27.2",
 		"cookie-signature": "^1.2.0",
+		"dotenv": "^16.0.3",
 		"env-cmd": "^10.1.0",
 		"ethers": "^5.6.2",
 		"gql": "^1.1.2",
 		"graphql": "^16.5.0",
 		"graphql-type-json": "^0.3.2",
+		"mongodb": "^4.12.0",
 		"nodemon": "^2.0.16"
 	},
 	"devDependencies": {

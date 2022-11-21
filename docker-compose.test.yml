@@ -1,0 +1,24 @@
+version: "3"
+services:
+  openq-api:
+    container_name: openq-api
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./
+    env_file:
+      - ./.env
+    ports:
+      - "4000:4000"
+    volumes:
+      - /app/node_modules
+      - ./:/app
+  mongo:
+    container_name: mongo
+    image: openq/mongo-local-replica-set:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_REPLICA_HOST: mongo
+      MONGO_REPLICA_PORT: 27018
+    ports:
+      - '27018:27018'

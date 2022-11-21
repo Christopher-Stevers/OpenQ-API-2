@@ -1,5 +1,8 @@
 const { ApolloClient, HttpLink, InMemoryCache, ApolloLink } = require('@apollo/client');
 const fetch = require('cross-fetch');
+
+const dotenv = require('dotenv');
+dotenv.config({ path: '.env.test' });
 const uri = process.env.OPENQ_API_URL;
 
 const getClient = () => {
@@ -13,7 +16,6 @@ const getClient = () => {
 		cache: new InMemoryCache()
 	});
 };
-
 
 const getAuthenticatedClient = (token, signature) => {
 	const authLink = new ApolloLink((operation, forward) => {
@@ -32,6 +34,7 @@ const getAuthenticatedClient = (token, signature) => {
 	});
 
 	const httpLink = new HttpLink({ uri: uri + '/graphql', fetch });
+
 	return new ApolloClient({
 		link: authLink.concat(httpLink),
 		onError: (e) => { console.log(e); },
