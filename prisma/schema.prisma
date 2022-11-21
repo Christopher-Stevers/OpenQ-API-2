@@ -47,13 +47,15 @@ model Pr {
 }
 
 model Repository {
-    id             String       @id @map("_id")
-    participantIds String[]
-    participants   User[]       @relation(fields: [participantIds], references: [address])
-    organizationId String
-    organization   Organization @relation(fields: [organizationId], references: [id])
-    isContest      Boolean      @default(false)
-    Bounty         Bounty[]
+    id                   String       @id @map("_id")
+    participantIds       String[]
+    participants         User[]       @relation(fields: [participantIds], references: [address])
+    organizationId       String
+    organization         Organization @relation(fields: [organizationId], references: [id])
+    isContest            Boolean      @default(false)
+    Bounty               Bounty[]
+    startDate            DateTime?
+    registrationDeadLine DateTime?
 }
 
 model User {
