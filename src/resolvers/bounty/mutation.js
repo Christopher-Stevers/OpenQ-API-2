@@ -5,8 +5,6 @@ const { verifySignature } = require('../../utils/auth/verifySignature');
 
 const Mutation = {
 	createBounty: async (parent, args, { req, prisma }) => {
-		console.log('argsfuck', args);
-
 		if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
 			throw new AuthenticationError();
 		}

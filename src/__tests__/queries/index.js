@@ -2,12 +2,13 @@ const { gql } = require('@apollo/client');
 
 
 const CREATE_NEW_BOUNTY = gql`
-mutation CreateBounty( $address: String!, $organizationId: String!, $bountyId: String!, $repositoryId: String!) {
-  createBounty(address: $address, organizationId: $organizationId, bountyId: $bountyId, repositoryId: $repositoryId) {
+mutation CreateBounty( $address: String!, $organizationId: String!, $bountyId: String!, $repositoryId: String!,  $type: String!) {
+  createBounty(address: $address, organizationId: $organizationId, bountyId: $bountyId, repositoryId: $repositoryId, type: $type) {
     address
 		bountyId
 		organizationId
 		repositoryId
+		type
   }
 }`;
 
