@@ -109,10 +109,21 @@ const Mutation = {
 								id: args.repositoryId
 							},
 							create: {
-								id: args.repositoryId
-							},
-						},
-					},
+								id: args.repositoryId,
+								organization:
+								{
+									connectOrCreate: {
+										where: {
+											id: args.organizationId
+										},
+										create: {
+											id: args.organizationId
+										},
+									},
+								}
+							}
+						}
+					}
 				}
 			},
 		});
