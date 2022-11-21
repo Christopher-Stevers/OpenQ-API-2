@@ -44,6 +44,7 @@ model Pr {
     contributors   Contributor[] @relation(fields: [contributorIds], references: [userId])
     Bounty         Bounty?       @relation(fields: [bountyAddress], references: [address])
     bountyAddress  String?
+    blacklisted    Boolean       @default(false)
 }
 
 model Repository {
@@ -56,6 +57,7 @@ model Repository {
     Bounty               Bounty[]
     startDate            DateTime?
     registrationDeadline DateTime?
+    hackathonBlacklisted Boolean      @default(false)
 }
 
 model User {

@@ -63,7 +63,13 @@ const Mutation = {
 				}
 			},
 		});
-	}
+	},
+	setHackathonBlacklist: async (parent, args, { prisma }) => {
+		return prisma.repository.update({
+			where: { id: args.repositoryId },
+			data: { hackathonBlacklist: args.hackathonBlacklist }
+		});
+	},
 };
 
 module.exports = Mutation;

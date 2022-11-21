@@ -43,6 +43,18 @@ const Mutation = {
 		});
 	},
 
+	blackListPr: async (parent, args, { req, prisma }) => {
+		const { prId, blacklisted } = args;
+		const cookie = req.headers.cookie;
+		await validateOwnership(prId, cookie);
+		return prisma.pr.update({
+			where: { prId },
+			data: {
+				blacklisted
+			},
+		});
+	},
+
 	removeContributor: async (parent, args, { req, prisma }) => {
 		const { prId, userId } = args;
 		const cookie = req.headers.cookie;
