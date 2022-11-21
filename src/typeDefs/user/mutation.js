@@ -22,6 +22,7 @@ const mutationDefs = gql`
 			address: String!
 			email: String		
 			twitter:String
+			languages: [String]
 			github: String)	: User!
   }
 `;
