@@ -13,6 +13,10 @@ const typeDef = gql`
 			category: String
 			types: [String]
 		): Bounties
+		isContest: Boolean
+		startDate: String
+		registrationDeadline: String
+		
 	}
 `;
 

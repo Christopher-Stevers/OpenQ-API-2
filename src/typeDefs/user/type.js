@@ -23,6 +23,10 @@ const typeDef = gql`
 		github: String 			
 		twitter:String
 		discord: String
+		devRoles: [String]		
+		frameworks: [String]
+		languages: [String]
+		otherRoles: [String]
 	}
 
 	type UserConnection {

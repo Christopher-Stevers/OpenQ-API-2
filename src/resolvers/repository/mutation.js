@@ -38,6 +38,31 @@ const Mutation = {
 				}
 			},
 		});
+	},
+
+	setIsContest: async (parent, args, { prisma }) => {
+		const startDate = new Date(args.startDate);
+		const registrationDeadline = new Date(args.registrationDeadline);
+		// upsert repository as contest
+		return prisma.repository.upsert({
+			where: { id: args.repositoryId },
+			update: { isContest: args.isContest, startDate, registrationDeadline },
+			create: {
+				id: args.repositoryId,
+				isContest: args.isContest,
+				organization: {
+					connectOrCreate: {
+						where: {
+							id: args.organizationId
+						},
+						create: {
+							id: args.organizationId
+						},
+					},
+
+				}
+			},
+		});
 	}
 };
 

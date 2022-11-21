@@ -64,20 +64,31 @@ const Mutation = {
 							create: {
 								id: args.organizationId,
 								blacklisted: false
-							}
+							},
 						},
-					}
+					},
 				},
 				...args.repositoryId && {
-					organization: {
+					repository: {
 						connectOrCreate: {
 							where: {
 								id: args.repositoryId
 							},
 							create: {
-								id: args.repositoryId
+								id: args.repositoryId,
+								organization:
+								{
+									connectOrCreate: {
+										where: {
+											id: args.organizationId
+										},
+										create: {
+											id: args.organizationId
+										},
+									},
+								}
 							}
-						},
+						}
 					}
 				}
 			},
@@ -109,10 +120,21 @@ const Mutation = {
 								id: args.repositoryId
 							},
 							create: {
-								id: args.repositoryId
-							},
-						},
-					},
+								id: args.repositoryId,
+								organization:
+								{
+									connectOrCreate: {
+										where: {
+											id: args.organizationId
+										},
+										create: {
+											id: args.organizationId
+										},
+									},
+								}
+							}
+						}
+					}
 				}
 			},
 		});
