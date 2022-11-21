@@ -15,7 +15,7 @@ const typeDef = gql`
 		): Bounties
 		isContest: Boolean
 		startDate: String
-		registrationDeadLine: String
+		registrationDeadline: String
 		
 	}
 `;

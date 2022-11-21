@@ -55,7 +55,7 @@ model Repository {
     isContest            Boolean      @default(false)
     Bounty               Bounty[]
     startDate            DateTime?
-    registrationDeadLine DateTime?
+    registrationDeadline DateTime?
 }
 
 model User {
