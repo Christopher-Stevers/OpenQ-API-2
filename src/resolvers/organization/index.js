@@ -5,7 +5,7 @@ const Organization = require('./organization');
 const organizationResolvers = {
 	Mutation,
 	Query,
-	Organization
+	Organization,
 };
 
 module.exports = organizationResolvers;

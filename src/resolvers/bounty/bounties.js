@@ -1,12 +1,13 @@
 
 const Bounties = {
 	bountyConnection: async (parent, args, { prisma }) => {
+
 		const cursor = parent.after ? { address: parent.after } : undefined;
 		const organizationIdObj = parent.organizationId ? { organizationId: parent.organizationId } : {};
 		const nodes = await prisma.bounty.findMany({
 			skip: (!parent.after) ? 0 : 1,
 			cursor,
-			where: { ...organizationIdObj, type: { in: parent.types }, category: parent.category, address: { in: parent.addresses } },
+			where: { ...organizationIdObj, type: { in: parent.types }, category: parent.category, address: { in: parent.addresses }, repositoryId: parent.repositoryId },
 			take: parent.limit,
 			...parent.orderBy ? {
 				orderBy: [

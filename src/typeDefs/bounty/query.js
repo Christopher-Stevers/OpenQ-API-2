@@ -11,6 +11,7 @@ const queryDef = gql`
 			organizationId: String
 			types: [String]
 			category: String
+			repositoryId: String
 		): Bounties
 	}
 `;
