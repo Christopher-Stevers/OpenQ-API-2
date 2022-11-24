@@ -17,6 +17,14 @@ const mutationDefs = gql`
 			frameworks: [String]
 			languages: [String]
 			otherRoles: [String]
+ 			postalCode: String
+  			billingName: String
+  			 phoneNumber: String
+  			 taxId: String
+			 vatNumber: String
+ 			 vatRate: Float
+			 invoiceNumber: Int
+  			 memo: String
 		): User!
 		updateUserSimple(
 			address: String!

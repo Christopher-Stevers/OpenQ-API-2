@@ -47,9 +47,13 @@ const Mutation = {
 		const { prId, blacklisted } = args;
 		const cookie = req.headers.cookie;
 		await validateOwnership(prId, cookie);
-		return prisma.pr.update({
+		return prisma.pr.upsert({
 			where: { prId },
-			data: {
+			create: {
+				prId,
+				blacklisted
+			},
+			update: {
 				blacklisted
 			},
 		});

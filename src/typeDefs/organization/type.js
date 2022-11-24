@@ -20,7 +20,7 @@ const typeDef = gql`
 			sortOrder: String
 			category: String
 			types: [String]
-		): [Repository]
+		): Repositories
 	}
 `;
 

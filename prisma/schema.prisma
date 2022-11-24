@@ -77,10 +77,19 @@ model User {
     discord                 String?
     github                  String?
     twitter                 String?
-    devRoles                String[]
-    otherRoles              String[]
-    languages               String[]
-    frameworks              String[]
+    postalCode              String?
+    billingName             String?
+    invoiceNumber           Int?
+    phoneNumber             String?
+    taxId                   String?
+    vatNumber               String?
+    vatRate                 Float?
+    memo                    String?
+
+    devRoles   String[]
+    otherRoles String[]
+    languages  String[]
+    frameworks String[]
 }
 
 model Organization {

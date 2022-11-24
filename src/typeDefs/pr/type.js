@@ -8,6 +8,7 @@ const typeDef = gql`
     contributorIds: [String]
     Bounty:   		Bounty
     bountyAddress: 	String
+	blacklisted: 	Boolean
 	}
 
 `;
