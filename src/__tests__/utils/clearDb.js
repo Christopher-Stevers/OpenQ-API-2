@@ -35,5 +35,28 @@ const clearDb = async () => {
 	});
 	return promise;
 };
+const clearDbUser = async () => {
+	const promise = new Promise((resolve, reject) => {
+		MongoClient
+			.connect(url, function (err, db) {
+				if (err) throw err;
+				var dbo = db.db('openqdb');
+				try {
+					console.log('Dropping User collection...');
+					dbo.dropCollection('User', function (err, delOK) {
+						if (err) throw err;
+						if (delOK) console.log('User collection deleted');
+						db.close();
+						console.log('DB Connection Closed');
+						resolve('true');
+					});
+				} catch (error) {
+					console.log('error', error);
+					reject(error);
+				}
+			});
+	});
+	return promise;
+};
 
-module.exports = clearDb;
+module.exports = { clearDb, clearDbUser };

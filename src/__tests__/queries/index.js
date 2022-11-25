@@ -82,7 +82,13 @@ const GET_BOUNTY_BY_ID = gql`query bounty($contractAddress: String!) {
 
 const GET_USER_BY_HASH = gql`query($userAddress: String!) {
   user(address: $userAddress) {
-    watchedBountyIds
+    address
+  }
+}`;
+
+const UPDATE_USER = gql`mutation UpdateUser( $address: String!) {
+  updateUser(address: $address) {
+    address
   }
 }`;
 
@@ -100,4 +106,4 @@ query BountiesConnection($after: ID, $limit: Int!, $orderBy: String, $sortOrder:
 }
 `;
 
-module.exports = { CREATE_NEW_BOUNTY, WATCH_BOUNTY, UNWATCH_BOUNTY, GET_BOUNTY_BY_ID, GET_USER_BY_HASH, GET_BOUNTY_PAGE, CREATE_NEW_REPOSITORY, GET_REPOSITORY, UPDATE_BOUNTY };
+module.exports = { CREATE_NEW_BOUNTY, WATCH_BOUNTY, UNWATCH_BOUNTY, GET_BOUNTY_BY_ID, GET_USER_BY_HASH, GET_BOUNTY_PAGE, CREATE_NEW_REPOSITORY, GET_REPOSITORY, UPDATE_BOUNTY, UPDATE_USER };

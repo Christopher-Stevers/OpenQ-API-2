@@ -6,7 +6,7 @@ const { CREATE_NEW_BOUNTY, GET_BOUNTY_BY_ID } = require('../queries');
 // mongodb://root:root@localhost:27018/openqdb?authSource=admin
 
 const dotenv = require('dotenv');
-const clearDb = require('../utils/clearDb');
+const { clearDb } = require('../utils/clearDb');
 dotenv.config({ path: '../../../.env.test' });
 
 describe('createBounty', () => {
@@ -57,6 +57,7 @@ describe('createBounty', () => {
 					mutation: CREATE_NEW_BOUNTY,
 					variables: { address: contractAddress, organizationId, bountyId, repositoryId, type }
 				});
+				throw('Should not reach this point');
 			} catch (error) {
 				expect(error.graphQLErrors[0].extensions.code).toEqual('UNAUTHENTICATED');
 			}

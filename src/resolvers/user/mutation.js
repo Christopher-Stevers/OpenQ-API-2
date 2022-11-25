@@ -20,8 +20,7 @@ const Mutation = {
 					watchedBountyIds: [],
 					starredOrganizationIds: [],
 					...args
-				}
-				,
+				},
 				update: {
 					...mutableArgs,
 				}
@@ -41,8 +40,7 @@ const Mutation = {
 					watchedBountyIds: [],
 					starredOrganizationIds: [],
 					...args
-				}
-				,
+				},
 				update: {
 					...mutableArgs,
 				}
