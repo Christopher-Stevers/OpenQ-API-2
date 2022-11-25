@@ -12,6 +12,9 @@ dotenv.config({ path: '../../../.env.test' });
 describe('createBounty', () => {
 	const contractAddress = '0x8daf17assdfdf20c9dba35f005b6324f493785d239719d';
 	const organizationId = 'organizationId';
+	const bountyId = 'bountyId';
+	const repositoryId = 'repositoryId';
+	const type = '1';
 
 	const authenticatedClient = getAuthenticatedClient('secret123!', 'signature');
 	const unauthenticatedClient = getAuthenticatedClient('incorrect_secret', 'signature');
@@ -24,7 +27,7 @@ describe('createBounty', () => {
 		it('Authenticated client can create bounty', async () => {
 			await authenticatedClient.mutate({
 				mutation: CREATE_NEW_BOUNTY,
-				variables: { address: contractAddress, organizationId, bountyId: 'sdf', repositoryId: 'repoId', type: '1' }
+				variables: { address: contractAddress, organizationId, bountyId, repositoryId, type }
 			});
 	
 			const { data } = await authenticatedClient.query({
@@ -34,13 +37,14 @@ describe('createBounty', () => {
 	
 			expect(data.bounty).toMatchObject({
 				'tvl': 0,
-				'bountyId': 'sdf',
-				'type': '1',
+				'bountyId': bountyId,
+				'type': type,
+				'blacklisted': false,
 				'organization': {
 					'id': organizationId
 				},
 				'repository': {
-					'id': 'repoId'
+					'id': repositoryId
 				}
 			});
 		});
@@ -51,7 +55,7 @@ describe('createBounty', () => {
 			try {
 				await unauthenticatedClient.mutate({
 					mutation: CREATE_NEW_BOUNTY,
-					variables: { address: contractAddress, organizationId: 'mdp', bountyId: 'sdf', repositoryId: 'repoId', type: '1' }
+					variables: { address: contractAddress, organizationId, bountyId, repositoryId, type }
 				});
 			} catch (error) {
 				expect(error.graphQLErrors[0].extensions.code).toEqual('UNAUTHENTICATED');
