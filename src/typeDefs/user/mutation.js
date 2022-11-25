@@ -24,6 +24,9 @@ const mutationDefs = gql`
 			twitter:String
 			languages: [String]
 			github: String)	: User!
+		updateUserGithubWithAddress(
+			github: String!
+			address: String!): User!	
   }
 `;
 
