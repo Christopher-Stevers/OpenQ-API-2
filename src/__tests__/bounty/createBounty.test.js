@@ -9,7 +9,7 @@ const dotenv = require('dotenv');
 const clearDb = require('../utils/clearDb');
 dotenv.config({ path: '../../../.env.test' });
 
-describe('Authenticated Client can create bounties', () => {
+describe('createBounty', () => {
 	const contractAddress = '0x8daf17assdfdf20c9dba35f005b6324f493785d239719d';
 	const authenticatedClient = getAuthenticatedClient('secret123!', 'signature');
 	const unauthenticatedClient = getAuthenticatedClient('incorrect_secret', 'signature');
@@ -40,15 +40,14 @@ describe('Authenticated Client can create bounties', () => {
 		await clearDb();
 	});
 
-	// it('should fail for unauthenticated calls', async () => {
-	// 	try {
-	// 		await unauthenticatedClient.mutate({
-	// 			mutation: CREATE_NEW_BOUNTY,
-	// 			variables: { address: contractAddress, organizationId: 'mdp', bountyId: 'sdf', repositoryId: 'repoId', type: '1' }
-	// 		});
-	// 	} catch (error) {
-	// 		console.log(error);
-	// 		expect(error.message).toMatch('Not Authorised!');
-	// 	}
-	// });
+	it('should fail for unauthenticated calls', async () => {
+		try {
+			await unauthenticatedClient.mutate({
+				mutation: CREATE_NEW_BOUNTY,
+				variables: { address: contractAddress, organizationId: 'mdp', bountyId: 'sdf', repositoryId: 'repoId', type: '1' }
+			});
+		} catch (error) {
+			expect(error.graphQLErrors[0].extensions.code).toEqual('UNAUTHENTICATED');
+		}
+	});
 });
