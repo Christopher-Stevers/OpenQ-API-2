@@ -11,7 +11,6 @@ const Mutation = {
 		const mutableArgs = { ...args };
 		delete mutableArgs.address;
 
-
 		return prisma.user.upsert(
 			{
 				where: {

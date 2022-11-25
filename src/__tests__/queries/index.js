@@ -12,6 +12,17 @@ mutation CreateBounty( $address: String!, $organizationId: String!, $bountyId: S
   }
 }`;
 
+const UPDATE_BOUNTY = gql`
+mutation UpdateBounty( $address: String!, $organizationId: String!, $bountyId: String!, $repositoryId: String!,  $type: String!) {
+  createBounty(address: $address, organizationId: $organizationId, bountyId: $bountyId, repositoryId: $repositoryId, type: $type) {
+    address
+		bountyId
+		organizationId
+		repositoryId
+		type
+  }
+}`;
+
 const CREATE_NEW_REPOSITORY = gql`
 mutation CreateRepository( $organizationId: String!, $repositoryId: String!, $bountyId: String!) {
   createBounty(organizationId: $organizationId, repositoryId: $repositoryId, bountyId: $bountyId) {
@@ -89,4 +100,4 @@ query BountiesConnection($after: ID, $limit: Int!, $orderBy: String, $sortOrder:
 }
 `;
 
-module.exports = { CREATE_NEW_BOUNTY, WATCH_BOUNTY, UNWATCH_BOUNTY, GET_BOUNTY_BY_ID, GET_USER_BY_HASH, GET_BOUNTY_PAGE, CREATE_NEW_REPOSITORY, GET_REPOSITORY };
+module.exports = { CREATE_NEW_BOUNTY, WATCH_BOUNTY, UNWATCH_BOUNTY, GET_BOUNTY_BY_ID, GET_USER_BY_HASH, GET_BOUNTY_PAGE, CREATE_NEW_REPOSITORY, GET_REPOSITORY, UPDATE_BOUNTY };
