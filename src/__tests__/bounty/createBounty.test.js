@@ -49,8 +49,7 @@ describe('Authenticated Client can create bounties', () => {
 		});
 		
 		try {
-			const result = await promise;
-			console.log(result);
+			await promise;
 		} catch (error) {
 			console.log('error in afterEach', error);
 		}
@@ -63,16 +62,21 @@ describe('Authenticated Client can create bounties', () => {
 			variables: { address: contractAddress, organizationId: 'mdp', bountyId: 'sdf', repositoryId: 'repoId', type: '1' }
 		});
 
-		// const { data } = await authenticatedClient.query({
-		// 	query: GET_BOUNTY_BY_ID,
-		// 	variables: { contractAddress }
-		// });
+		const { data } = await authenticatedClient.query({
+			query: GET_BOUNTY_BY_ID,
+			variables: { contractAddress }
+		});
 
-		// expect(data.bounty).toMatchObject({
-		// 	tvl: 0,
-		// 	bountyId: 'sdf',
-		// 	watchingUserIds: []
-		// });
-		expect(true).toBe(true);
+		expect(data.bounty).toMatchObject({
+			'tvl': 0,
+			'bountyId': 'sdf',
+			'type': '1',
+			'organization': {
+				'id': 'mdp'
+			},
+			'repository': {
+				'id': 'repoId'
+			}
+		});
 	});
 });

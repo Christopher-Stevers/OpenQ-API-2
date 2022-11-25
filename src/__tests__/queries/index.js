@@ -54,11 +54,17 @@ const UNWATCH_BOUNTY = gql` mutation AddUser($contractAddress: String, $userAddr
 `;
 
 
-const GET_BOUNTY_BY_ID = gql`query bounty($contractAddress: String! ) {
+const GET_BOUNTY_BY_ID = gql`query bounty($contractAddress: String!) {
   bounty(address: $contractAddress) {
     tvl
 		bountyId
-    watchingUserIds
+    type
+    organization {
+      id
+    }
+    repository {
+      id
+    }
   }
 }`;
 
