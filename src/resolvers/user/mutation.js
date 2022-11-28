@@ -5,6 +5,10 @@ const { verifySignature } = require('../../utils/auth/verifySignature');
 
 const Mutation = {
 	createUser: async (parent, args, { req, prisma }) => {
+		if (!(args.email || args.address || args.github)) {
+			throw new Error('Must provide id, email, address, or github');
+		}
+
 		return prisma.user.create({
 			data: {
 				email: args.email
