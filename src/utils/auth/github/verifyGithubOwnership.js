@@ -9,7 +9,7 @@ const {
 	GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES,
 	UNKNOWN_ERROR,
 	RATE_LIMITED
-} = require('../errors');
+} = require('./errors/errors');
 
 /***
  *  Verifies the OAuth token holder matches 

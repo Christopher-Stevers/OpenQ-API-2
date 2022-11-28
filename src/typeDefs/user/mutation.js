@@ -26,7 +26,8 @@ const mutationDefs = gql`
 			github: String)	: User!
 		updateUserGithubWithAddress(
 			github: String!
-			address: String!): User!	
+			address: String!): User!
+		createUserWithEmail(email: String!): User!
   }
 `;
 

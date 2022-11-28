@@ -4,6 +4,14 @@ const { verifyGithubOwnership } = require('../../utils/auth/github/verifyGithubO
 const { verifySignature } = require('../../utils/auth/verifySignature');
 
 const Mutation = {
+	createUserWithEmail: async (parent, args, { req, prisma }) => {
+		// create with email
+		return prisma.user.create({
+			data: {
+				email: args.email
+			},
+		});
+	},
 	updateUser: async (parent, args, { req, prisma }) => {
 		if (!verifySignature(req, args.address)) {
 			throw new AuthenticationError();
