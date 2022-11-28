@@ -1,14 +1,11 @@
 const Query = {
 	user: async (parent, args, { prisma }) => {
+		if (!(args.id || args.email || args.address || args.github)) {
+			throw new Error('Must provide id, email, address, or github');
+		}
+
 		const value = await prisma.user.findUnique({
-			where: { id: args.id },
-			include: { starredOrganizations: true }
-		});
-		return value;
-	},
-	userByEmail: async (parent, args, { prisma }) => {
-		const value = await prisma.user.findUnique({
-			where: { email: args.email },
+			where: { ...args },
 			include: { starredOrganizations: true }
 		});
 		return value;

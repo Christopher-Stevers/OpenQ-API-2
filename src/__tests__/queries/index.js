@@ -99,9 +99,9 @@ const CREATE_USER_WITH_EMAIL = gql`mutation CreateUser( $email: String!) {
   }
 }`;
 
-const GET_USER_WITH_EMAIL = gql`query UserByEmail($email: String!) {
-  userByEmail(email: $email) {
-    email
+const GET_USER_WITH_EMAIL = gql`query GetUser( $email: String!) {
+  user(email: $email) {
+		email
   }
 }`;
 

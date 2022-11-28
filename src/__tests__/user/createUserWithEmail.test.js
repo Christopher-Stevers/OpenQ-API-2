@@ -28,7 +28,7 @@ describe('createUserWithEmail.test', () => {
 				variables: { email }
 			});
 
-			expect(data.userByEmail).toMatchObject({
+			expect(data.user).toMatchObject({
 				__typename: 'User',
 				email: 'email'
 			});
