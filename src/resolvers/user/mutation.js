@@ -11,7 +11,7 @@ const Mutation = {
 
 		return prisma.user.create({
 			data: {
-				email: args.email
+				...args
 			},
 		});
 	},
