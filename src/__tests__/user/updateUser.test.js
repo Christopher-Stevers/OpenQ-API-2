@@ -1,6 +1,6 @@
 
 const { getAuthenticatedClient } = require('../utils/getClient');
-const { UPDATE_USER, GET_USER_BY_HASH } = require('../utils/queries');
+const { UPDATE_USER, GET_USER } = require('../utils/queries');
 
 // URL for connecting from OUTSIDE the docker-compose environment
 // mongodb://root:root@localhost:27018/openqdb?authSource=admin
@@ -29,8 +29,8 @@ describe('updateUser', () => {
 			});
 
 			const { data } = await authenticatedClient.query({
-				query: GET_USER_BY_HASH,
-				variables: { userAddress: address }
+				query: GET_USER,
+				variables: { address }
 			});
 
 			expect(data.user).toMatchObject({

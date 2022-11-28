@@ -80,12 +80,6 @@ const GET_BOUNTY_BY_ID = gql`query bounty($contractAddress: String!) {
   }
 }`;
 
-const GET_USER_BY_HASH = gql`query($userAddress: String!) {
-  user(address: $userAddress) {
-    address
-  }
-}`;
-
 const UPDATE_USER = gql`mutation UpdateUser( $address: String!) {
   updateUser(address: $address) {
     address
@@ -99,9 +93,12 @@ const CREATE_USER_WITH_EMAIL = gql`mutation CreateUser( $email: String!) {
   }
 }`;
 
-const GET_USER_WITH_EMAIL = gql`query GetUser( $email: String!) {
-  user(email: $email) {
+const GET_USER = gql`query GetUser($id: String, $email: String, $github: String, $address: String) {
+  user(id: $id, email: $email, github: $github, address: $address) {
+		id
 		email
+		address
+		github
   }
 }`;
 
@@ -119,4 +116,4 @@ query BountiesConnection($after: ID, $limit: Int!, $orderBy: String, $sortOrder:
 }
 `;
 
-module.exports = { CREATE_NEW_BOUNTY, WATCH_BOUNTY, UNWATCH_BOUNTY, GET_USER_WITH_EMAIL, GET_BOUNTY_BY_ID, CREATE_USER_WITH_EMAIL, GET_USER_BY_HASH, GET_BOUNTY_PAGE, CREATE_NEW_REPOSITORY, GET_REPOSITORY, UPDATE_BOUNTY, UPDATE_USER };
+module.exports = { CREATE_NEW_BOUNTY, WATCH_BOUNTY, UNWATCH_BOUNTY, GET_USER, GET_BOUNTY_BY_ID, CREATE_USER_WITH_EMAIL, GET_BOUNTY_PAGE, CREATE_NEW_REPOSITORY, GET_REPOSITORY, UPDATE_BOUNTY, UPDATE_USER };
