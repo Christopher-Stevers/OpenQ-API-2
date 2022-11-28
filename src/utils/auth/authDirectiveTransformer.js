@@ -1,6 +1,6 @@
 const { mapSchema, getDirective, MapperKind } = require('@graphql-tools/utils');
 const { defaultFieldResolver } = require('graphql');
-const { verifySignature } = require('./verifySignature');
+const { verifySignature } = require('./address/verifySignature');
 const { AuthenticationError } = require('apollo-server');
 
 function authDirectiveTransformer(schema, directiveName) {

@@ -1,10 +1,8 @@
 
 const { AuthenticationError } = require('apollo-server');
-const { verifyGithubOwnership } = require('../../utils/auth/github/verifyGithubOwnership');
-const { verifySignature } = require('../../utils/auth/verifySignature');
 
 const Mutation = {
-	createUser: async (parent, args, { req, prisma }) => {
+	createUser: async (parent, args, { req, prisma, verifySignature }) => {
 		if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
 			throw new AuthenticationError();
 		}
@@ -23,7 +21,7 @@ const Mutation = {
 			},
 		});
 	},
-	updateUser: async (parent, args, { req, prisma }) => {
+	updateUser: async (parent, args, { req, prisma, verifySignature }) => {
 		if (!verifySignature(req, args.address)) {
 			throw new AuthenticationError();
 		}
@@ -47,18 +45,11 @@ const Mutation = {
 			}
 		);
 	},
-	updateUserGithubWithAddress: async (parent, args, { req, prisma }) => {
+	updateUserGithubWithAddress: async (parent, args, { req, prisma, verifySignature }) => {
 		// Verify that the caller owns the address
 		if (!verifySignature(req, args.address)) {
 			throw new AuthenticationError();
 		}
-
-		// Verify that the user owns the GitHub account
-		if (!verifyGithubOwnership(req, args.github)) {
-			throw new AuthenticationError();
-		}
-
-		// verify uniqueness, AKA that this Github account is not already associated with another address
 
 		const mutableArgs = { ...args };
 		delete mutableArgs.address;

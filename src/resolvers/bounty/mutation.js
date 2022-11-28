@@ -1,7 +1,6 @@
 const calculateTvl = require('../../utils/calculateTvl');
 const calculateTvc = require('../../utils/calculateTvc');
 const { AuthenticationError } = require('apollo-server');
-const { verifySignature } = require('../../utils/auth/verifySignature');
 
 const Mutation = {
 	createBounty: async (parent, args, { req, prisma }) => {
@@ -182,7 +181,7 @@ const Mutation = {
 			},
 		});
 	},
-	watchBounty: async (parent, args, { req, prisma }) => {
+	watchBounty: async (parent, args, { req, prisma, verifySignature }) => {
 		if (!verifySignature(req, args.userAddress)) {
 			throw new AuthenticationError();
 		}
@@ -210,7 +209,7 @@ const Mutation = {
 			},
 		});
 	},
-	unWatchBounty: async (parent, args, { req, prisma }) => {
+	unWatchBounty: async (parent, args, { req, prisma, verifySignature }) => {
 		if (!verifySignature(req, args.userAddress)) {
 			throw new AuthenticationError();
 		}

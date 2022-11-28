@@ -1,6 +1,5 @@
 
 const AuthenticationError = require('apollo-server');
-const { verifySignature } = require('../../utils/auth/verifySignature');
 
 const Mutation = {
 	blackListOrg: async (parent, args, { req, prisma }) => {
@@ -16,7 +15,7 @@ const Mutation = {
 		);
 	},
 
-	starOrg: async (parent, args, { req, prisma }) => {
+	starOrg: async (parent, args, { req, prisma, verifySignature }) => {
 		if (!verifySignature(req, args.address)) {
 			throw new AuthenticationError();
 		}
@@ -48,7 +47,7 @@ const Mutation = {
 
 
 	},
-	unStarOrg: async (parent, args, { req, prisma }) => {
+	unStarOrg: async (parent, args, { req, prisma, verifySignature }) => {
 		if (!verifySignature(req, args.address)) {
 			throw new AuthenticationError();
 		}

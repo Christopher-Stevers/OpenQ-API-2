@@ -1,4 +1,4 @@
-const { ecdsaRecover, compareAddress } = require('../ecdsaRecover');
+const { ecdsaRecover, compareAddress } = require('../../ecdsaRecover');
 
 const verifySignature = (req, incomingAddress) => {
 	const signatureRegex = /signature=\w+/;
