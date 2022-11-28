@@ -1,6 +1,9 @@
 const { MongoClient } = require('mongodb');
 var url = 'mongodb://root:root@mongo:27018/openqdb?authSource=admin';
 
+// URL for connecting from OUTSIDE the docker-compose environment
+// mongodb://root:root@localhost:27018/openqdb?authSource=admin
+
 const clearDb = async () => {
 	const promise = new Promise((resolve, reject) => {
 		MongoClient
@@ -35,6 +38,7 @@ const clearDb = async () => {
 	});
 	return promise;
 };
+
 const clearDbUser = async () => {
 	const promise = new Promise((resolve, reject) => {
 		MongoClient

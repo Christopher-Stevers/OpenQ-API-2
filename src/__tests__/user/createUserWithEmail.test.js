@@ -1,9 +1,6 @@
 
 const { getAuthenticatedClient } = require('../utils/getClient');
-const { CREATE_USER_WITH_EMAIL } = require('../queries');
-
-// URL for connecting from OUTSIDE the docker-compose environment
-// mongodb://root:root@localhost:27018/openqdb?authSource=admin
+const { CREATE_USER_WITH_EMAIL, GET_USER_WITH_EMAIL } = require('../queries');
 
 const dotenv = require('dotenv');
 const { clearDbUser } = require('../utils/clearDb');
@@ -25,8 +22,16 @@ describe('createUserWithEmail.test', () => {
 				mutation: CREATE_USER_WITH_EMAIL,
 				variables: { email }
 			});
-			
-			expect(true).toEqual(true);
+
+			const { data } = await authenticatedClient.query({
+				query: GET_USER_WITH_EMAIL,
+				variables: { email }
+			});
+
+			expect(data.userByEmail).toMatchObject({
+				__typename: 'User',
+				email: 'email'
+			});
 		});
 	});
 });
