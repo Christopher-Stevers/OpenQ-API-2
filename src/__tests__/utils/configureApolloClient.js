@@ -1,6 +1,5 @@
 const { ApolloClient, HttpLink, InMemoryCache, ApolloLink } = require('@apollo/client');
 const fetch = require('cross-fetch');
-const { verifySignature } = require('../../utils/auth/address/verifySignature');
 
 const dotenv = require('dotenv');
 dotenv.config({ path: '.env.test' });
@@ -24,7 +23,6 @@ const getAuthenticatedClient = (token, signature) => {
 
 		// Use the setContext method to set the HTTP headers.
 		operation.setContext({
-			verifySignature,
 			headers: {
 				authorization: token,
 				...(signature && { cookie: `signature=${signature}` })
