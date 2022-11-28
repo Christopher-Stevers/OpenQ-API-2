@@ -1,14 +1,14 @@
+const verifyGithubOwnership = require('./verifyGithubOwnership');
+
 const GithubClient = {
-	isValidGithub: true,
-	get isValidGithub() {
-		return isValidGithub;
-	},
-	set isValidGithub(bool) {
-		isValidGithub = bool;
-	},
-	verifyGithub: async (email) => {
+	verifyGithub: async (req, email) => {
 		return new Promise(async (resolve, reject) => {
-			resolve(isValidGithub);
+			try {
+				const result = await verifyGithubOwnership(req, email);
+				resolve(result);
+			} catch (error) {
+				return reject(error);
+			}
 		});
 	},
 };

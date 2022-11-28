@@ -8,7 +8,8 @@ const GET_VIEWER = require('./query/GET_VIEWER');
 const {
 	GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES,
 	UNKNOWN_ERROR,
-	RATE_LIMITED
+	RATE_LIMITED,
+	INVALID_GITHUB_OAUTH_TOKEN
 } = require('./errors/errors');
 
 /***
@@ -16,7 +17,12 @@ const {
  * ***/
 const verifyGithubOwnership = async (req, userId) => {
 	const signatureRegex = /github_oauth=\w+/;
-	const token = req.headers.cookie.match(signatureRegex)[0].slice(13);
+	const regexMatch = req.headers.cookie.match(signatureRegex);
+	
+	let token;
+	if (regexMatch !== null) {
+		token = req.headers.cookie.match(signatureRegex)[0].slice(13);
+	}
 	
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -42,7 +48,7 @@ const verifyGithubOwnership = async (req, userId) => {
 			if (viewerUserId == userId) {
 				return resolve({ viewerIsValid: true });
 			} else {
-				return resolve({ viewerIsValid: false });
+				return reject(INVALID_GITHUB_OAUTH_TOKEN());
 			}
 		} catch (error) {
 			console.error(error);

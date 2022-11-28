@@ -1,5 +1,5 @@
-const INVALID_GITHUB_OAUTH_TOKEN = ({ payoutAddress }) => {
-	return { id: payoutAddress, canWithdraw: false, type: 'INVALID_GITHUB_OAUTH_TOKEN', errorMessage: 'Invalid GitHub OAuth toke unsigned by OpenQ' };
+const INVALID_GITHUB_OAUTH_TOKEN = () => {
+	return { id: 'id', type: 'INVALID_GITHUB_OAUTH_TOKEN', errorMessage: 'Invalid GitHub OAuth toke unsigned by OpenQ' };
 };
 
 const NO_GITHUB_OAUTH_TOKEN = ({ payoutAddress }) => {
