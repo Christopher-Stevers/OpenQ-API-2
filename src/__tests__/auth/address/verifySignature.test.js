@@ -1,4 +1,4 @@
-const { verifySignature } = require('../../utils/auth/address/verifySignature');
+const { verifySignature } = require('../../../utils/auth/address/verifySignature');
 
 describe('verifySignature', () => {
 	const address = '0x1abcD810374b2C0fCDD11cFA280Df9dA7970da4e';

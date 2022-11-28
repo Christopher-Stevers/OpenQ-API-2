@@ -2,10 +2,12 @@ const { ApolloServer } = require('apollo-server');
 const {
 	ApolloServerPluginLandingPageGraphQLPlayground
 } = require('apollo-server-core');
+const dotenv = require('dotenv');
+dotenv.config();
 
 const typeDefs = require('./typeDefs');
 const resolvers = require('./resolvers');
-const createContext = require('./context');
+const { createContext, createMockContext } = require('./context');
 const apolloLogger = require('./plugins/index.js');
 const authDirectiveTransformer = require('./utils/auth/authDirectiveTransformer');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
@@ -17,9 +19,11 @@ let schema = makeExecutableSchema({
 
 schema = authDirectiveTransformer(schema, '@auth');
 
+const context = process.env.DEPLOY_ENV === 'production' ? createContext : createMockContext;
+
 const server = new ApolloServer({
 	schema,
-	context: createContext,
+	context,
 	plugins: [apolloLogger, ApolloServerPluginLandingPageGraphQLPlayground],
 	introspection: true,
 	cors: {
