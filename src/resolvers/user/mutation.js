@@ -4,7 +4,7 @@ const { verifyGithubOwnership } = require('../../utils/auth/github/verifyGithubO
 const { verifySignature } = require('../../utils/auth/verifySignature');
 
 const Mutation = {
-	createUserWithEmail: async (parent, args, { req, prisma }) => {
+	createUser: async (parent, args, { req, prisma }) => {
 		return prisma.user.create({
 			data: {
 				email: args.email
