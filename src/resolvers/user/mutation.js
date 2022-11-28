@@ -5,8 +5,16 @@ const { verifySignature } = require('../../utils/auth/verifySignature');
 
 const Mutation = {
 	createUser: async (parent, args, { req, prisma }) => {
+		if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
+			throw new AuthenticationError();
+		}
+		
 		if (!(args.email || args.address || args.github)) {
 			throw new Error('Must provide id, email, address, or github');
+		}
+
+		if (args.address && !verifySignature(req, args.address)) {
+			throw new AuthenticationError();
 		}
 
 		return prisma.user.create({
