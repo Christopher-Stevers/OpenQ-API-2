@@ -62,7 +62,7 @@ describe('createUser.test', () => {
 				});
 			});
 
-			it.only('Authenticated client can create user with github and valid oauth', async () => {
+			it('Authenticated client can create user with github and valid oauth', async () => {
 				await authenticatedClient.mutate({
 					mutation: CREATE_USER,
 					variables: { github }
@@ -120,7 +120,7 @@ describe('createUser.test', () => {
 				}
 			});
 
-			it.only('should fail for unauthenticated calls - GITHUB UNAUTHORIZED', async () => {
+			it('should fail for unauthenticated calls - GITHUB UNAUTHORIZED', async () => {
 				try {
 					await unauthenticatedClient_INVALID_GITHUB.mutate({
 						mutation: CREATE_USER,

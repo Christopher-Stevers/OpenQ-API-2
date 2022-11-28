@@ -52,4 +52,5 @@ const getAuthenticatedClient = (token, signature, emailIsValid, githubIsValid) =
 		},
 	});
 };
+
 module.exports = { getClient, getAuthenticatedClient };

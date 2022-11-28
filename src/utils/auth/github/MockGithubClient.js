@@ -6,7 +6,7 @@ const MockGithubClient = {
 	set isValidGithub(bool) {
 		isValidGithub = bool;
 	},
-	verifyGithub: async (email) => {
+	verifyGithub: async (req, github) => {
 		return new Promise(async (resolve, reject) => {
 			resolve(isValidGithub);
 		});

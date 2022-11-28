@@ -21,14 +21,14 @@ const Mutation = {
 		}
 
 		if (args.email) {
-			const emailIsValid = await emailClient.verifyEmail(args.email);
+			const emailIsValid = await emailClient.verifyEmail(req, args.email);
 			if (!emailIsValid) {
 				throw new AuthenticationError('Email not authorized');
 			}
 		}
 
 		if (args.github) {
-			const githubIsValid = await githubClient.verifyGithub(args.github);
+			const githubIsValid = await githubClient.verifyGithub(req, args.github);
 			if (!githubIsValid) {
 				throw new AuthenticationError('Github not authorized');
 			}

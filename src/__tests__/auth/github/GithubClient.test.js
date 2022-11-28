@@ -7,6 +7,8 @@ describe('GithubClient', () => {
 		}
 	};
 
+	console.log(req);
+
 	const req_NO_OAUTH_TOKEN = {
 		headers: {
 			cookie: 'foo=bar',
@@ -18,7 +20,7 @@ describe('GithubClient', () => {
 
 	it('GithubClient.verifyGithub should return TRUE if the OAuth Token matches the given userId', async () => {
 		const result = await GithubClient.verifyGithub(req, userId);
-		expect(result).toMatchObject({ viewerIsValid: true});
+		expect(result).toEqual(true);
 	});
 
 	it('GithubClient.verifyGithub should return FALSE if the OAuth Token is not present', async () => {
