@@ -12,7 +12,8 @@ directive @auth(
 			orderBy: String
 			sortOrder: String
 		): UserConnection
-		user(address: String!): User
+		user(id: String!): User
+		userByEmail(email: String!): User
 		other: String
 	}
 `;

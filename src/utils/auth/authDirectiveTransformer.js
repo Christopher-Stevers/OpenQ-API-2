@@ -13,18 +13,15 @@ function authDirectiveTransformer(schema, directiveName) {
 				fieldConfig.resolve = async function (parent, args, context, info) {
 					try {
 						if (context.req.headers.authorization === process.env.OPENQ_API_SECRET) {
-
 							const result = await resolve(parent, args, context, info);
 							return result;
-
 						}
+
 						const isUser = verifySignature(context.req, parent.address);
 
 						if (isUser) {
 							const result = await resolve(parent, args, context, info);
-
 							return result;
-
 						}
 					}
 					catch (err) {

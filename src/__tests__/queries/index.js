@@ -92,17 +92,17 @@ const UPDATE_USER = gql`mutation UpdateUser( $address: String!) {
   }
 }`;
 
-const CREATE_USER_WITH_EMAIL = gql`mutation CreateUser( $emal: String!) {
-  updateUser(emal: $emal) {
+const CREATE_USER_WITH_EMAIL = gql`mutation CreateUser( $email: String!) {
+  createUserWithEmail(email: $email) {
     id
-		emal
+		email
   }
 }`;
 
-const GET_USER_BY_EMAIL = gql`query GetUserByEmail( $emal: String!) {
-  updateUser(emal: $emal) {
+const GET_USER_BY_EMAIL = gql`query GetUserByEmail( $email: String!) {
+  updateUser(email: $email) {
     id
-		emal
+		email
   }
 }`;
 

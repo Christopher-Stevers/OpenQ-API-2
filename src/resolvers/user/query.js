@@ -1,7 +1,14 @@
 const Query = {
 	user: async (parent, args, { prisma }) => {
 		const value = await prisma.user.findUnique({
-			where: { address: args.address },
+			where: { id: args.id },
+			include: { starredOrganizations: true }
+		});
+		return value;
+	},
+	userByEmail: async (parent, args, { prisma }) => {
+		const value = await prisma.user.findUnique({
+			where: { email: args.email },
 			include: { starredOrganizations: true }
 		});
 		return value;

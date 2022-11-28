@@ -5,7 +5,6 @@ const { verifySignature } = require('../../utils/auth/verifySignature');
 
 const Mutation = {
 	createUserWithEmail: async (parent, args, { req, prisma }) => {
-		// create with email
 		return prisma.user.create({
 			data: {
 				email: args.email
