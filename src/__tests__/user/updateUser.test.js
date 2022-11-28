@@ -1,5 +1,5 @@
 
-const { getAuthenticatedClient } = require('../utils/getClient');
+const { getAuthenticatedClient } = require('../utils/configureApolloClient');
 const { UPDATE_USER, GET_USER } = require('../utils/queries');
 
 // URL for connecting from OUTSIDE the docker-compose environment

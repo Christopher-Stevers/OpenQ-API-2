@@ -14,6 +14,8 @@ const createContext = async ({ req, res }) => {
 
 const createMockContext = async ({ req, res }) => {
 	console.log(req.body);
+	// headers come in as strings, so we need to cast the 'emailisvalid' header to a boolean
+	MockEmailClient.isValidEmail = req.headers.emailisvalid === 'true';
 	return { req, res, prisma, gAnalyticsDataClient, verifySignature, emailClient: MockEmailClient };
 };
 

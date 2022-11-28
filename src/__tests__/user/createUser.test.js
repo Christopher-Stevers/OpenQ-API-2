@@ -24,7 +24,7 @@ describe('createUser.test', () => {
 				await clearDbUser();
 			});
 	
-			it('Authenticated client can create user with email', async () => {
+			it.only('Authenticated client can create user with email', async () => {
 				await authenticatedClient.mutate({
 					mutation: CREATE_USER,
 					variables: { email }

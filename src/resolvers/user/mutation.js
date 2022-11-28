@@ -21,7 +21,7 @@ const Mutation = {
 		const emailIsValid = await emailClient.verifyEmail(args.email);
 		const emailWithoutAuthorization = args.email && !emailIsValid;
 		if (emailWithoutAuthorization) {
-			throw new AuthenticationError();
+			throw new AuthenticationError('Email not authorized');
 		}
 
 		return prisma.user.create({

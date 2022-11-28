@@ -17,13 +17,14 @@ const getClient = () => {
 	});
 };
 
-const getAuthenticatedClient = (token, signature) => {
+const getAuthenticatedClient = (token, signature, emailIsValid) => {
 	const authLink = new ApolloLink((operation, forward) => {
 		// Retrieve the authorization token from local storage.
 
 		// Use the setContext method to set the HTTP headers.
 		operation.setContext({
 			headers: {
+				emailIsValid: emailIsValid,
 				authorization: token,
 				...(signature && { cookie: `signature=${signature}` })
 			}
