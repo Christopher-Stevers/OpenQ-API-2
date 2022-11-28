@@ -53,4 +53,38 @@ const getAuthenticatedClient = (token, signature, emailIsValid, githubIsValid) =
 	});
 };
 
-module.exports = { getClient, getAuthenticatedClient };
+const getAuthenticatedClientIntegration = (token, signature, emailToken, githubOAuthToken) => {
+	const authLink = new ApolloLink((operation, forward) => {
+		// Retrieve the authorization token from local storage.
+
+		// Use the setContext method to set the HTTP headers.
+		operation.setContext({
+			headers: {
+				authorization: token,
+				...(signature && { cookie: `signature=${signature}; github_oauth=${githubOAuthToken}; emailAuth=${emailToken}` })
+			}
+		});
+
+		// Call the next link in the middleware chain.
+		return forward(operation);
+	});
+
+	const httpLink = new HttpLink({ uri: uri + '/graphql', fetch });
+
+	return new ApolloClient({
+		link: authLink.concat(httpLink),
+		onError: (e) => { console.log(e); },
+		cache: new InMemoryCache(),
+		request: (operation) => {
+			if (token) {
+				operation.setContext({
+					headers: {
+						'Authorization': token
+					}
+				});
+			}
+		},
+	});
+};
+
+module.exports = { getClient, getAuthenticatedClient, getAuthenticatedClientIntegration };
