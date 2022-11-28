@@ -1,6 +1,6 @@
 
 const { getAuthenticatedClient } = require('../utils/getClient');
-const { CREATE_USER_WITH_EMAIL, GET_USER_WITH_EMAIL } = require('../utils/queries');
+const { CREATE_USER_WITH_EMAIL, GET_USER } = require('../utils/queries');
 
 const dotenv = require('dotenv');
 const { clearDbUser } = require('../utils/clearDb');
@@ -24,7 +24,7 @@ describe('createUser.test', () => {
 			});
 
 			const { data } = await authenticatedClient.query({
-				query: GET_USER_WITH_EMAIL,
+				query: GET_USER,
 				variables: { email }
 			});
 
