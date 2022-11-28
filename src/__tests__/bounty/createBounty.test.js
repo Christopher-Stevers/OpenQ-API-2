@@ -1,6 +1,6 @@
 
 const { getAuthenticatedClient } = require('../utils/getClient');
-const { CREATE_NEW_BOUNTY, GET_BOUNTY_BY_ID } = require('../queries');
+const { CREATE_NEW_BOUNTY, GET_BOUNTY_BY_ID } = require('../utils/queries');
 
 // URL for connecting from OUTSIDE the docker-compose environment
 // mongodb://root:root@localhost:27018/openqdb?authSource=admin

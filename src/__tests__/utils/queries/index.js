@@ -93,7 +93,7 @@ const UPDATE_USER = gql`mutation UpdateUser( $address: String!) {
 }`;
 
 const CREATE_USER_WITH_EMAIL = gql`mutation CreateUser( $email: String!) {
-  createUserWithEmail(email: $email) {
+  createUser(email: $email) {
     id
 		email
   }

@@ -7,7 +7,8 @@
 		"start": "node ./src/index.js",
 		"start:dev": "nodemon --ignore generated --ignore src/__tests__/ --exec 'npx prisma generate && node ./src/index.js'",
 		"boot:test": "docker-compose down && docker-compose up",
-		"test": "jest"
+		"test": "jest",
+		"test:all": "jest --testPathIgnorePatterns src/__tests__/utils/**"
 	},
 	"keywords": [],
 	"author": "Christopher-Stevers",

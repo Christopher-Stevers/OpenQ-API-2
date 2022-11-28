@@ -1,6 +1,6 @@
 
 const { getAuthenticatedClient } = require('../utils/getClient');
-const { UPDATE_USER, GET_USER_BY_HASH } = require('../queries');
+const { UPDATE_USER, GET_USER_BY_HASH } = require('../utils/queries');
 
 // URL for connecting from OUTSIDE the docker-compose environment
 // mongodb://root:root@localhost:27018/openqdb?authSource=admin
