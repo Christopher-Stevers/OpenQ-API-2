@@ -17,7 +17,7 @@ const getClient = () => {
 	});
 };
 
-const getAuthenticatedClient = (token, signature, emailIsValid) => {
+const getAuthenticatedClient = (token, signature, emailIsValid, githubIsValid) => {
 	const authLink = new ApolloLink((operation, forward) => {
 		// Retrieve the authorization token from local storage.
 
@@ -25,6 +25,7 @@ const getAuthenticatedClient = (token, signature, emailIsValid) => {
 		operation.setContext({
 			headers: {
 				emailIsValid: emailIsValid,
+				githubIsValid: githubIsValid,
 				authorization: token,
 				...(signature && { cookie: `signature=${signature}` })
 			}

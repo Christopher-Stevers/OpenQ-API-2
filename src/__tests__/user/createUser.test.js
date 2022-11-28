@@ -9,13 +9,17 @@ dotenv.config({ path: '../../../.env.test' });
 describe('createUser.test', () => {
 	describe('createUser', () => {
 		const email = 'email';
+		const github = 'github';
 		const validSignatureFor0x1abc = '0xb4fceac372e7dd620bf581ef3bd399116e79a3c3744ac8b09e876132ff32142b5e612bc0e3b169b4b5e930aa598c7c3501f4e2d3e9e26548d8dde0ac916aff7c1b';
 		const invalidSignatureFor0x1abc = '0xae641394f837b5657d768f0a5a6a874ffad7b9e4298f0d300bb56bae7da65874440a5f139c7eaca49862f345d7bb64362b375049faa180a230f96203c564485d1b';
 	
-		const authenticatedClient = getAuthenticatedClient(process.env.OPENQ_API_SECRET, validSignatureFor0x1abc, true);
-		const unauthenticatedClient_WRONG_API_KEY = getAuthenticatedClient('incorrect_secret', validSignatureFor0x1abc, true);
-		const unauthenticatedClient_INVALID_SIGNATURE = getAuthenticatedClient(process.env.OPENQ_API_SECRET, invalidSignatureFor0x1abc, true);
-		const unauthenticatedClient_INVALID_EMAIL = getAuthenticatedClient(process.env.OPENQ_API_SECRET, invalidSignatureFor0x1abc, false);
+		// this client is authed for all 3 identifiers
+		const authenticatedClient = getAuthenticatedClient(process.env.OPENQ_API_SECRET, validSignatureFor0x1abc, true, true);
+
+		const unauthenticatedClient_WRONG_API_KEY = getAuthenticatedClient('incorrect_secret', validSignatureFor0x1abc, true, false);
+		const unauthenticatedClient_INVALID_SIGNATURE = getAuthenticatedClient(process.env.OPENQ_API_SECRET, invalidSignatureFor0x1abc, true, false);
+		const unauthenticatedClient_INVALID_EMAIL = getAuthenticatedClient(process.env.OPENQ_API_SECRET, invalidSignatureFor0x1abc, false, false);
+		const unauthenticatedClient_INVALID_GITHUB = getAuthenticatedClient(process.env.OPENQ_API_SECRET, invalidSignatureFor0x1abc, true, false);
 
 		const address = '0x1abcD810374b2C0fCDD11cFA280Df9dA7970da4e';
 
@@ -24,7 +28,7 @@ describe('createUser.test', () => {
 				await clearDbUser();
 			});
 	
-			it.only('Authenticated client can create user with email', async () => {
+			it('Authenticated client can create user with email', async () => {
 				await authenticatedClient.mutate({
 					mutation: CREATE_USER,
 					variables: { email }
@@ -57,6 +61,23 @@ describe('createUser.test', () => {
 					address
 				});
 			});
+
+			it.only('Authenticated client can create user with github and valid oauth', async () => {
+				await authenticatedClient.mutate({
+					mutation: CREATE_USER,
+					variables: { github }
+				});
+	
+				const { data } = await authenticatedClient.query({
+					query: GET_USER,
+					variables: { github }
+				});
+	
+				expect(data.user).toMatchObject({
+					__typename: 'User',
+					github
+				});
+			});
 		});
 	
 		describe('Unauthenticated', () => {
@@ -86,11 +107,24 @@ describe('createUser.test', () => {
 				}
 			});
 
-			it.only('should fail for unauthenticated calls - EMAIL WITH NO AUTH', async () => {
+			it('should fail for unauthenticated calls - EMAIL WITH NO AUTH', async () => {
 				try {
 					await unauthenticatedClient_INVALID_EMAIL.mutate({
 						mutation: CREATE_USER,
 						variables: { email }
+					});
+					throw('Should not reach this point');
+				} catch (error) {
+					console.log(error);
+					expect(error.graphQLErrors[0].extensions.code).toEqual('UNAUTHENTICATED');
+				}
+			});
+
+			it.only('should fail for unauthenticated calls - GITHUB UNAUTHORIZED', async () => {
+				try {
+					await unauthenticatedClient_INVALID_GITHUB.mutate({
+						mutation: CREATE_USER,
+						variables: { github }
 					});
 					throw('Should not reach this point');
 				} catch (error) {

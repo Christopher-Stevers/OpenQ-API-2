@@ -2,7 +2,7 @@
 const { AuthenticationError } = require('apollo-server');
 
 const Mutation = {
-	createUser: async (parent, args, { req, prisma, verifySignature, emailClient }) => {
+	createUser: async (parent, args, { req, prisma, verifySignature, emailClient, githubClient }) => {
 		const incorrectApiSecret = req.headers.authorization !== process.env.OPENQ_API_SECRET;
 		if (incorrectApiSecret) {
 			throw new AuthenticationError();
@@ -13,15 +13,25 @@ const Mutation = {
 			throw new Error('Must provide id, email, address, or github');
 		}
 
-		const addressWithInvalidSignature = args.address && !verifySignature(req, args.address);
-		if (addressWithInvalidSignature) {
-			throw new AuthenticationError();
+		if (args.address) {
+			const addressWithInvalidSignature =  !verifySignature(req, args.address);
+			if (addressWithInvalidSignature) {
+				throw new AuthenticationError(`Signature for address ${args.address} is invalid`);
+			}
 		}
 
-		const emailIsValid = await emailClient.verifyEmail(args.email);
-		const emailWithoutAuthorization = args.email && !emailIsValid;
-		if (emailWithoutAuthorization) {
-			throw new AuthenticationError('Email not authorized');
+		if (args.email) {
+			const emailIsValid = await emailClient.verifyEmail(args.email);
+			if (!emailIsValid) {
+				throw new AuthenticationError('Email not authorized');
+			}
+		}
+
+		if (args.github) {
+			const githubIsValid = await githubClient.verifyGithub(args.github);
+			if (!githubIsValid) {
+				throw new AuthenticationError('Github not authorized');
+			}
 		}
 
 		return prisma.user.create({
