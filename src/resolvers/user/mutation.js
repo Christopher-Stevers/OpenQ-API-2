@@ -3,12 +3,7 @@ const { AuthenticationError } = require('apollo-server');
 
 const Mutation = {
 	createUser: async (parent, args, { req, prisma, emailClient, githubClient }) => {
-		const incorrectApiSecret = req.headers.authorization !== process.env.OPENQ_API_SECRET;
-		if (incorrectApiSecret) {
-			throw new AuthenticationError();
-		}
-		
-		const noIdentifier = !(args.email || args.address || args.github);
+		const noIdentifier = !(args.email || args.github);
 		if (noIdentifier) {
 			throw new Error('Must provide id, email, address, or github');
 		}
