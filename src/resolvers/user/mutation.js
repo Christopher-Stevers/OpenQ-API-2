@@ -13,24 +13,28 @@ const Mutation = {
 			throw new Error('Must provide id, email, address, or github');
 		}
 
-		if (args.address) {
+		if (args.address !== undefined) {
 			const addressWithInvalidSignature =  !verifySignature(req, args.address);
 			if (addressWithInvalidSignature) {
 				throw new AuthenticationError(`Signature for address ${args.address} is invalid`);
 			}
 		}
 
-		if (args.email) {
+		if (args.email !== undefined) {
 			const emailIsValid = await emailClient.verifyEmail(req, args.email);
 			if (!emailIsValid) {
 				throw new AuthenticationError('Email not authorized');
 			}
 		}
 
-		if (args.github) {
-			const githubIsValid = await githubClient.verifyGithub(req, args.github);
-			if (!githubIsValid) {
-				throw new AuthenticationError('Github not authorized');
+		if (args.github !== undefined) {
+			try {
+				const githubIsValid = await githubClient.verifyGithub(req, args.github);
+				if (!githubIsValid) {
+					throw new AuthenticationError('Github not authorized');
+				}
+			} catch (error) {
+				throw new AuthenticationError(error);
 			}
 		}
 

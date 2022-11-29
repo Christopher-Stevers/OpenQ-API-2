@@ -1,10 +1,10 @@
 const verifyGithubOwnership = require('./verifyGithubOwnership');
 
 const GithubClient = {
-	verifyGithub: async (req, email) => {
+	verifyGithub: async (req, github) => {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const result = await verifyGithubOwnership(req, email);
+				const result = await verifyGithubOwnership(req, github);
 				resolve(result);
 			} catch (error) {
 				return reject(error);

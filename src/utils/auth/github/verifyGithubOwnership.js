@@ -23,8 +23,6 @@ const verifyGithubOwnership = async (req, userId) => {
 	if (regexMatch !== null) {
 		token = req.headers.cookie.match(signatureRegex)[0].slice(13);
 	}
-
-	console.log('token', token);
 	
 	return new Promise(async (resolve, reject) => {
 		try {

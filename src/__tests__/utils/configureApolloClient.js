@@ -53,15 +53,14 @@ const getAuthenticatedClient = (token, signature, emailIsValid, githubIsValid) =
 	});
 };
 
-const getAuthenticatedClientIntegration = (token, signature, emailToken, githubOAuthToken) => {
+const getAuthenticatedClientIntegration = (token, signature, githubOAuthToken, emailToken) => {
 	const authLink = new ApolloLink((operation, forward) => {
 		// Retrieve the authorization token from local storage.
-
 		// Use the setContext method to set the HTTP headers.
 		operation.setContext({
 			headers: {
 				authorization: token,
-				...(signature && { cookie: `signature=${signature}; github_oauth=${githubOAuthToken}; emailAuth=${emailToken}` })
+				cookie: `signature=${signature}; github_oauth=${githubOAuthToken}; emailAuth=${emailToken}`
 			}
 		});
 
