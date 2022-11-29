@@ -17,7 +17,7 @@ const getClient = () => {
 	});
 };
 
-const getAuthenticatedClient = (token, signature, emailIsValid, githubIsValid) => {
+const getAuthenticatedClient = (token, emailIsValid, githubIsValid) => {
 	const authLink = new ApolloLink((operation, forward) => {
 		// Retrieve the authorization token from local storage.
 
@@ -26,8 +26,7 @@ const getAuthenticatedClient = (token, signature, emailIsValid, githubIsValid) =
 			headers: {
 				emailIsValid: emailIsValid,
 				githubIsValid: githubIsValid,
-				authorization: token,
-				...(signature && { cookie: `signature=${signature}` })
+				authorization: token
 			}
 		});
 
@@ -53,14 +52,21 @@ const getAuthenticatedClient = (token, signature, emailIsValid, githubIsValid) =
 	});
 };
 
-const getAuthenticatedClientIntegration = (token, signature, githubOAuthToken, emailToken) => {
+/**
+ * 
+ * @param {String} token API Secret token
+ * @param {String} githubOAuthToken A Valid Github OAuth token associated with the user you'd like to update
+ * @param {String} emailToken A MagicLink OAuth token associated with the email account you'd like to update
+ * @returns 
+ */
+const getAuthenticatedClientIntegration = (token, githubOAuthToken, emailToken) => {
 	const authLink = new ApolloLink((operation, forward) => {
 		// Retrieve the authorization token from local storage.
 		// Use the setContext method to set the HTTP headers.
 		operation.setContext({
 			headers: {
 				authorization: token,
-				cookie: `signature=${signature}; github_oauth=${githubOAuthToken}; email_auth=${emailToken}`
+				cookie: `github_oauth=${githubOAuthToken}; email_auth=${emailToken}`
 			}
 		});
 
