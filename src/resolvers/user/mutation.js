@@ -21,9 +21,13 @@ const Mutation = {
 		}
 
 		if (args.email !== undefined) {
-			const emailIsValid = await emailClient.verifyEmail(req, args.email);
-			if (!emailIsValid) {
-				throw new AuthenticationError('Email not authorized');
+			try {
+				const emailIsValid = await emailClient.verifyEmail(req, args.email);
+				if (!emailIsValid) {
+					throw new AuthenticationError('Email not authorized');
+				}
+			} catch (error) {
+				throw new AuthenticationError(error);
 			}
 		}
 

@@ -1,14 +1,14 @@
+const verifyEmailOwnership = require('./verifyEmailOwnership');
+
 const EmailClient = {
-	isValidEmail: true,
-	get isValidEmail() {
-		return isValidEmail;
-	},
-	set isValidEmail(bool) {
-		isValidEmail = bool;
-	},
-	verifyEmail: async (issueId) => {
+	verifyEmail: async (req, email) => {
 		return new Promise(async (resolve, reject) => {
-			resolve(isValidEmail);
+			try {
+				const result = await verifyEmailOwnership(req, email);
+				resolve(result);
+			} catch (error) {
+				return reject(error);
+			}
 		});
 	},
 };
