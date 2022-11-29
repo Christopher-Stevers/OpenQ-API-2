@@ -16,16 +16,16 @@ const {
  *  Verifies the OAuth token holder matches 
  * ***/
 const verifyGithubOwnership = async (req, userId) => {
-	const signatureRegex = /github_oauth=\w+/;
-	const regexMatch = req.headers.cookie.match(signatureRegex);
-	
-	let token;
-	if (regexMatch !== null) {
-		token = req.headers.cookie.match(signatureRegex)[0].slice(13);
-	}
-	
 	return new Promise(async (resolve, reject) => {
 		try {
+			const signatureRegex = /github_oauth=\w+/;
+			const regexMatch = req.headers.cookie.match(signatureRegex);
+			
+			let token;
+			if (regexMatch !== null) {
+				token = req.headers.cookie.match(signatureRegex)[0].slice(13);
+			}
+			
 			const resultViewer = await axios
 				.post(
 					'https://api.github.com/graphql',
