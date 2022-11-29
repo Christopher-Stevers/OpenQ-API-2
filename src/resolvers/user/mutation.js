@@ -2,11 +2,13 @@
 const { AuthenticationError } = require('apollo-server');
 
 const Mutation = {
-	createUser: async (parent, args, { req, prisma, emailClient, githubClient }) => {
+	upsertUser: async (parent, args, { req, prisma, emailClient, githubClient }) => {
 		const noIdentifier = !(args.email || args.github);
 		if (noIdentifier) {
 			throw new Error('Must provide id, email, address, or github');
 		}
+
+		let identifier;
 
 		if (args.email !== undefined) {
 			try {
@@ -14,6 +16,7 @@ const Mutation = {
 				if (!emailIsValid) {
 					throw new AuthenticationError('Email not authorized');
 				}
+				identifier = {email: args.email};
 			} catch (error) {
 				throw new AuthenticationError(error);
 			}
@@ -25,65 +28,23 @@ const Mutation = {
 				if (!githubIsValid) {
 					throw new AuthenticationError('Github not authorized');
 				}
+				identifier = {github: args.github};
 			} catch (error) {
 				throw new AuthenticationError(error);
 			}
 		}
 
-		return prisma.user.create({
-			data: {
+		return prisma.user.upsert({
+			where: {
+				...identifier
+			},
+			create: {
 				...args
 			},
+			update: {
+				...args
+			}
 		});
-	},
-	updateUser: async (parent, args, { req, prisma, verifySignature }) => {
-		if (!verifySignature(req, args.address)) {
-			throw new AuthenticationError();
-		}
-
-		const mutableArgs = { ...args };
-		delete mutableArgs.address;
-
-		return prisma.user.upsert(
-			{
-				where: {
-					address: args.address,
-				},
-				create: {
-					watchedBountyIds: [],
-					starredOrganizationIds: [],
-					...args
-				},
-				update: {
-					...mutableArgs,
-				}
-			}
-		);
-	},
-	updateUserGithubWithAddress: async (parent, args, { req, prisma, verifySignature }) => {
-		// Verify that the caller owns the address
-		if (!verifySignature(req, args.address)) {
-			throw new AuthenticationError();
-		}
-
-		const mutableArgs = { ...args };
-		delete mutableArgs.address;
-
-		return prisma.user.upsert(
-			{
-				where: {
-					address: args.address,
-				},
-				create: {
-					watchedBountyIds: [],
-					starredOrganizationIds: [],
-					...args
-				},
-				update: {
-					...mutableArgs,
-				}
-			}
-		);
 	},
 	updateUserSimple: async (parent, args, { prisma }) => {
 		const mutableArgs = { ...args };
