@@ -25,8 +25,6 @@ const verifyGithubOwnership = async (req, userId) => {
 			if (regexMatch !== null) {
 				token = req.headers.cookie.match(signatureRegex)[0].slice(28);
 			}
-
-			console.log('token', token);
 			
 			const resultViewer = await axios
 				.post(

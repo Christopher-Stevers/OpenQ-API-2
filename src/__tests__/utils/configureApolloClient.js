@@ -66,7 +66,7 @@ const getAuthenticatedClientIntegration = (token, githubOAuthToken, emailToken) 
 		operation.setContext({
 			headers: {
 				authorization: token,
-				cookie: `github_oauth=${githubOAuthToken}; email_auth=${emailToken}`
+				cookie: `github_oauth_token_unsigned=${githubOAuthToken}; email_auth=${emailToken}`
 			}
 		});
 

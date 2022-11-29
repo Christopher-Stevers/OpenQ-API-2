@@ -25,11 +25,7 @@ const Mutation = {
 
 		if (args.github !== undefined) {
 			try {
-				console.log(req.headers);
-				console.log(args.github);
-				console.log('githubClient', githubClient);
 				const githubIsValid = await githubClient.verifyGithub(req, args.github);
-				console.log('githubIsValid', githubIsValid);
 				if (!githubIsValid) {
 					throw new AuthenticationError('Github not authorized');
 				}
