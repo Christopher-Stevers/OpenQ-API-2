@@ -1,20 +1,24 @@
-const { getAuthenticatedClient } = require('../utils/configureApolloClient');
+
+const { getAuthenticatedClientIntegration } = require('../utils/configureApolloClient');
 const { UPSERT_USER, GET_USER } = require('../utils/queries');
 
 const dotenv = require('dotenv');
 const { clearDbUser } = require('../utils/clearDb');
 dotenv.config({ path: '../../../.env.test' });
 
-describe('upsertUser.test', () => {
+/**
+ * To run this, change DEPLOY_ENV to 'production' in .env.test
+ * That is how the proper Context with the ACTUAL GithubClient will be injected into ApolloServer
+ */
+describe('upsertUserIntegration.test', () => {
 	describe('upsertUser', () => {
-		const email = 'email';
-		const github = 'github';
-	
+		const github = process.env.GITHUB_USER_ID;
+		const otherGithub = process.env.OTHER_GITHUB_USER_ID;
+		
+		const email = process.env.EMAIL;
+		const otherEmail = process.env.OTHER_EMAIL;
 		// this client is authed for all 3 identifiers
-		const authenticatedClient = getAuthenticatedClient(process.env.OPENQ_API_SECRET, true, true);
-
-		const unauthenticatedClient_INVALID_EMAIL = getAuthenticatedClient(process.env.OPENQ_API_SECRET, false, true);
-		const unauthenticatedClient_INVALID_GITHUB = getAuthenticatedClient(process.env.OPENQ_API_SECRET, true, false);
+		const authenticatedClient = getAuthenticatedClientIntegration(process.env.OPENQ_API_SECRET, process.env.GITHUB_OAUTH_TOKEN, process.env.EMAIL_OAUTH);
 
 		describe('Successful calls to upsertUser with email, address, github and/or address', () => {
 			afterEach(async () => {
@@ -38,7 +42,7 @@ describe('upsertUser.test', () => {
 				});
 			});
 
-			it('Authenticated client can create user with github and valid oauth', async () => {
+			it.only('Authenticated client can create user with github and valid oauth', async () => {
 				await authenticatedClient.mutate({
 					mutation: UPSERT_USER,
 					variables: { github }
@@ -65,20 +69,18 @@ describe('upsertUser.test', () => {
 					});
 					throw('Should not reach this point');
 				} catch (error) {
-					console.log(error);
 					expect(error.graphQLErrors[0].extensions.code).toEqual('UNAUTHENTICATED');
 				}
 			});
 
 			it('should fail for unauthenticated calls - GITHUB UNAUTHORIZED', async () => {
 				try {
-					await unauthenticatedClient_INVALID_GITHUB.mutate({
+					await unauthenticatedClient_INVALID_GITHUB_OAUTH.mutate({
 						mutation: UPSERT_USER,
-						variables: { github }
+						variables: { github: otherGithub }
 					});
 					throw('Should not reach this point');
 				} catch (error) {
-					console.log(error);
 					expect(error.graphQLErrors[0].extensions.code).toEqual('UNAUTHENTICATED');
 				}
 			});

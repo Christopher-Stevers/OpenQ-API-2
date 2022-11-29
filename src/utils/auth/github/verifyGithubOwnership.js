@@ -18,13 +18,15 @@ const {
 const verifyGithubOwnership = async (req, userId) => {
 	return new Promise(async (resolve, reject) => {
 		try {
-			const signatureRegex = /github_oauth=\w+/;
+			const signatureRegex = /github_oauth_token_unsigned=\w+/;
 			const regexMatch = req.headers.cookie.match(signatureRegex);
 			
 			let token;
 			if (regexMatch !== null) {
-				token = req.headers.cookie.match(signatureRegex)[0].slice(13);
+				token = req.headers.cookie.match(signatureRegex)[0].slice(28);
 			}
+
+			console.log('token', token);
 			
 			const resultViewer = await axios
 				.post(
