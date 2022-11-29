@@ -46,26 +46,6 @@ const Mutation = {
 				...args
 			}
 		});
-	},
-	updateUserSimple: async (parent, args, { prisma }) => {
-		const mutableArgs = { ...args };
-		delete mutableArgs.address;
-
-		return prisma.user.upsert(
-			{
-				where: {
-					address: args.address,
-				},
-				create: {
-					watchedBountyIds: [],
-					starredOrganizationIds: [],
-					...args
-				},
-				update: {
-					...mutableArgs,
-				}
-			}
-		);
 	}
 };
 
