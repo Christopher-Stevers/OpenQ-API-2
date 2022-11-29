@@ -1,6 +1,6 @@
 const Query = {
 	user: async (parent, args, { prisma }) => {
-		if (!(args.id || args.email || args.address || args.github)) {
+		if (!(args.id || args.email || args.github)) {
 			throw new Error('Must provide id, email, address, or github');
 		}
 

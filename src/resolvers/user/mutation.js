@@ -2,7 +2,7 @@
 const { AuthenticationError } = require('apollo-server');
 
 const Mutation = {
-	createUser: async (parent, args, { req, prisma, verifySignature, emailClient, githubClient }) => {
+	createUser: async (parent, args, { req, prisma, emailClient, githubClient }) => {
 		const incorrectApiSecret = req.headers.authorization !== process.env.OPENQ_API_SECRET;
 		if (incorrectApiSecret) {
 			throw new AuthenticationError();
@@ -11,13 +11,6 @@ const Mutation = {
 		const noIdentifier = !(args.email || args.address || args.github);
 		if (noIdentifier) {
 			throw new Error('Must provide id, email, address, or github');
-		}
-
-		if (args.address !== undefined) {
-			const addressWithInvalidSignature =  !verifySignature(req, args.address);
-			if (addressWithInvalidSignature) {
-				throw new AuthenticationError(`Signature for address ${args.address} is invalid`);
-			}
 		}
 
 		if (args.email !== undefined) {
