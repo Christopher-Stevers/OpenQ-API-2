@@ -1,6 +1,5 @@
 const { PrismaClient } = require('../../generated/client');
 const { BetaAnalyticsDataClient } = require('@google-analytics/data');
-const { verifySignature } = require('../utils/auth/address/verifySignature');
 
 const EmailClient = require('../utils/auth/email/EmailClient');
 const MockEmailClient = require('../utils/auth/email/MockEmailClient');
@@ -13,7 +12,7 @@ const gAnalyticsDataClient = new BetaAnalyticsDataClient();
 
 const createContext = async ({ req, res }) => {
 	console.log(req.body);
-	return { req, res, prisma, gAnalyticsDataClient, verifySignature, emailClient: EmailClient, githubClient: GithubClient };
+	return { req, res, prisma, gAnalyticsDataClient, emailClient: EmailClient, githubClient: GithubClient };
 };
 
 const createMockContext = async ({ req, res }) => {
@@ -25,7 +24,7 @@ const createMockContext = async ({ req, res }) => {
 	 *  */
 	MockEmailClient.isValidEmail = req.headers.emailisvalid === 'true';
 	MockGithubClient.isValidGithub = req.headers.githubisvalid === 'true';
-	return { req, res, prisma, gAnalyticsDataClient, verifySignature, emailClient: MockEmailClient, githubClient: MockGithubClient };
+	return { req, res, prisma, gAnalyticsDataClient, emailClient: MockEmailClient, githubClient: MockGithubClient };
 };
 
 module.exports = { createContext, createMockContext };

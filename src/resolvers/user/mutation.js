@@ -3,9 +3,10 @@ const { AuthenticationError } = require('apollo-server');
 
 const Mutation = {
 	upsertUser: async (parent, args, { req, prisma, emailClient, githubClient }) => {
+		console.log(args);
 		const noIdentifier = !(args.email || args.github);
 		if (noIdentifier) {
-			throw new Error('Must provide id, email, address, or github');
+			throw new Error('Must provide id, email, or github');
 		}
 
 		let identifier;
