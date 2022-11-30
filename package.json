@@ -8,7 +8,8 @@
 		"start:dev": "nodemon --ignore generated --ignore src/__tests__/ --exec 'npx prisma generate && node ./src/index.js'",
 		"boot:test": "docker-compose down && docker-compose up",
 		"test": "jest",
-		"test:all": "jest --testPathIgnorePatterns src/__tests__/utils/**"
+		"test:integration": "jest src/__tests__/integration/** --runInBand",
+		"unittest:all": "jest --testPathIgnorePatterns src/__tests__/utils/** --runInBand"
 	},
 	"keywords": [],
 	"author": "Christopher-Stevers",
