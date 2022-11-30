@@ -3,7 +3,7 @@ const GithubClient = require('../../../utils/auth/github/GithubClient');
 describe('GithubClient', () => { 
 	const req = {
 		headers: {
-			cookie: `github_oauth=${process.env.GITHUB_OAUTH_TOKEN}`,
+			cookie: `github_oauth_token_unsigned=${process.env.GITHUB_OAUTH_TOKEN}`,
 		}
 	};
 
