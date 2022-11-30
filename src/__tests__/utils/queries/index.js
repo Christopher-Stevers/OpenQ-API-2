@@ -43,16 +43,23 @@ mutation GetRepository( $id: String!) {
   }
 }`;
 
-const WATCH_BOUNTY = gql` mutation AddUser($contractAddress: String, $userAddress: String) {
+const WATCH_BOUNTY = gql`mutation AddUser($contractAddress: String, $userId: String) {
   watchBounty(
     contractAddress: $contractAddress
-    userAddress: $userAddress
+    userId: $userId
   ) {
     address
-	watchingUserIds
+		watchingUserIds
   }
-}
-`;
+}`;
+
+const CREATE_USER = gql`mutation CreateUser($github: String!) {
+  upsertUser(github: $github) {
+    id
+    github
+  }
+}`;
+
 const UNWATCH_BOUNTY = gql` mutation AddUser($contractAddress: String, $userAddress: String) {
   unWatchBounty(
     contractAddress: $contractAddress
@@ -110,4 +117,4 @@ query BountiesConnection($after: ID, $limit: Int!, $orderBy: String, $sortOrder:
 }
 `;
 
-module.exports = { CREATE_NEW_BOUNTY, WATCH_BOUNTY, UNWATCH_BOUNTY, GET_USER, GET_BOUNTY_BY_ID, UPSERT_USER, GET_BOUNTY_PAGE, CREATE_NEW_REPOSITORY, GET_REPOSITORY, UPDATE_BOUNTY };
+module.exports = { CREATE_NEW_BOUNTY, WATCH_BOUNTY, UNWATCH_BOUNTY, GET_USER, CREATE_USER, GET_BOUNTY_BY_ID, UPSERT_USER, GET_BOUNTY_PAGE, CREATE_NEW_REPOSITORY, GET_REPOSITORY, UPDATE_BOUNTY };

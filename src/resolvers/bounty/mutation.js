@@ -1,6 +1,7 @@
 const calculateTvl = require('../../utils/calculateTvl');
 const calculateTvc = require('../../utils/calculateTvc');
 const { AuthenticationError } = require('apollo-server');
+const checkUserAuth = require('../utils/userAuth');
 
 const Mutation = {
 	createBounty: async (parent, args, { req, prisma }) => {
@@ -181,57 +182,57 @@ const Mutation = {
 			},
 		});
 	},
-	watchBounty: async (parent, args, { req, prisma, verifySignature }) => {
-		if (!verifySignature(req, args.userAddress)) {
-			throw new AuthenticationError();
-		}
+	watchBounty: async (parent, args, { req, prisma, githubClient, emailClient }) => {
+		const identifier = await checkUserAuth(req, args, emailClient, githubClient);
+
 		const bounty = await prisma.bounty.findUnique({
 			where: { address: args.contractAddress },
 		});
-		const user = await prisma.user.upsert({
-			where: { address: args.userAddress },
-			update: {
+
+		const user = await prisma.user.data({
+			where: { ...identifier },
+			data: {
 				watchedBountyIds: {
 					push: bounty.address,
 				},
-			},
-			create: {
-				address: args.userAddress,
-				watchedBountyIds: [bounty.address],
-			},
+			}
 		});
+
 		return prisma.bounty.update({
-			where: { address: args.contractAddress },
+			where: { address: bounty.address },
 			data: {
 				watchingUserIds: {
-					push: user.address,
+					push: user.id,
 				},
 			},
 		});
 	},
-	unWatchBounty: async (parent, args, { req, prisma, verifySignature }) => {
-		if (!verifySignature(req, args.userAddress)) {
-			throw new AuthenticationError();
-		}
+	unWatchBounty: async (parent, args, { req, prisma, emailClient, githubClient }) => {
+		const identifier = await checkUserAuth(req, args, emailClient, githubClient);
+
 		const bounty = await prisma.bounty.findUnique({
 			where: { address: args.contractAddress },
 		});
+
 		const user = await prisma.user.findUnique({
-			where: { address: args.userAddress },
+			where: { ...identifier },
 		});
+
 		const newBounties = user.watchedBountyIds.filter(
 			(bountyId) => bountyId !== bounty.address
 		);
+
 		const newUsers = bounty.watchingUserIds.filter(
-			(userId) => userId !== user.address
+			(userId) => userId !== user.id
 		);
 
 		await prisma.user.update({
-			where: { address: args.userAddress },
+			where: { ...identifier },
 			data: {
 				watchedBountyIds: { set: newBounties },
 			},
 		});
+
 		return prisma.bounty.update({
 			where: { address: args.contractAddress },
 			data: {
