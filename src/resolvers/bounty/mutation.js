@@ -40,7 +40,7 @@ const Mutation = {
 					},
 				}
 			},
-			include: { repository: true }
+			include: { repository: true, organization: true }
 		});
 	},
 	updateBounty: async (parent, args, { req, prisma }) => {

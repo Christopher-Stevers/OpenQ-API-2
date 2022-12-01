@@ -39,7 +39,6 @@ const Mutation = {
 			},
 		});
 	},
-
 	setIsContest: async (parent, args, { prisma }) => {
 		const startDate = new Date(args.startDate);
 		const registrationDeadline = new Date(args.registrationDeadline);

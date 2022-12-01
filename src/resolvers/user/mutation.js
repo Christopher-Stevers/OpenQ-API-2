@@ -11,7 +11,6 @@ const Mutation = {
 		const mutableArgs = { ...args };
 		delete mutableArgs.address;
 
-
 		return prisma.user.upsert(
 			{
 				where: {
@@ -21,8 +20,7 @@ const Mutation = {
 					watchedBountyIds: [],
 					starredOrganizationIds: [],
 					...args
-				}
-				,
+				},
 				update: {
 					...mutableArgs,
 				}
@@ -42,8 +40,7 @@ const Mutation = {
 					watchedBountyIds: [],
 					starredOrganizationIds: [],
 					...args
-				}
-				,
+				},
 				update: {
 					...mutableArgs,
 				}
