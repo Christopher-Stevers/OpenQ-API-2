@@ -49,11 +49,11 @@ describe('blacklistOrg', () => {
 	});
 
 	describe('Unsuccessful', () => {
-		it('should fail for unauthenticated calls', async () => {
+		it.only('should fail for unauthenticated calls', async () => {
 			try {
 				await unauthenticatedClient.mutate({
-					mutation: CREATE_NEW_BOUNTY,
-					variables: { address: contractAddress, organizationId, bountyId, repositoryId, type }
+					mutation: BLACKLIST_ORGANIZATION,
+					variables: { organizationId }
 				});
 				throw('Should not reach this point');
 			} catch (error) {

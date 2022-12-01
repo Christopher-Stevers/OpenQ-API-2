@@ -1,10 +1,10 @@
-const AuthenticationError = require('apollo-server');
+const { AuthenticationError } = require('apollo-server');
 const checkUserAuth = require('../utils/userAuth');
 
 const Mutation = {
 	blacklistOrg: async (parent, args, { req, prisma }) => {
 		if (req.headers.authorization !== process.env.BANHAMMER) {
-			throw new AuthenticationError();
+			throw new AuthenticationError('UNAUTHENTICATED');
 		}
 		return prisma.organization.upsert(
 			{
