@@ -6,7 +6,7 @@ const Query = {
 
 		const value = await prisma.user.findUnique({
 			where: { ...args },
-			include: { starredOrganizations: true }
+			include: { starredOrganizations: true, watchedBounties: true }
 		});
 		return value;
 	},

@@ -1,12 +1,11 @@
 
 const { getAuthenticatedClient } = require('../utils/configureApolloClient');
-const { WATCH_BOUNTY, CREATE_NEW_BOUNTY, CREATE_USER, GET_BOUNTY_BY_ID } = require('../utils/queries');
+const { WATCH_BOUNTY, CREATE_NEW_BOUNTY, CREATE_USER, GET_USER, GET_BOUNTY_BY_ID } = require('../utils/queries');
 
 const { clearDb } = require('../utils/clearDb');
 
 describe('watchBounty', () => {
 	const contractAddress = '0x8daf17assdfdf20c9dba35f005b6324f493785d239719d';
-	const userId = 'userId';
 	const organizationId = 'organizationId';
 	const bountyId = 'bountyId';
 	const repositoryId = 'repositoryId';
@@ -34,14 +33,44 @@ describe('watchBounty', () => {
 				variables: { github }
 			});
 
+			const userId = user.data.upsertUser.id;
 			// ACT
 			await authenticatedClient.mutate({
 				mutation: WATCH_BOUNTY,
-				variables: { contractAddress: contractAddress, userId: user.data.upsertUser.id }
+				variables: { contractAddress: contractAddress, userId: userId }
+			});
+
+			const userResult = await authenticatedClient.query({
+				query: GET_USER,
+				variables: { id: userId }
+			});
+
+			const bountyResult = await authenticatedClient.query({
+				query: GET_BOUNTY_BY_ID,
+				variables: { contractAddress }
 			});
 
 			// ASSERT
-			expect(true).toEqual(true);
+			expect(userResult.data.user).toMatchObject({
+				__typename: 'User',
+				id: userId,
+				watchedBounties: {
+					bountyConnection: {
+						nodes: []
+					}
+				}
+			});
+
+			expect(bountyResult.data.bounty).toMatchObject({
+				__typename: 'Bounty',
+				address: contractAddress,
+				watchingUsers: [
+					{
+						__typename: 'User',
+						id: userId
+					}
+				]
+			});
 		});
 	});
 

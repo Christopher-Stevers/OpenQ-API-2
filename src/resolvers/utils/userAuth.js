@@ -1,7 +1,7 @@
 const { AuthenticationError } = require('apollo-server');
 
 const checkUserAuth = async (req, args, emailClient, githubClient) => {
-	const noIdentifier = !(args.email || args.github);
+	const noIdentifier = !(args.email || args.github || args.userId);
 	if (noIdentifier) {
 		throw new Error('Must provide id, email, or github');
 	}
@@ -31,6 +31,12 @@ const checkUserAuth = async (req, args, emailClient, githubClient) => {
 			throw new AuthenticationError(error);
 		}
 	}
+
+	if (args.userId !== undefined) {
+		identifier = { id: args.userId };
+	}
+
+	console.log('identifier', identifier);
 
 	return identifier;
 };

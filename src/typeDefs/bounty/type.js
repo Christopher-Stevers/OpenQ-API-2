@@ -10,6 +10,7 @@ const typeDef = gql`
 		views: Int
 		watchingCount: Int
 		bountyId: String!
+		watchingUsers: [User]
 		organization: Organization
 		organizationId: String
 		category: String

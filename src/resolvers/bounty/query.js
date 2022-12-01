@@ -2,7 +2,7 @@ const Query = {
 	bounty: async (_, args, { prisma }) =>
 		prisma.bounty.findUnique({
 			where: { address: args.address },
-			include: { repository: true, organization: true },
+			include: { repository: true, organization: true, watchingUsers: true },
 		}),
 	bounties: async (parent, args) => {
 		return args;

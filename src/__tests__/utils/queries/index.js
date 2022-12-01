@@ -49,7 +49,9 @@ const WATCH_BOUNTY = gql`mutation AddUser($contractAddress: String, $userId: Str
     userId: $userId
   ) {
     address
-		watchingUserIds
+		watchingUsers {
+			id
+		}
   }
 }`;
 
@@ -75,9 +77,13 @@ const UNWATCH_BOUNTY = gql` mutation AddUser($contractAddress: String, $userAddr
 const GET_BOUNTY_BY_ID = gql`query bounty($contractAddress: String!) {
   bounty(address: $contractAddress) {
     tvl
+		address
 		bountyId
     type
 		blacklisted
+		watchingUsers {
+			id
+		}
     organization {
       id
     }
@@ -100,6 +106,13 @@ const GET_USER = gql`query GetUser($id: String, $email: String, $github: String)
 		id
 		email
 		github
+		watchedBounties(limit: 10) {
+      bountyConnection{
+        nodes {
+          address
+        }
+      }
+    }
   }
 }`;
 

@@ -189,7 +189,7 @@ const Mutation = {
 			where: { address: args.contractAddress },
 		});
 
-		const user = await prisma.user.data({
+		const user = await prisma.user.update({
 			where: { ...identifier },
 			data: {
 				watchedBountyIds: {
