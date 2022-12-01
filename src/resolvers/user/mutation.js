@@ -6,9 +6,7 @@ const Mutation = {
 		const identifier = await checkUserAuth(req, args, emailClient, githubClient);
 
 		return prisma.user.upsert({
-			where: {
-				...identifier
-			},
+			where: identifier,
 			create: {
 				...args
 			},

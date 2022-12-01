@@ -1,34 +1,31 @@
-
 const AuthenticationError = require('apollo-server');
+const checkUserAuth = require('../utils/userAuth');
 
 const Mutation = {
-	blackListOrg: async (parent, args, { req, prisma }) => {
+	blacklistOrg: async (parent, args, { req, prisma }) => {
 		if (req.headers.authorization !== process.env.BANHAMMER) {
 			throw new AuthenticationError();
 		}
 		return prisma.organization.upsert(
 			{
 				where: { id: args.organizationId },
-				create: { blacklisted: args.blackList, id: args.organizationId },
-				update: { blacklisted: args.blackList }
+				create: { blacklisted: args.blacklist, id: args.organizationId },
+				update: { blacklisted: args.blacklist }
 			}
 		);
 	},
-
-	starOrg: async (parent, args, { req, prisma, verifySignature }) => {
-		if (!verifySignature(req, args.address)) {
-			throw new AuthenticationError();
-		}
+	starOrg: async (parent, args, { req, prisma, githubClient, emailClient }) => {
+		const identifier = await checkUserAuth(req, args, emailClient, githubClient);
 
 		await prisma.user.upsert({
-			where: { address: args.address },
+			where: identifier,
 			update: {
 				starredOrganizationIds: {
 					push: args.id,
 				},
 			},
 			create: {
-				address: args.address,
+				...identifier,
 				starredOrganizationIds: [args.id],
 			},
 		});
@@ -37,41 +34,41 @@ const Mutation = {
 			where: { id: args.id },
 			data: {
 				starringUserIds: {
-					push: args.address,
+					push: args.userId,
 				},
 			},
 		});
 
 		return organization;
-
-
-
 	},
-	unStarOrg: async (parent, args, { req, prisma, verifySignature }) => {
-		if (!verifySignature(req, args.address)) {
-			throw new AuthenticationError();
-		}
+	unStarOrg: async (parent, args, { req, prisma, githubClient, emailClient }) => {
+		const identifier = await checkUserAuth(req, args, emailClient, githubClient);
+
 		const organization = await prisma.organization.upsert({
 			where: { id: args.id },
 			update: {},
 			create: { id: args.id, blacklisted: false, }
 		});
+
 		const user = await prisma.user.findUnique({
-			where: { address: args.address },
+			where: identifier,
 		});
+
 		const newOrgs = user.starredOrganizationIds.filter(
 			(bountyId) => bountyId !== organization.id
 		);
+
 		const newUsers = organization.starringUserIds.filter(
-			(userId) => userId !== user.address
+			(userId) => userId !== user.id
 		);
 
 		await prisma.user.update({
-			where: { address: args.address },
+			where: identifier,
 			data: {
 				starredOrganizationIds: { set: newOrgs },
 			},
 		});
+
 		return prisma.organization.update({
 			where: { id: args.id },
 			data: {

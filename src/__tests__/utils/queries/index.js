@@ -131,4 +131,32 @@ query BountiesConnection($after: ID, $limit: Int!, $orderBy: String, $sortOrder:
 }
 `;
 
-module.exports = { CREATE_NEW_BOUNTY, WATCH_BOUNTY, UNWATCH_BOUNTY, GET_USER, CREATE_USER, GET_BOUNTY_BY_ID, UPSERT_USER, GET_BOUNTY_PAGE, CREATE_NEW_REPOSITORY, GET_REPOSITORY, UPDATE_BOUNTY };
+const GET_ORGANIZATION = gql`query GetOrganization($organizationId: String!) {
+  organization(organizationId: $organizationId) {
+		id
+		blacklisted
+  }
+}`;
+
+const BLACKLIST_ORGANIZATION = gql`mutation blacklistOrg($organizationId: String, $blacklist: Boolean) {
+    blacklistOrg(organizationId: $organizationId, blacklist: $blacklist) {
+      blacklisted
+    }
+  }
+`;
+
+module.exports = { 
+	CREATE_NEW_BOUNTY,
+	UPDATE_BOUNTY,
+	WATCH_BOUNTY,
+	UNWATCH_BOUNTY,
+	GET_BOUNTY_BY_ID,
+	GET_BOUNTY_PAGE,
+	CREATE_USER,
+	GET_USER,
+	UPSERT_USER,
+	CREATE_NEW_REPOSITORY,
+	GET_REPOSITORY,
+	GET_ORGANIZATION,
+	BLACKLIST_ORGANIZATION
+};

@@ -139,14 +139,14 @@ const Mutation = {
 			},
 		});
 	},
-	blackList: async (parent, args, { req, prisma }) => {
+	blacklist: async (parent, args, { req, prisma }) => {
 		if (req.headers.authorization !== process.env.BANHAMMER) {
 			throw new AuthenticationError();
 		}
 		return prisma.bounty.update(
 			{
 				where: { bountyId: args.bountyId },
-				data: { blacklisted: args.blackList }
+				data: { blacklisted: args.blacklist }
 			}
 		);
 	},

@@ -2,9 +2,9 @@ const { gql } = require('apollo-server');
 
 const mutationDefs = gql`
   extend type Mutation {
-		blackListOrg(organizationId: String, blackList: Boolean): Organization
-		starOrg(address: String, id: String): Organization
-		unStarOrg(address: String!, id: String!): Organization!
+		blacklistOrg(organizationId: String, blacklist: Boolean): Organization
+		starOrg(userId: String!, id: String!): Organization
+		unStarOrg(userId: String!, id: String!): Organization!
   }
 `;
 

@@ -52,4 +52,25 @@ const clearDbUser = async () => {
 	return promise;
 };
 
-module.exports = { clearDb, clearDbUser };
+const clearDbOrganization = async () => {
+	const promise = new Promise((resolve, reject) => {
+		MongoClient
+			.connect(url, function (err, db) {
+				if (err) throw err;
+				var dbo = db.db('openqdb');
+				try {
+					dbo.dropCollection('Organization', function (err, delOK) {
+						if (err) throw err;
+						db.close();
+						resolve('true');
+					});
+				} catch (error) {
+					console.log('error', error);
+					reject(error);
+				}
+			});
+	});
+	return promise;
+};
+
+module.exports = { clearDb, clearDbUser, clearDbOrganization };

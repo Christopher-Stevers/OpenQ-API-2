@@ -4,7 +4,7 @@ const typeDef = gql`
 	type Organization {
 		id: String!
 		blacklisted: Boolean
-		starringUserIds: [String]
+		starringUsers: [User]
 		bounties(
 			after: ID
 			limit: Int!
