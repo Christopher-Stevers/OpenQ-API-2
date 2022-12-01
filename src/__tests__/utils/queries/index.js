@@ -62,17 +62,17 @@ const CREATE_USER = gql`mutation CreateUser($github: String!) {
   }
 }`;
 
-const UNWATCH_BOUNTY = gql` mutation AddUser($contractAddress: String, $userAddress: String) {
-  unWatchBounty(
+const UNWATCH_BOUNTY = gql`mutation AddUser($contractAddress: String, $userId: String) {
+  unwatchBounty(
     contractAddress: $contractAddress
-    userAddress: $userAddress
+    userId: $userId
   ) {
     address
-	watchingUserIds
+		watchingUsers {
+			id
+		}
   }
-}
-`;
-
+}`;
 
 const GET_BOUNTY_BY_ID = gql`query bounty($contractAddress: String!) {
   bounty(address: $contractAddress) {

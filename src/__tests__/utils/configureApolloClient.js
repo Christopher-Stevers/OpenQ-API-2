@@ -40,6 +40,11 @@ const getAuthenticatedClient = (token, emailIsValid, githubIsValid) => {
 		link: authLink.concat(httpLink),
 		onError: (e) => { console.log(e); },
 		cache: new InMemoryCache(),
+		defaultOptions: {
+			watchQuery: {
+				fetchPolicy: 'no-cache',
+			},
+		},
 		request: (operation) => {
 			if (token) {
 				operation.setContext({
