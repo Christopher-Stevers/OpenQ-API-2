@@ -183,7 +183,7 @@ const Mutation = {
 		});
 	},
 	watchBounty: async (parent, args, { req, prisma, githubClient, emailClient }) => {
-		const identifier = await checkUserAuth(req, args, emailClient, githubClient);
+		const identifier = await checkUserAuth(prisma, req, args, emailClient, githubClient);
 
 		const bounty = await prisma.bounty.findUnique({
 			where: { address: args.contractAddress },
@@ -208,7 +208,7 @@ const Mutation = {
 		});
 	},
 	unwatchBounty: async (parent, args, { req, prisma, emailClient, githubClient }) => {
-		const identifier = await checkUserAuth(req, args, emailClient, githubClient);
+		const identifier = await checkUserAuth(prisma, req, args, emailClient, githubClient);
 
 		const bounty = await prisma.bounty.findUnique({
 			where: { address: args.contractAddress },

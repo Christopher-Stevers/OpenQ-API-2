@@ -15,7 +15,7 @@ const Mutation = {
 		);
 	},
 	starOrg: async (parent, args, { req, prisma, githubClient, emailClient }) => {
-		const identifier = await checkUserAuth(req, args, emailClient, githubClient);
+		const identifier = await checkUserAuth(prisma, req, args, emailClient, githubClient);
 
 		const user = await prisma.user.findUnique({
 			where: { ...identifier }
@@ -52,8 +52,8 @@ const Mutation = {
 
 		return organization;
 	},
-	unStarOrg: async (parent, args, { req, prisma, githubClient, emailClient }) => {
-		const identifier = await checkUserAuth(req, args, emailClient, githubClient);
+	unstarOrg: async (parent, args, { req, prisma, githubClient, emailClient }) => {
+		const identifier = await checkUserAuth(prisma, req, args, emailClient, githubClient);
 
 		const organization = await prisma.organization.upsert({
 			where: { id: args.organizationId },
@@ -66,7 +66,7 @@ const Mutation = {
 		});
 
 		const newOrgs = user.starredOrganizationIds.filter(
-			(bountyId) => bountyId !== organization.organizationId
+			(organizationId) => organizationId !== organization.id
 		);
 
 		const newUsers = organization.starringUserIds.filter(

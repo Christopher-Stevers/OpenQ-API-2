@@ -1,9 +1,9 @@
 const { AuthenticationError } = require('apollo-server');
 
-const checkUserAuth = async (req, args, emailClient, githubClient) => {
+const checkUserAuth = async (prisma, req, args, emailClient, githubClient) => {
 	const noIdentifier = !(args.email || args.github || args.userId);
 	if (noIdentifier) {
-		throw new Error('Must provide id, email, or github');
+		throw new Error('Must provide a userId and either an email OR github');
 	}
 
 	let identifier;
@@ -33,6 +33,10 @@ const checkUserAuth = async (req, args, emailClient, githubClient) => {
 	}
 
 	if (args.userId !== undefined) {
+		const user = await prisma.user.findUnique({
+			where: identifier,
+		});
+
 		identifier = { id: args.userId };
 	}
 

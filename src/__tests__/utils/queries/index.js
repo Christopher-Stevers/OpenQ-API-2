@@ -52,6 +52,15 @@ const STAR_ORGANIZATION = gql`mutation StarOrg($userId: String!, $organizationId
   }
 }`;
 
+const UNSTAR_ORGANIZATION = gql`mutation StarOrg($userId: String!, $organizationId: String!) {
+  unstarOrg(userId: $userId, organizationId: $organizationId) {
+    id
+		starringUsers {
+			id
+		}
+  }
+}`;
+
 const WATCH_BOUNTY = gql`mutation AddUser($contractAddress: String, $userId: String) {
   watchBounty(
     contractAddress: $contractAddress
@@ -174,5 +183,6 @@ module.exports = {
 	GET_REPOSITORY,
 	GET_ORGANIZATION,
 	BLACKLIST_ORGANIZATION,
-	STAR_ORGANIZATION
+	STAR_ORGANIZATION,
+	UNSTAR_ORGANIZATION
 };
