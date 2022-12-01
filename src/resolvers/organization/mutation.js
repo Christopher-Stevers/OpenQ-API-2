@@ -18,9 +18,8 @@ const Mutation = {
 		const identifier = await checkUserAuth(prisma, req, args, emailClient, githubClient);
 
 		const user = await prisma.user.findUnique({
-			where: { ...identifier }
+			where: { id: args.userId }
 		});
-		console.log(user);
 
 		if (user.starredOrganizationIds.includes(args.organizationId)) {
 			throw new Error('ALREADY_STARRED');
@@ -62,7 +61,7 @@ const Mutation = {
 		});
 
 		const user = await prisma.user.findUnique({
-			where: identifier,
+			where: { id: args.userId },
 		});
 
 		const newOrgs = user.starredOrganizationIds.filter(

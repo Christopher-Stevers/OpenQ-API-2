@@ -43,8 +43,8 @@ mutation GetRepository( $id: String!) {
   }
 }`;
 
-const STAR_ORGANIZATION = gql`mutation StarOrg($userId: String!, $organizationId: String!) {
-  starOrg(userId: $userId, organizationId: $organizationId) {
+const STAR_ORGANIZATION = gql`mutation StarOrg($userId: String!, $organizationId: String!, $github: String, $email: String) {
+  starOrg(userId: $userId, organizationId: $organizationId, github: $github, email: $email) {
     id
 		starringUsers {
 			id
