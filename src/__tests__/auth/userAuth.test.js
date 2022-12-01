@@ -8,15 +8,23 @@ describe('userAuth', () => {
 		MockEmailClient.isValidEmail = true;
 	});
 	
-	const userId = '123';
+	const id = '123';
 	const github = 'github';
 	const email = 'email';
-	const args_GITHUB = { github, userId };
-	const args_EMAIL = { email, userId };
-	const args_BOTH = { email, github, userId };
-	const invalidArgs = { userId };
+	const args_GITHUB = { github, id };
+	const args_EMAIL = { email, id };
+	const args_BOTH = { email, github, id };
+	const invalidArgs = { id };
 
-	const prisma = {};
+	const prisma = {
+		user: {
+			findUnique: async () => {
+				return new Promise(async (resolve) => {
+					resolve({ id });
+				});
+			},
+		}
+	};
 	
 	const req = null;
 
@@ -39,11 +47,16 @@ describe('userAuth', () => {
 
 	it('should return error false and identifier if successful - GITHUB', async () => {
 		const result = await checkUserAuth(prisma, req, args_GITHUB, MockEmailClient, MockGithubClient);
-		expect(result).toMatchObject({ error: false, errorMessage: null, github: 'github' });
+		expect(result).toMatchObject({ error: false, errorMessage: null, id });
 	});
 
 	it('should return error false and identifier if successful - EMAIL', async () => {
 		const result = await checkUserAuth(prisma, req, args_EMAIL, MockEmailClient, MockGithubClient);
-		expect(result).toMatchObject({ error: false, errorMessage: null, email: 'email' });
+		expect(result).toMatchObject({ error: false, errorMessage: null, id });
+	});
+
+	it('should return error false and identifier if successful - BOTH GITHUB and EMAIL', async () => {
+		const result = await checkUserAuth(prisma, req, args_BOTH, MockEmailClient, MockGithubClient);
+		expect(result).toMatchObject({ error: false, errorMessage: null, id });
 	});
 }); 
