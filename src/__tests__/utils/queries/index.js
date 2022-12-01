@@ -79,6 +79,7 @@ const GET_BOUNTY_BY_ID = gql`query bounty($contractAddress: String!) {
     tvl
 		address
 		bountyId
+		organizationId
     type
 		blacklisted
 		watchingUsers {

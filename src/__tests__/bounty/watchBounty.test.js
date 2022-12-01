@@ -34,12 +34,14 @@ describe('watchBounty', () => {
 			});
 
 			const userId = user.data.upsertUser.id;
+			
 			// ACT
 			await authenticatedClient.mutate({
 				mutation: WATCH_BOUNTY,
 				variables: { contractAddress: contractAddress, userId: userId }
 			});
 
+			// ARRANGE
 			const userResult = await authenticatedClient.query({
 				query: GET_USER,
 				variables: { id: userId }
@@ -51,18 +53,9 @@ describe('watchBounty', () => {
 			});
 
 			// ASSERT
-			expect(userResult.data.user).toMatchObject({
-				__typename: 'User',
-				id: userId,
-				watchedBounties: {
-					bountyConnection: {
-						nodes: []
-					}
-				}
-			});
-
 			expect(bountyResult.data.bounty).toMatchObject({
 				__typename: 'Bounty',
+				organizationId,
 				address: contractAddress,
 				watchingUsers: [
 					{
@@ -70,6 +63,21 @@ describe('watchBounty', () => {
 						id: userId
 					}
 				]
+			});
+			
+			expect(userResult.data.user).toMatchObject({
+				__typename: 'User',
+				id: userId,
+				watchedBounties: {
+					bountyConnection: {
+						nodes: [
+							{
+								__typename: 'Bounty',
+								address: contractAddress
+							}
+						]
+					}
+				}
 			});
 		});
 	});

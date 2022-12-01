@@ -1,8 +1,6 @@
-
-
 const User = {
 	watchedBounties: async (parent, args) => {
-		return { organizationId: parent.id, addresses: parent.watchedBountyIds, ...args };
+		return { organizationId: parent.organizationId, addresses: parent.watchedBountyIds, ...args };
 	}
 };
 

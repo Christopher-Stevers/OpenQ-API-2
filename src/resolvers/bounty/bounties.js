@@ -1,13 +1,23 @@
+const generateFilter = (organizationId, repositoryId, addresses, types, category) => {
+	const inAddresses = addresses ? { address: { in: addresses } } : {};
+	const inTypes = types ? { type: { in: types } } : {};
+	const repoId = repositoryId ? { repositoryId } : {};
+	const orgId = organizationId ? { organizationId } : {};
+	const categoryUnwrapped = category ? { category } : {};
+	return { ...repoId, ...orgId, ...categoryUnwrapped, ...inAddresses, ...inTypes };
+};
 
 const Bounties = {
 	bountyConnection: async (parent, args, { prisma }) => {
-
+		const { organizationId, addresses, types, category, repositoryId } = parent; 
+		const filters = generateFilter(organizationId, repositoryId, addresses, types, category);
+		
 		const cursor = parent.after ? { address: parent.after } : undefined;
-		const organizationIdObj = parent.organizationId ? { organizationId: parent.organizationId } : {};
+		
 		const nodes = await prisma.bounty.findMany({
 			skip: (!parent.after) ? 0 : 1,
 			cursor,
-			where: { ...organizationIdObj, type: { in: parent.types }, category: parent.category, address: { in: parent.addresses }, repositoryId: parent.repositoryId },
+			where: filters,
 			take: parent.limit,
 			...parent.orderBy ? {
 				orderBy: [
@@ -32,9 +42,11 @@ const Bounties = {
 
 
 	nodes: async (parent, args, { prisma }) => {
-		const organizationIdObj = parent.organizationId ? { organizationId: parent.organizationId } : {};
+		const { organizationId, addresses, types, category, repositoryId } = parent; 
+		const filters = generateFilter(organizationId, repositoryId, addresses, types, category);
+
 		const bounties = await prisma.bounty.findMany({
-			where: { ...organizationIdObj, type: { in: parent.types }, category: parent.category, address: { in: parent.addresses } },
+			where: filters,
 			take: parent.limit,
 			...parent.orderBy ? {
 				orderBy: [
