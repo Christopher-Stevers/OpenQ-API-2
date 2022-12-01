@@ -3,7 +3,7 @@ const { AuthenticationError } = require('apollo-server');
 const checkUserAuth = async (prisma, req, args, emailClient, githubClient) => {
 	const noIdentifier = !(args.email || args.github);
 	if (noIdentifier) {
-		throw new Error('Must provide a an email OR github');
+		return { error: true, errorMessage: 'Must provide a an email OR github' };
 	}
 
 	let identifier;
@@ -12,11 +12,11 @@ const checkUserAuth = async (prisma, req, args, emailClient, githubClient) => {
 		try {
 			const emailIsValid = await emailClient.verifyEmail(req, args.email);
 			if (!emailIsValid) {
-				throw new AuthenticationError('Email not authorized');
+				return { error: true, errorMessage: 'Email not authorized' };
 			}
 			identifier = { email: args.email };
 		} catch (error) {
-			throw new AuthenticationError(error);
+			return { error: true, errorMessage: error };
 		}
 	}
 
@@ -24,15 +24,15 @@ const checkUserAuth = async (prisma, req, args, emailClient, githubClient) => {
 		try {
 			const githubIsValid = await githubClient.verifyGithub(req, args.github);
 			if (!githubIsValid) {
-				throw new AuthenticationError('Github not authorized');
+				return { error: true, errorMessage: 'Github not authorized' };
 			}
 			identifier = { github: args.github };
 		} catch (error) {
-			throw new AuthenticationError(error);
+			return { error: true, errorMessage: error };
 		}
 	}
 
-	return identifier;
+	return { error: false, errorMessage: null, ...identifier };
 };
 
 module.exports = checkUserAuth;
