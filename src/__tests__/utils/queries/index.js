@@ -43,6 +43,15 @@ mutation GetRepository( $id: String!) {
   }
 }`;
 
+const STAR_ORGANIZATION = gql`mutation StarOrg($userId: String!, $organizationId: String!) {
+  starOrg(userId: $userId, organizationId: $organizationId) {
+    id
+		starringUsers {
+			id
+		}
+  }
+}`;
+
 const WATCH_BOUNTY = gql`mutation AddUser($contractAddress: String, $userId: String) {
   watchBounty(
     contractAddress: $contractAddress
@@ -107,6 +116,9 @@ const GET_USER = gql`query GetUser($id: String, $email: String, $github: String)
 		id
 		email
 		github
+		starredOrganizations {
+			id
+		}
 		watchedBounties(limit: 10) {
       bountyConnection{
         nodes {
@@ -135,6 +147,9 @@ const GET_ORGANIZATION = gql`query GetOrganization($organizationId: String!) {
   organization(organizationId: $organizationId) {
 		id
 		blacklisted
+		starringUsers {
+			id
+		}
   }
 }`;
 
@@ -158,5 +173,6 @@ module.exports = {
 	CREATE_NEW_REPOSITORY,
 	GET_REPOSITORY,
 	GET_ORGANIZATION,
-	BLACKLIST_ORGANIZATION
+	BLACKLIST_ORGANIZATION,
+	STAR_ORGANIZATION
 };
