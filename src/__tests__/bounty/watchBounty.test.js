@@ -21,7 +21,7 @@ describe('watchBounty', () => {
 			await clearDb();
 		});
 
-		it.only('Authorized user can watch a bounty', async () => {
+		it('Authorized user can watch a bounty', async () => {
 			// ARRANGE
 			await authenticatedClient.mutate({
 				mutation: CREATE_NEW_BOUNTY,
@@ -41,44 +41,44 @@ describe('watchBounty', () => {
 				variables: { contractAddress, userId, github }
 			});
 
-			// // ARRANGE
-			// const userResult = await authenticatedClient.query({
-			// 	query: GET_USER,
-			// 	variables: { id: userId }
-			// });
+			// ARRANGE
+			const userResult = await authenticatedClient.query({
+				query: GET_USER,
+				variables: { id: userId }
+			});
 
-			// const bountyResult = await authenticatedClient.query({
-			// 	query: GET_BOUNTY_BY_ID,
-			// 	variables: { contractAddress }
-			// });
+			const bountyResult = await authenticatedClient.query({
+				query: GET_BOUNTY_BY_ID,
+				variables: { contractAddress }
+			});
 
-			// // ASSERT
-			// expect(bountyResult.data.bounty).toMatchObject({
-			// 	__typename: 'Bounty',
-			// 	organizationId,
-			// 	address: contractAddress,
-			// 	watchingUsers: [
-			// 		{
-			// 			__typename: 'User',
-			// 			id: userId
-			// 		}
-			// 	]
-			// });
+			// ASSERT
+			expect(bountyResult.data.bounty).toMatchObject({
+				__typename: 'Bounty',
+				organizationId,
+				address: contractAddress,
+				watchingUsers: [
+					{
+						__typename: 'User',
+						id: userId
+					}
+				]
+			});
 			
-			// expect(userResult.data.user).toMatchObject({
-			// 	__typename: 'User',
-			// 	id: userId,
-			// 	watchedBounties: {
-			// 		bountyConnection: {
-			// 			nodes: [
-			// 				{
-			// 					__typename: 'Bounty',
-			// 					address: contractAddress
-			// 				}
-			// 			]
-			// 		}
-			// 	}
-			// });
+			expect(userResult.data.user).toMatchObject({
+				__typename: 'User',
+				id: userId,
+				watchedBounties: {
+					bountyConnection: {
+						nodes: [
+							{
+								__typename: 'Bounty',
+								address: contractAddress
+							}
+						]
+					}
+				}
+			});
 		});
 	});
 });

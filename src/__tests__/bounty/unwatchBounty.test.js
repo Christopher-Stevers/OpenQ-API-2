@@ -81,7 +81,7 @@ describe('unwatchBounty', () => {
 			// ACT
 			await authenticatedClient.mutate({
 				mutation: UNWATCH_BOUNTY,
-				variables: { contractAddress: contractAddress, userId: userId }
+				variables: { contractAddress, userId, github }
 			});
 
 			// ASSERT

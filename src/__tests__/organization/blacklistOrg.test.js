@@ -15,7 +15,7 @@ describe('blacklistOrg', () => {
 			await clearDbOrganization();
 		});
 
-		it.only('Authenticated client can create bounty', async () => {
+		it('Authenticated client can create bounty', async () => {
 			await authenticatedClient.mutate({
 				mutation: BLACKLIST_ORGANIZATION,
 				variables: { organizationId, blacklist: true }
@@ -49,7 +49,7 @@ describe('blacklistOrg', () => {
 	});
 
 	describe('Unsuccessful', () => {
-		it.only('should fail for unauthenticated calls', async () => {
+		it('should fail for unauthenticated calls', async () => {
 			try {
 				await unauthenticatedClient.mutate({
 					mutation: BLACKLIST_ORGANIZATION,

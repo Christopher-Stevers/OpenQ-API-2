@@ -2,7 +2,7 @@ const checkUserAuth = require('../../resolvers/utils/checkUserAuth');
 const MockEmailClient = require('../../utils/auth/email/MockEmailClient');
 const MockGithubClient = require('../../utils/auth/github/MockGithubClient');
 
-describe('userAuth', () => {
+describe('checkUserAuth', () => {
 	beforeEach(() => {
 		MockGithubClient.isValidGithub = true;
 		MockEmailClient.isValidEmail = true;

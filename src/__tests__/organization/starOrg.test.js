@@ -17,7 +17,7 @@ describe('starOrg', () => {
 			await clearDbUser();
 		});
 
-		it.only('Authenticated client can create bounty', async () => {
+		it('Authenticated client can create bounty', async () => {
 			// CREATES THE ORGANIZATION
 			await authenticatedClient.mutate({
 				mutation: BLACKLIST_ORGANIZATION,
@@ -60,7 +60,7 @@ describe('starOrg', () => {
 			// ACT
 			await authenticatedClient.mutate({
 				mutation: UNSTAR_ORGANIZATION,
-				variables: { organizationId, userId, github }	
+				variables: { organizationId, userId, github }
 			});
 
 			// ASSERT

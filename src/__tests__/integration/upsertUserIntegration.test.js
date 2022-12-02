@@ -10,7 +10,7 @@ dotenv.config({ path: '../../../.env.test' });
  * To run this, change DEPLOY_ENV to 'production' in .env.test
  * That is how the proper Context with the ACTUAL GithubClient will be injected into ApolloServer
  */
-describe.only('upsertUserIntegration.test', () => {
+describe('upsertUserIntegration.test', () => {
 	console.log(process.env.DEPLOY_ENV);
 	describe('upsertUser', () => {
 		const github = process.env.GITHUB_USER_ID;
@@ -62,7 +62,7 @@ describe.only('upsertUserIntegration.test', () => {
 			});
 		});
 	
-		describe.only('Unauthenticated', () => {
+		describe('Unauthenticated', () => {
 			it('should fail for unauthenticated calls - EMAIL WITH NO AUTH', async () => {
 				try {
 					await unauthenticatedClient_INVALID_EMAIL.mutate({
@@ -76,7 +76,7 @@ describe.only('upsertUserIntegration.test', () => {
 				}
 			});
 
-			it.only('should fail for unauthenticated calls - UNAUTHORIZED to update this GITHUB login', async () => {
+			it('should fail for unauthenticated calls - UNAUTHORIZED to update this GITHUB login', async () => {
 				try {
 					await authenticatedClient.mutate({
 						mutation: UPSERT_USER,
@@ -89,7 +89,7 @@ describe.only('upsertUserIntegration.test', () => {
 				}
 			});
 
-			it.only('should fail for unauthenticated calls - bad OAuth token', async () => {
+			it('should fail for unauthenticated calls - bad OAuth token', async () => {
 				try {
 					await unauthenticatedClient_GITHUB_BAD_TOKEN.mutate({
 						mutation: UPSERT_USER,

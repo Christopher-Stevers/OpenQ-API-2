@@ -52,8 +52,8 @@ const STAR_ORGANIZATION = gql`mutation StarOrg($userId: String!, $organizationId
   }
 }`;
 
-const UNSTAR_ORGANIZATION = gql`mutation StarOrg($userId: String!, $organizationId: String!) {
-  unstarOrg(userId: $userId, organizationId: $organizationId) {
+const UNSTAR_ORGANIZATION = gql`mutation StarOrg($userId: String!, $organizationId: String!, $github: String, $email: String) {
+  unstarOrg(userId: $userId, organizationId: $organizationId, github: $github, email: $email) {
     id
 		starringUsers {
 			id
