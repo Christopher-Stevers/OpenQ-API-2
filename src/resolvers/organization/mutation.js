@@ -1,5 +1,5 @@
 const { AuthenticationError } = require('apollo-server');
-const checkUserAuth = require('../utils/userAuth');
+const checkUserAuth = require('../utils/checkUserAuth');
 
 const Mutation = {
 	blacklistOrg: async (parent, args, { req, prisma }) => {

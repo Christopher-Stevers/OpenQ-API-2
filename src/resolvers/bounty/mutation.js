@@ -1,7 +1,7 @@
 const calculateTvl = require('../../utils/calculateTvl');
 const calculateTvc = require('../../utils/calculateTvc');
 const { AuthenticationError } = require('apollo-server');
-const checkUserAuth = require('../utils/userAuth');
+const checkUserAuth = require('../utils/checkUserAuth');
 
 const Mutation = {
 	createBounty: async (parent, args, { req, prisma }) => {
@@ -183,14 +183,19 @@ const Mutation = {
 		});
 	},
 	watchBounty: async (parent, args, { req, prisma, githubClient, emailClient }) => {
-		const identifier = await checkUserAuth(prisma, req, args, emailClient, githubClient);
+		console.log('args in watch', args);
+		const { error, errorMessage, id } = await checkUserAuth(prisma, req, args, emailClient, githubClient);
+
+		if (error) {
+			throw new AuthenticationError(errorMessage);
+		}
 
 		const bounty = await prisma.bounty.findUnique({
 			where: { address: args.contractAddress },
 		});
 
 		const user = await prisma.user.update({
-			where: { ...identifier },
+			where: { id },
 			data: {
 				watchedBountyIds: {
 					push: bounty.address,
@@ -208,17 +213,20 @@ const Mutation = {
 		});
 	},
 	unwatchBounty: async (parent, args, { req, prisma, emailClient, githubClient }) => {
-		const identifier = await checkUserAuth(prisma, req, args, emailClient, githubClient);
+		const { error, errorMessage, id } = await checkUserAuth(prisma, req, args, emailClient, githubClient);
+
+		if (error) {
+			throw new AuthenticationError(errorMessage);
+		}
 
 		const bounty = await prisma.bounty.findUnique({
 			where: { address: args.contractAddress },
 		});
 
 		const user = await prisma.user.findUnique({
-			where: { ...identifier },
+			where: { id },
 		});
 
-		console.log(user.watchedBountyIds);
 		const newBounties = user.watchedBountyIds.filter(
 			(bountyId) => bountyId !== bounty.address
 		);
@@ -228,7 +236,7 @@ const Mutation = {
 		);
 
 		await prisma.user.update({
-			where: { ...identifier },
+			where: { id },
 			data: {
 				watchedBountyIds: { set: newBounties },
 			},

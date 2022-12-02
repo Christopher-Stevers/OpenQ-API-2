@@ -1,4 +1,4 @@
-const checkUserAuth = require('../../resolvers/utils/userAuth');
+const checkUserAuth = require('../../resolvers/utils/checkUserAuth');
 const MockEmailClient = require('../../utils/auth/email/MockEmailClient');
 const MockGithubClient = require('../../utils/auth/github/MockGithubClient');
 

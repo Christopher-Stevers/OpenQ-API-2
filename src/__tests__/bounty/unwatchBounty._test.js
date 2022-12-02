@@ -37,7 +37,7 @@ describe('unwatchBounty', () => {
 			
 			await authenticatedClient.mutate({
 				mutation: WATCH_BOUNTY,
-				variables: { contractAddress: contractAddress, userId: userId }
+				variables: { contractAddress: contractAddress, userId, github }
 			});
 
 			const userResult = await authenticatedClient.query({

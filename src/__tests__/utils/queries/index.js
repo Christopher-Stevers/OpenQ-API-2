@@ -61,10 +61,12 @@ const UNSTAR_ORGANIZATION = gql`mutation StarOrg($userId: String!, $organization
   }
 }`;
 
-const WATCH_BOUNTY = gql`mutation AddUser($contractAddress: String, $userId: String) {
+const WATCH_BOUNTY = gql`mutation WatchBounty($contractAddress: String!, $userId: String!, $github: String, $email: String) {
   watchBounty(
     contractAddress: $contractAddress
-    userId: $userId
+    userId: $userId,
+		github: $github,
+		email: $email
   ) {
     address
 		watchingUsers {
@@ -80,11 +82,8 @@ const CREATE_USER = gql`mutation CreateUser($github: String!) {
   }
 }`;
 
-const UNWATCH_BOUNTY = gql`mutation AddUser($contractAddress: String, $userId: String) {
-  unwatchBounty(
-    contractAddress: $contractAddress
-    userId: $userId
-  ) {
+const UNWATCH_BOUNTY = gql`mutation UnwatchBounty($contractAddress: String!, $userId: String!, $github: String, $email: String) {
+  unwatchBounty(contractAddress: $contractAddress, userId: $userId, github: $github, email: $email) {
     address
 		watchingUsers {
 			id
