@@ -22,11 +22,13 @@ describe('upsertUser.test', () => {
 			});
 	
 			it('Authenticated client can create user with email', async () => {
+				// ACT
 				await authenticatedClient.mutate({
 					mutation: UPSERT_USER,
 					variables: { email }
 				});
-	
+
+				// ASSERET
 				const { data } = await authenticatedClient.query({
 					query: GET_USER,
 					variables: { email }
@@ -39,11 +41,13 @@ describe('upsertUser.test', () => {
 			});
 
 			it('Authenticated client can create user with github and valid oauth', async () => {
+				// ARRANGE
 				await authenticatedClient.mutate({
 					mutation: UPSERT_USER,
 					variables: { github }
 				});
 	
+				// ASSERT
 				const { data } = await authenticatedClient.query({
 					query: GET_USER,
 					variables: { github }

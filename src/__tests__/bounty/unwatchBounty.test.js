@@ -50,7 +50,7 @@ describe('unwatchBounty', () => {
 				variables: { contractAddress }
 			});
 
-			// ASSERT
+			// ASSUME
 			expect(bountyResult.data.bounty).toMatchObject({
 				__typename: 'Bounty',
 				organizationId,
@@ -95,7 +95,6 @@ describe('unwatchBounty', () => {
 				variables: { contractAddress }
 			});
 
-			// ASSERT
 			expect(userResultUnwatched.data.user).toMatchObject({
 				__typename: 'User',
 				id: userId,

@@ -16,6 +16,7 @@ describe('blacklistOrg', () => {
 		});
 
 		it('Authenticated client can create bounty', async () => {
+			// ARRANGE
 			await authenticatedClient.mutate({
 				mutation: BLACKLIST_ORGANIZATION,
 				variables: { organizationId, blacklist: true }
@@ -26,16 +27,19 @@ describe('blacklistOrg', () => {
 				variables: { organizationId }
 			});
 	
+			// ASSERT
 			expect(data.organization).toMatchObject({
 				id: organizationId,
 				blacklisted: true
 			});
 
+			// ACT
 			await authenticatedClient.mutate({
 				mutation: BLACKLIST_ORGANIZATION,
 				variables: { organizationId, blacklist: false }
 			});
 	
+			// ASSERT
 			const newOrgResult = await authenticatedClient.query({
 				query: GET_ORGANIZATION,
 				variables: { organizationId }

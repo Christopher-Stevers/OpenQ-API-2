@@ -41,7 +41,7 @@ describe('watchBounty', () => {
 				variables: { contractAddress, userId, github }
 			});
 
-			// ARRANGE
+			// ASSERT
 			const userResult = await authenticatedClient.query({
 				query: GET_USER,
 				variables: { id: userId }
@@ -52,7 +52,6 @@ describe('watchBounty', () => {
 				variables: { contractAddress }
 			});
 
-			// ASSERT
 			expect(bountyResult.data.bounty).toMatchObject({
 				__typename: 'Bounty',
 				organizationId,

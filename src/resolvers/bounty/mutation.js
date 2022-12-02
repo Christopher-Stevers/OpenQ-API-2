@@ -183,7 +183,6 @@ const Mutation = {
 		});
 	},
 	watchBounty: async (parent, args, { req, prisma, githubClient, emailClient }) => {
-		console.log('args in watch', args);
 		const { error, errorMessage, id } = await checkUserAuth(prisma, req, args, emailClient, githubClient);
 
 		if (error) {

@@ -8,6 +8,7 @@ const Query = {
 			where: { ...args },
 			include: { starredOrganizations: true, watchedBounties: true }
 		});
+		
 		return value;
 	},
 	usersConnection: async (parent, args, { prisma }) => {
