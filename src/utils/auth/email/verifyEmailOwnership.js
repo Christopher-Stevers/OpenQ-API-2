@@ -1,20 +1,18 @@
-const { Magic } = require('@magic-sdk/admin');
-
-const verifyEmailOwnership = (req, email) => {
+const verifyEmailOwnership = (req, email, magic) => {
 	return new Promise(async (resolve, reject) => {
-		const magic = new Magic(process.env.MAGIC_SECRET_KEY);
 		try {
 			const emailAuthRegex = /email_auth=\w+/;
 			const regexMatch = req.headers.cookie.match(emailAuthRegex);
-			
+
 			let didToken;
-			if (regexMatch !== null) {
-				didToken = req.headers.cookie.match(emailAuthRegex)[0].slice(11);
+			if (regexMatch === null) {
+				return reject('No email_auth cookie found');
+			} else {
+				didToken = req.headers.cookie.match(regexMatch)[0].slice(28);
 			}
 
-			await magic.token.validate(didToken);
-
-			return resolve(true);
+			const isTokenValid = await magic.auth.verifyToken(didToken);
+			return resolve(isTokenValid);
 		} catch (error) {
 			return reject(error);
 		}
