@@ -16,7 +16,7 @@ const {
 /***
  *  Verifies the OAuth token holder matches 
  * ***/
-const verifyUserCanAdministerRepository = async (req, userId) => {
+const verifyUserCanAdministerRepository = async (req, repoId) => {
 	return new Promise(async (resolve, reject) => {
 		try {
 			const signatureRegex = /github_oauth_token_unsigned=\w+/;
@@ -24,7 +24,7 @@ const verifyUserCanAdministerRepository = async (req, userId) => {
 			
 			let token;
 			if (regexMatch === null) {
-				return reject(NO_GITHUB_OAUTH_TOKEN({ userId }));
+				return reject(NO_GITHUB_OAUTH_TOKEN({ repoId }));
 			} else {
 				token = req.headers.cookie.match(signatureRegex)[0].slice(28);
 			}
@@ -33,7 +33,8 @@ const verifyUserCanAdministerRepository = async (req, userId) => {
 				.post(
 					'https://api.github.com/graphql',
 					{
-						query: VIEWER_CAN_ADMINISTER_REPOSITORY
+						query: VIEWER_CAN_ADMINISTER_REPOSITORY,
+						variables: { repoId }
 					},
 					{
 						headers: {
@@ -43,7 +44,7 @@ const verifyUserCanAdministerRepository = async (req, userId) => {
 				);
 
 			if (resultViewer.data.errors && resultViewer.data.errors[0].type == 'RATE_LIMITED') {
-				return reject(RATE_LIMITED({ userId }));
+				return reject(RATE_LIMITED({ repoId }));
 			}
 
 			const verifyUserCanAdministerRepository = resultViewer.data.node.viewerCanAdminister;
@@ -51,13 +52,13 @@ const verifyUserCanAdministerRepository = async (req, userId) => {
 			if (verifyUserCanAdministerRepository) {
 				return resolve(true);
 			} else {
-				return reject(INVALID_GITHUB_OAUTH_TOKEN({userId}));
+				return reject(INVALID_GITHUB_OAUTH_TOKEN({repoId}));
 			}
 		} catch (error) {
 			if (error.response && error.response.status == 401) {
-				return reject(GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES({ userId }));
+				return reject(GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES({ repoId }));
 			}
-			return reject(UNKNOWN_ERROR({ userId, error }));
+			return reject(UNKNOWN_ERROR({ repoId, error }));
 		}
 	});
 };

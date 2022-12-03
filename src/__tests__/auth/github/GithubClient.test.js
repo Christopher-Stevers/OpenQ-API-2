@@ -15,27 +15,37 @@ describe('GithubClient', () => {
 
 	const userId = process.env.GITHUB_USER_ID;
 	const otherUserId = process.env.OTHER_GITHUB_USER_ID;
+	const repoId = process.env.OPENQ_FRONTEND_REPO_ID;
 
-	it('GithubClient.verifyGithub should return TRUE if the OAuth Token matches the given userId', async () => {
-		const result = await GithubClient.verifyGithub(req, userId);
-		expect(result).toEqual(true);
-	});
+	describe('verifyGithubOwnership', () => {
+		it('GithubClient.verifyGithub should return TRUE if the OAuth Token matches the given userId', async () => {
+			const result = await GithubClient.verifyGithub(req, userId);
+			expect(result).toEqual(true);
+		});
+	
+		it('GithubClient.verifyGithub should return FALSE if the OAuth Token is not present', async () => {
+			try {
+				await GithubClient.verifyGithub(req_NO_OAUTH_TOKEN, userId);
+				throw Error('should not reach here');
+			} catch (error) {
+				expect(error.type).toEqual('NO_GITHUB_OAUTH_TOKEN');
+			}
+		});
+	
+		it('GithubClient.verifyGithub should return FALSE if the OAuth Token does not match the desired userId', async () => {
+			try {
+				await GithubClient.verifyGithub(req, otherUserId);
+				throw Error('should not reach here');
+			} catch (error) {
+				expect(error.type).toEqual('INVALID_GITHUB_OAUTH_TOKEN');
+			}
+		});
+	 });
 
-	it('GithubClient.verifyGithub should return FALSE if the OAuth Token is not present', async () => {
-		try {
-			await GithubClient.verifyGithub(req_NO_OAUTH_TOKEN, userId);
-			throw Error('should not reach here');
-		} catch (error) {
-			expect(error.type).toEqual('NO_GITHUB_OAUTH_TOKEN');
-		}
-	});
-
-	it('GithubClient.verifyGithub should return FALSE if the OAuth Token does not match the desired userId', async () => {
-		try {
-			await GithubClient.verifyGithub(req, otherUserId);
-			throw Error('should not reach here');
-		} catch (error) {
-			expect(error.type).toEqual('INVALID_GITHUB_OAUTH_TOKEN');
-		}
-	});
+	describe('verifyGithubUserCanAdministerRepository', () => {
+		it('GithubClient.verifyGithubUserCanAdministerRepository should return TRUE if the user can administer the repo', async () => {
+			const result = await GithubClient.verifyGithubUserCanAdministerRepository(req, repoId);
+			expect(result).toEqual(true);
+		});
+	 });
 });
