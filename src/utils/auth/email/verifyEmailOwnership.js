@@ -1,6 +1,10 @@
 // Third Party
 const axios = require('axios');
 
+const { Magic } = require('@magic-sdk/admin');
+
+const magic = new Magic(process.env.MAGIC_SECRET_KEY);
+
 const verifyEmailOwnership = (req, email) => {
 	return new Promise(async (resolve, reject) => {
 		try {
