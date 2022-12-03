@@ -66,7 +66,7 @@ describe('upsertUser.test', () => {
 			 });
 		});
 
-		describe.only('GITHUB', () => {
+		describe('GITHUB', () => {
 			describe('SUCCESS', () => {
 				afterEach(async () => {
 					await clearDbUser();

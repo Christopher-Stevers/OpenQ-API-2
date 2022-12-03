@@ -13,10 +13,10 @@ describe('blacklistOrg', () => {
 	if(process.env.DEPLOY_ENV === 'production') {
 		// For blacklisting, we need the BANHAMMER secret rather than the OPENQ_API_SECRET
 		authenticatedClient = getAuthenticatedClientIntegration(process.env.BANHAMMER, process.env.GITHUB_OAUTH_TOKEN, process.env.EMAIL_OAUTH);
-		unauthenticatedClient = getAuthenticatedClientIntegration('incorrect_secret', process.env.GITHUB_OAUTH_TOKEN, process.env.EMAIL_OAUTH);
+		unauthenticatedClient = getAuthenticatedClientIntegration('incorrect_secret', 'invalid_oauth_token', 'invalid_email_oauth');
 	} else  {
 		authenticatedClient = getAuthenticatedClient(process.env.BANHAMMER, true, true);
-		unauthenticatedClient  = getAuthenticatedClient('incorrect_secret', 'signature', true, true);
+		unauthenticatedClient  = getAuthenticatedClient('incorrect_secret', 'signature', false, false);
 	}
 
 	describe('Successful', () => {

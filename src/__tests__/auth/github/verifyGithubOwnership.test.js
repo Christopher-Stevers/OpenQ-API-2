@@ -76,7 +76,7 @@ describe('verifyGithubOwnership', () => {
 			await expect(verifyGithubOwnership(req, userId)).rejects.toEqual(INVALID_GITHUB_OAUTH_TOKEN({ userId, viewerUserId: otherUserId }));
 		});
 
-		it.only('GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES', async () => {
+		it('GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES', async () => {
 			mock.onPost('https://api.github.com/graphql').reply(401);
 			
 			await expect(verifyGithubOwnership(req, userId)).rejects.toEqual(GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES({ userId }));

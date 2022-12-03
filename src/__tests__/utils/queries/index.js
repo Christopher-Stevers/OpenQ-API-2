@@ -75,10 +75,11 @@ const WATCH_BOUNTY = gql`mutation WatchBounty($contractAddress: String!, $userId
   }
 }`;
 
-const CREATE_USER = gql`mutation CreateUser($github: String!) {
-  upsertUser(github: $github) {
+const CREATE_USER = gql`mutation CreateUser($github: String, $email: String) {
+  upsertUser(github: $github, email: $email) {
     id
     github
+		email
   }
 }`;
 
