@@ -17,7 +17,7 @@ const getClient = () => {
 	});
 };
 
-const getAuthenticatedClient = (token, emailIsValid, githubIsValid) => {
+const getAuthenticatedClient = (token, githubIsValid, emailIsValid) => {
 	const authLink = new ApolloLink((operation, forward) => {
 		// Retrieve the authorization token from local storage.
 
@@ -85,6 +85,11 @@ const getAuthenticatedClientIntegration = (token, githubOAuthToken, emailToken) 
 		link: authLink.concat(httpLink),
 		onError: (e) => { console.log(e); },
 		cache: new InMemoryCache(),
+		defaultOptions: {
+			watchQuery: {
+				fetchPolicy: 'no-cache',
+			},
+		},
 		request: (operation) => {
 			if (token) {
 				operation.setContext({

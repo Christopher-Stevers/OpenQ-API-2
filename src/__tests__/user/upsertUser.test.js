@@ -1,4 +1,4 @@
-const { getAuthenticatedClient } = require('../utils/configureApolloClient');
+const { getAuthenticatedClient, getAuthenticatedClientIntegration } = require('../utils/configureApolloClient');
 const { UPSERT_USER, GET_USER } = require('../utils/queries');
 
 const dotenv = require('dotenv');
@@ -7,14 +7,22 @@ dotenv.config({ path: '../../../.env.test' });
 
 describe('upsertUser.test', () => {
 	describe('upsertUser', () => {
-		const email = 'email';
-		const github = 'github';
+		const email = process.env.EMAIL;
+		const github = process.env.GITHUB_USER_ID;
 	
-		// this client is authed for all 3 identifiers
-		const authenticatedClient = getAuthenticatedClient(process.env.OPENQ_API_SECRET, true, true);
-
-		const unauthenticatedClient_INVALID_EMAIL = getAuthenticatedClient(process.env.OPENQ_API_SECRET, false, true);
-		const unauthenticatedClient_INVALID_GITHUB = getAuthenticatedClient(process.env.OPENQ_API_SECRET, true, false);
+		let authenticatedClient;
+		let unauthenticatedClient_INVALID_GITHUB;
+		let unauthenticatedClient_INVALID_EMAIL;
+		
+		if(process.env.DEPLOY_ENV === 'production') {
+			authenticatedClient = getAuthenticatedClientIntegration(process.env.OPENQ_API_SECRET, process.env.GITHUB_OAUTH_TOKEN, process.env.EMAIL_OAUTH);
+			unauthenticatedClient_INVALID_GITHUB = getAuthenticatedClientIntegration(process.env.OPENQ_API_SECRET, true, 'invalid');
+			unauthenticatedClient_INVALID_EMAIL = getAuthenticatedClientIntegration(process.env.OPENQ_API_SECRET, 'invalid', true);
+		} else  {
+			authenticatedClient = getAuthenticatedClient(process.env.OPENQ_API_SECRET, true, true);
+			unauthenticatedClient_INVALID_GITHUB = getAuthenticatedClient(process.env.OPENQ_API_SECRET, false, true);
+			unauthenticatedClient_INVALID_EMAIL = getAuthenticatedClient(process.env.OPENQ_API_SECRET, true, false);
+		}
 
 		describe('Successful calls to upsertUser with email, address, github and/or address', () => {
 			afterEach(async () => {
@@ -36,7 +44,7 @@ describe('upsertUser.test', () => {
 	
 				expect(data.user).toMatchObject({
 					__typename: 'User',
-					email: 'email'
+					email
 				});
 			});
 

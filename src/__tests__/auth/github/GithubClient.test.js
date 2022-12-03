@@ -7,8 +7,6 @@ describe('GithubClient', () => {
 		}
 	};
 
-	console.log(req);
-
 	const req_NO_OAUTH_TOKEN = {
 		headers: {
 			cookie: 'foo=bar',
@@ -28,7 +26,7 @@ describe('GithubClient', () => {
 			await GithubClient.verifyGithub(req_NO_OAUTH_TOKEN, userId);
 			throw Error('should not reach here');
 		} catch (error) {
-			expect(error.type).toEqual('GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES');
+			expect(error.type).toEqual('NO_GITHUB_OAUTH_TOKEN');
 		}
 	});
 

@@ -5,7 +5,6 @@ const MockAdapter = require('axios-mock-adapter');
 
 const {
 	GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES,
-	UNKNOWN_ERROR,
 	RATE_LIMITED,
 	INVALID_GITHUB_OAUTH_TOKEN,
 	NO_GITHUB_OAUTH_TOKEN
@@ -44,7 +43,7 @@ describe('verifyGithubOwnership', () => {
 	});
 
 	describe('Errors', () => {
-		it.only('NO OAUTH COOKIE', async () => {
+		it('NO_GITHUB_OAUTH_TOKEN', async () => {
 			const reqWithNoCookie = {
 				headers: {
 					cookie: 'foo=bar'
@@ -52,6 +51,35 @@ describe('verifyGithubOwnership', () => {
 			};
 
 			await expect(verifyGithubOwnership(reqWithNoCookie, userId)).rejects.toEqual(NO_GITHUB_OAUTH_TOKEN({ userId }));
+		});
+
+		it('RATE_LIMITED', async () => {
+			const rateLimitedErrorResponse = {
+				errors: [
+					{type: 'RATE_LIMITED'}
+				]
+			};
+
+			mock.onPost('https://api.github.com/graphql').reply(200, rateLimitedErrorResponse);
+			
+			await expect(verifyGithubOwnership(req, userId)).rejects.toEqual(RATE_LIMITED({ userId }));
+		});
+
+		it('INVALID_GITHUB_OAUTH_TOKEN', async () => {
+			const otherUserId = 'otherUserId';
+			const otherViewerData = {
+				data: { viewer: { login: 'FlacoJones', id: otherUserId } }
+			};
+
+			mock.onPost('https://api.github.com/graphql').reply(200, otherViewerData);
+			
+			await expect(verifyGithubOwnership(req, userId)).rejects.toEqual(INVALID_GITHUB_OAUTH_TOKEN({ userId, viewerUserId: otherUserId }));
+		});
+
+		it.only('GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES', async () => {
+			mock.onPost('https://api.github.com/graphql').reply(401);
+			
+			await expect(verifyGithubOwnership(req, userId)).rejects.toEqual(GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES({ userId }));
 		});
 	});
 });
