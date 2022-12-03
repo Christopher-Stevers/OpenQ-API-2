@@ -23,76 +23,87 @@ describe('upsertUser.test', () => {
 			unauthenticatedClient_INVALID_GITHUB = getAuthenticatedClient(process.env.OPENQ_API_SECRET, false, true);
 			unauthenticatedClient_INVALID_EMAIL = getAuthenticatedClient(process.env.OPENQ_API_SECRET, true, false);
 		}
-
-		describe('Successful calls to upsertUser with email, address, github and/or address', () => {
-			afterEach(async () => {
-				await clearDbUser();
-			});
 	
-			it('Authenticated client can create user with email', async () => {
-				// ACT
-				await authenticatedClient.mutate({
-					mutation: UPSERT_USER,
-					variables: { email }
+		describe('EMAIL', () => {
+			describe('SUCCESS', () => {
+				afterEach(async () => {
+					await clearDbUser();
 				});
 
-				// ASSERET
-				const { data } = await authenticatedClient.query({
-					query: GET_USER,
-					variables: { email }
-				});
-	
-				expect(data.user).toMatchObject({
-					__typename: 'User',
-					email
-				});
-			});
-
-			it('Authenticated client can create user with github and valid oauth', async () => {
-				// ARRANGE
-				await authenticatedClient.mutate({
-					mutation: UPSERT_USER,
-					variables: { github }
-				});
-	
-				// ASSERT
-				const { data } = await authenticatedClient.query({
-					query: GET_USER,
-					variables: { github }
-				});
-	
-				expect(data.user).toMatchObject({
-					__typename: 'User',
-					github
-				});
-			});
-		});
-	
-		describe('Unauthenticated', () => {
-			it('should fail for unauthenticated calls - EMAIL WITH NO AUTH', async () => {
-				try {
-					await unauthenticatedClient_INVALID_EMAIL.mutate({
+				it('Authenticated client can create user with email', async () => {
+					// ACT
+					await authenticatedClient.mutate({
 						mutation: UPSERT_USER,
 						variables: { email }
 					});
-					throw('Should not reach this point');
-				} catch (error) {
-					console.log(error);
-					expect(error.graphQLErrors[0].extensions.code).toEqual('UNAUTHENTICATED');
-				}
+	
+					// ASSERET
+					const { data } = await authenticatedClient.query({
+						query: GET_USER,
+						variables: { email }
+					});
+		
+					expect(data.user).toMatchObject({
+						__typename: 'User',
+						email
+					});
+				});
 			});
 
-			it('should fail for unauthenticated calls - GITHUB UNAUTHORIZED', async () => {
-				try {
-					await unauthenticatedClient_INVALID_GITHUB.mutate({
+			describe('FAIL', () => { 
+				it('should fail for unauthenticated calls - EMAIL WITH NO AUTH', async () => {
+					try {
+						await unauthenticatedClient_INVALID_EMAIL.mutate({
+							mutation: UPSERT_USER,
+							variables: { email }
+						});
+						throw('Should not reach this point');
+					} catch (error) {
+						console.log(error);
+						expect(error.graphQLErrors[0].extensions.code).toEqual('UNAUTHENTICATED');
+					}
+				});
+			 });
+		});
+
+		describe.only('GITHUB', () => {
+			describe('SUCCESS', () => {
+				afterEach(async () => {
+					await clearDbUser();
+				}); 
+				it('Authenticated client can create user with github and valid oauth', async () => {
+					// ARRANGE
+					await authenticatedClient.mutate({
 						mutation: UPSERT_USER,
 						variables: { github }
 					});
-					throw('Should not reach this point');
-				} catch (error) {
-					console.log(error);
-					expect(error.graphQLErrors[0].extensions.code).toEqual('UNAUTHENTICATED');
-				}
+		
+					// ASSERT
+					const { data } = await authenticatedClient.query({
+						query: GET_USER,
+						variables: { github }
+					});
+		
+					expect(data.user).toMatchObject({
+						__typename: 'User',
+						github
+					});
+				});
+			 });
+
+			describe('should fail for unauthenticated calls', () => {
+				it('should fail for unauthenticated calls - GITHUB UNAUTHORIZED', async () => {
+					try {
+						await unauthenticatedClient_INVALID_GITHUB.mutate({
+							mutation: UPSERT_USER,
+							variables: { github }
+						});
+						throw('Should not reach this point');
+					} catch (error) {
+						console.log(error);
+						expect(error.graphQLErrors[0].extensions.code).toEqual('UNAUTHENTICATED');
+					}
+				});
 			});
 		});
 	});
