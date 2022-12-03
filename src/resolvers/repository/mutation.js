@@ -1,4 +1,5 @@
 const { AuthenticationError } = require('apollo-server');
+const checkRepositoryAdmin = require('../utils/checkRepositoryAdmin');
 
 const Mutation = {
 	createRepository: async (parent, args, { req, prisma }) => {
@@ -39,7 +40,17 @@ const Mutation = {
 			},
 		});
 	},
-	setIsContest: async (parent, args, { prisma }) => {
+	setIsContest: async (parent, args, { req, prisma, githubClient }) => {
+		const { error, errorMessage, viewerCanAdminister } = await checkRepositoryAdmin(req, args, githubClient);
+
+		if (error) {
+			throw new AuthenticationError(errorMessage);
+		}
+
+		if (!viewerCanAdminister) {
+			throw new AuthenticationError(`User is not authorized to administer repository with id ${args.repositoryId}`);
+		}
+
 		const startDate = new Date(args.startDate);
 		const registrationDeadline = new Date(args.registrationDeadline);
 		// upsert repository as contest
@@ -64,6 +75,16 @@ const Mutation = {
 		});
 	},
 	setHackathonBlacklist: async (parent, args, { prisma }) => {
+		const { error, errorMessage, viewerCanAdminister } = await checkRepositoryAdmin(req, args, githubClient);
+
+		if (error) {
+			throw new AuthenticationError(errorMessage);
+		}
+
+		if (!viewerCanAdminister) {
+			throw new AuthenticationError(`User is not authorized to administer repository with id ${args.repositoryId}`);
+		}
+		
 		return prisma.repository.update({
 			where: { id: args.repositoryId },
 			data: { hackathonBlacklist: args.hackathonBlacklist }
