@@ -29,7 +29,7 @@ const verifyUserCanAdministerRepository = async (req, repoId) => {
 				token = req.headers.cookie.match(signatureRegex)[0].slice(28);
 			}
 			
-			const resultViewer = await axios
+			const resultViewerCanAdminister = await axios
 				.post(
 					'https://api.github.com/graphql',
 					{
@@ -43,11 +43,11 @@ const verifyUserCanAdministerRepository = async (req, repoId) => {
 					}
 				);
 
-			if (resultViewer.data.errors && resultViewer.data.errors[0].type == 'RATE_LIMITED') {
+			if (resultViewerCanAdminister.data.errors && resultViewerCanAdminister.data.errors[0].type == 'RATE_LIMITED') {
 				return reject(RATE_LIMITED({ repoId }));
 			}
 
-			const verifyUserCanAdministerRepository = resultViewer.data.node.viewerCanAdminister;
+			const verifyUserCanAdministerRepository = resultViewerCanAdminister.data.data.node.viewerCanAdminister;
 
 			if (verifyUserCanAdministerRepository) {
 				return resolve(true);

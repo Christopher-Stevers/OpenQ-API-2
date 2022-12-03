@@ -42,10 +42,29 @@ describe('GithubClient', () => {
 		});
 	 });
 
-	describe('verifyGithubUserCanAdministerRepository', () => {
-		it('GithubClient.verifyGithubUserCanAdministerRepository should return TRUE if the user can administer the repo', async () => {
-			const result = await GithubClient.verifyGithubUserCanAdministerRepository(req, repoId);
+	describe.only('verifyUserCanAdministerRepository', () => {
+		it('GithubClient.verifyUserCanAdministerRepository should return TRUE if the user can administer the repo', async () => {
+			const result = await GithubClient.verifyUserCanAdministerRepository(req, repoId);
 			expect(result).toEqual(true);
+		});
+
+		it('GithubClient.verifyUserCanAdministerRepository should return NO_GITHUB_OAUTH_TOKEN', async () => {
+			try {
+				await GithubClient.verifyUserCanAdministerRepository(req_NO_OAUTH_TOKEN, repoId);
+				throw Error('should not reach here');
+			} catch (error) {
+				expect(error.type).toEqual('NO_GITHUB_OAUTH_TOKEN');
+			}
+		});
+		
+		it('GithubClient.verifyUserCanAdministerRepository should return INVALID_GITHUB_OAUTH_TOKEN if the user CANNOT administer the repo', async () => {
+			const otherRepoId = 'MDEwOlJlcG9zaXRvcnk2MzQ2NTY2NA==';
+			try {
+				await GithubClient.verifyUserCanAdministerRepository(req, otherRepoId);
+				throw Error('should not reach here');
+			} catch (error) {
+				expect(error.type).toEqual('INVALID_GITHUB_OAUTH_TOKEN');
+			}
 		});
 	 });
 });
