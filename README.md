@@ -34,3 +34,13 @@ yarn start
 You can now access the GraphiQL Playground at `http://localhost:4000`.
 
 Any changes you make will trigger a live reload thanks to `nodemon`. 
+
+**How To Test**
+
+1. Boot OpenQ-API, MongoDB, and Mongo Express
+
+Using the `docker-compose.yml` in the root of the `OpenQ-API` repository, run `./boot.sh`
+
+NOTE: You may need to `chmod u+x boot.sh` to make it executable first.
+
+2. Run yarn
