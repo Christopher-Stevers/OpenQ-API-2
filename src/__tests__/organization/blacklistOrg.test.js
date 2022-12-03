@@ -1,5 +1,5 @@
 
-const { getAuthenticatedClient } = require('../utils/configureApolloClient');
+const { getAuthenticatedClient, getAuthenticatedClientIntegration } = require('../utils/configureApolloClient');
 const { BLACKLIST_ORGANIZATION, GET_ORGANIZATION } = require('../utils/queries');
 
 const { clearDbOrganization } = require('../utils/clearDb');
@@ -7,15 +7,24 @@ const { clearDbOrganization } = require('../utils/clearDb');
 describe('blacklistOrg', () => {
 	const organizationId = 'organizationId';
 
-	const authenticatedClient = getAuthenticatedClient(process.env.BANHAMMER, 'signature', true, true);
-	const unauthenticatedClient = getAuthenticatedClient('incorrect_secret', 'signature', true, true);
+	let authenticatedClient;
+	let unauthenticatedClient;
+
+	if(process.env.DEPLOY_ENV === 'production') {
+		// For blacklisting, we need the BANHAMMER secret rather than the OPENQ_API_SECRET
+		authenticatedClient = getAuthenticatedClientIntegration(process.env.BANHAMMER, process.env.GITHUB_OAUTH_TOKEN, process.env.EMAIL_OAUTH);
+		unauthenticatedClient = getAuthenticatedClientIntegration('incorrect_secret', process.env.GITHUB_OAUTH_TOKEN, process.env.EMAIL_OAUTH);
+	} else  {
+		authenticatedClient = getAuthenticatedClient(process.env.BANHAMMER, true, true);
+		unauthenticatedClient  = getAuthenticatedClient('incorrect_secret', 'signature', true, true);
+	}
 
 	describe('Successful', () => {
 		afterEach(async () => {
 			await clearDbOrganization();
 		});
 
-		it('Authenticated client can create bounty', async () => {
+		it('Authenticated client can blacklist an organization', async () => {
 			// ARRANGE
 			await authenticatedClient.mutate({
 				mutation: BLACKLIST_ORGANIZATION,

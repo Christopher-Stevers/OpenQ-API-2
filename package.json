@@ -9,9 +9,7 @@
 		"test:docker": "docker exec -it openq-api yarn test:unit:all",
 		"boot:test": "docker-compose down && docker-compose up",
 		"test:unit": "jest",
-		"test:unit:all": "jest --testPathIgnorePatterns src/__tests__/utils/** --testPathIgnorePatterns src/__tests__/integration/** --runInBand",
-		"test:integration": "jest",
-		"test:integration:all": "jest src/__tests__/integration/** --runInBand"
+		"test:unit:all": "jest --testPathIgnorePatterns src/__tests__/utils/** --testPathIgnorePatterns src/__tests__/integration/** --runInBand"
 	},
 	"keywords": [],
 	"author": "Christopher-Stevers",
