@@ -9,7 +9,8 @@ const {
 	GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES,
 	UNKNOWN_ERROR,
 	RATE_LIMITED,
-	INVALID_GITHUB_OAUTH_TOKEN
+	INVALID_GITHUB_OAUTH_TOKEN,
+	NO_GITHUB_OAUTH_TOKEN
 } = require('./errors/errors');
 
 /***
@@ -22,7 +23,9 @@ const verifyGithubOwnership = async (req, userId) => {
 			const regexMatch = req.headers.cookie.match(signatureRegex);
 			
 			let token;
-			if (regexMatch !== null) {
+			if (regexMatch === null) {
+				return reject(NO_GITHUB_OAUTH_TOKEN({ userId }));
+			} else {
 				token = req.headers.cookie.match(signatureRegex)[0].slice(28);
 			}
 			

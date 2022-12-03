@@ -2,8 +2,8 @@ const INVALID_GITHUB_OAUTH_TOKEN = () => {
 	return { id: 'id', type: 'INVALID_GITHUB_OAUTH_TOKEN', errorMessage: 'Invalid GitHub OAuth toke unsigned by OpenQ' };
 };
 
-const NO_GITHUB_OAUTH_TOKEN = ({ payoutAddress }) => {
-	return { id: payoutAddress, canWithdraw: false, type: 'NO_GITHUB_OAUTH_TOKEN', errorMessage: 'No GitHub OAuth token. You must sign in.' };
+const NO_GITHUB_OAUTH_TOKEN = ({ userId }) => {
+	return { id: userId, canWithdraw: false, type: 'NO_GITHUB_OAUTH_TOKEN', errorMessage: 'No GitHub OAuth token. You must sign in.' };
 };
 
 const GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES = ({ issueId }) => {

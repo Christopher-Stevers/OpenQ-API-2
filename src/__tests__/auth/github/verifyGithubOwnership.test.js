@@ -3,6 +3,14 @@ const verifyGithubOwnership = require('../../../utils/auth/github/verifyGithubOw
 const axios = require('axios');
 const MockAdapter = require('axios-mock-adapter');
 
+const {
+	GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES,
+	UNKNOWN_ERROR,
+	RATE_LIMITED,
+	INVALID_GITHUB_OAUTH_TOKEN,
+	NO_GITHUB_OAUTH_TOKEN
+} = require('../../../utils/auth/github/errors/errors');
+
 describe('verifyGithubOwnership', () => { 
 	let mock;
 	
@@ -26,12 +34,24 @@ describe('verifyGithubOwnership', () => {
 		mock.reset();
 	});
 
-	describe('success', () => { 
+	describe('Success', () => {
 		it('should return true if the user is the owner of the token', async () => {
 			mock.onPost('https://api.github.com/graphql').reply(200, viewerData);
 
 			const result = await verifyGithubOwnership(req, userId);
 			expect(result).toBe(true);
 		});
-	 });
+	});
+
+	describe('Errors', () => {
+		it.only('NO OAUTH COOKIE', async () => {
+			const reqWithNoCookie = {
+				headers: {
+					cookie: 'foo=bar'
+				}
+			};
+
+			await expect(verifyGithubOwnership(reqWithNoCookie, userId)).rejects.toEqual(NO_GITHUB_OAUTH_TOKEN({ userId }));
+		});
+	});
 });
