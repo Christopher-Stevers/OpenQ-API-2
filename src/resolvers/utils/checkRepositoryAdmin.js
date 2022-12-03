@@ -11,11 +11,10 @@ const checkRepositoryAdmin = async (req, args, githubClient) => {
 		if (!viewerCanAdminister) {
 			return { error: true, errorMessage: `Github not authorized to administer repository with id ${args.repositoryId}`, viewerCanAdminister: false };
 		}
+		return { error: false, errorMessage: null, viewerCanAdminister: true };
 	} catch (error) {
 		return { error: true, errorMessage: error, viewerCanAdminister: false };
 	}
-
-	return { error: false, errorMessage: null, viewerCanAdminister: true };
 };
 
 module.exports = checkRepositoryAdmin;

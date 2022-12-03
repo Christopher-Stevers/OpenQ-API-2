@@ -1,32 +1,19 @@
-// Third Party
-const axios = require('axios');
-
 const { Magic } = require('@magic-sdk/admin');
-
-const magic = new Magic(process.env.MAGIC_SECRET_KEY);
 
 const verifyEmailOwnership = (req, email) => {
 	return new Promise(async (resolve, reject) => {
+		const magic = new Magic(process.env.MAGIC_SECRET_KEY);
 		try {
-			// const signatureRegex = /email_auth=\w+/;
-			// const regexMatch = req.headers.cookie.match(signatureRegex);
+			const emailAuthRegex = /email_auth=\w+/;
+			const regexMatch = req.headers.cookie.match(emailAuthRegex);
 			
-			// let token;
-			// if (regexMatch !== null) {
-			// 	token = req.headers.cookie.match(signatureRegex)[0].slice(11);
-			// }
-			
-			// const result = await axios
-			// 	.post(
-			// 		process.env.MAGIC_LINK_API_URL,
-			// 		{foo: 'bar'},
-			// 		{
-			// 			headers: {
-			// 				'Authorization': 'token ' + token,
-			// 			},
-			// 		}
-			// 	);
-			// return resolve(result);
+			let didToken;
+			if (regexMatch !== null) {
+				didToken = req.headers.cookie.match(emailAuthRegex)[0].slice(11);
+			}
+
+			await magic.token.validate(didToken);
+
 			return resolve(true);
 		} catch (error) {
 			return reject(error);
