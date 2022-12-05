@@ -11,12 +11,10 @@ const prisma = new PrismaClient();
 const gAnalyticsDataClient = new BetaAnalyticsDataClient();
 
 const createContext = async ({ req, res }) => {
-	console.log(req.body);
 	return { req, res, prisma, gAnalyticsDataClient, emailClient: EmailClient, githubClient: GithubClient };
 };
 
 const createMockContext = async ({ req, res }) => {
-	console.log(req.body);
 	/**
 	 * Headers come in as strings
 	 * We cast the 'emailisvalid' and 'githubisvalid' headers to booleans
