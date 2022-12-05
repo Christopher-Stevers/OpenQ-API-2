@@ -4,6 +4,13 @@ const Query = {
 			where: { prId: args.prId },
 		});
 	},
+	prs: async (_, args, { prisma }) => {
+		return prisma.pr.findMany({
+			where: {
+				prId: { in: args.prIds },
+			}
+		});
+	}
 
 };
 

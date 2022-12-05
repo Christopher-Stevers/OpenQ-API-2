@@ -19,7 +19,15 @@ const typeDef = gql`
 		city: String			@auth
 		streetAddress: String	@auth
 		country: String			@auth	
-		province: String		@auth
+		province: String		@auth		
+ 		postalCode: String 		@auth
+  		billingName: String 	@auth
+  		phoneNumber: String 	@auth
+  		taxId: String 			@auth
+		vatNumber: String 		@auth
+ 		vatRate: Float		 	@auth
+  		memo: String           @auth
+  		invoiceNumber: Int           @auth
 		github: String 			
 		twitter:String
 		discord: String

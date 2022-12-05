@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 const gAnalyticsDataClient = new BetaAnalyticsDataClient();
 
 const createContext = async ({ req, res }) => {
-	console.log(req.body);
+
 	return { req, res, prisma, gAnalyticsDataClient };
 };
 
