@@ -14,17 +14,17 @@ const mutationDefs = gql`
       province: String
       discord: String
       twitter: String
-      devRoles: String
-      frameworks: String
-      languages: String
-      otherRoles: String
+      devRoles: [String]
+      otherRoles: [String]
+      frameworks: [String]
+      languages: [String]
       postalCode: String
-      invoiceNumber: String
+      invoiceNumber: Int
       billingName: String
       phoneNumber: String
       taxId: String
       vatNumber: String
-      vatRate: String
+      vatRate: Float
       memo: String
 		): User!
   }
