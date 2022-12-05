@@ -16,11 +16,19 @@ const typeDef = gql`
 		): Bounties! @auth
 		starredOrganizations: [Organization]
 		starredOrganizationIds: [String]
+		province: String		@auth		
+ 		postalCode: String 		@auth
+		billingName: String 	@auth
+		phoneNumber: String 	@auth
+		taxId: String 			@auth
+		vatNumber: String 		@auth
+ 		vatRate: Float		 	@auth
+		memo: String           @auth
+		invoiceNumber: Int           @auth
 		company: String 		@auth
 		city: String			@auth
 		streetAddress: String	@auth
 		country: String			@auth	
-		province: String		@auth
 		twitter:String
 		discord: String
 		devRoles: [String]		

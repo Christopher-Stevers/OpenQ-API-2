@@ -16,7 +16,7 @@ const typeDef = gql`
 		isContest: Boolean
 		startDate: String
 		registrationDeadline: String
-		
+		hackathonBlacklisted: Boolean
 	}
 `;
 
