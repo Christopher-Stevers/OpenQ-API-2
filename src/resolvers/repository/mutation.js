@@ -1,6 +1,5 @@
 const { AuthenticationError } = require('apollo-server');
 const checkRepositoryAdmin = require('../utils/checkRepositoryAdmin');
-
 const Mutation = {
 	createRepository: async (parent, args, { req, prisma }) => {
 		if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
@@ -32,9 +31,8 @@ const Mutation = {
 			where: { id: args.repositoryId },
 			data: {
 				participants: {
-					connectOrCreate: {
-						where: { address: args.userId },
-						create: { address: args.userId }
+					connect: {
+						id: args.userId
 					}
 				}
 			},
@@ -74,7 +72,8 @@ const Mutation = {
 			},
 		});
 	},
-	setHackathonBlacklist: async (parent, args, { prisma }) => {
+
+	setHackathonBlacklist: async (parent, args, { req, prisma, githubClient }) => {
 		const { error, errorMessage, viewerCanAdminister } = await checkRepositoryAdmin(req, args, githubClient);
 
 		if (error) {
@@ -84,7 +83,7 @@ const Mutation = {
 		if (!viewerCanAdminister) {
 			throw new AuthenticationError(`User is not authorized to administer repository with id ${args.repositoryId}`);
 		}
-		
+
 		return prisma.repository.update({
 			where: { id: args.repositoryId },
 			data: { hackathonBlacklisted: args.hackathonBlacklisted }

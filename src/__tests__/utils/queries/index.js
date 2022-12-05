@@ -26,23 +26,53 @@ mutation UpdateBounty( $address: String!, $organizationId: String!, $bountyId: S
 const CREATE_NEW_REPOSITORY = gql`
 mutation CreateRepository( $organizationId: String!, $repositoryId: String!) {
   createRepository(organizationId: $organizationId, repositoryId: $repositoryId) {
-    id
-		
+    id		
 		organization{
 		id}
   }
 }`;
 
 
+const ADD_USER_TO_REPOSITORY = gql`
+mutation AddUserToRepository( $repositoryId: String!, $userId: String!) {
+  addUserToRepository(repositoryId: $repositoryId, userId: $userId) {
+    id
+		participants{
+			id
+		}
+		  }
+}`;
 
+const SET_HACKATHON_BLACKLIST = gql`
+mutation SetHackathonBlacklist( $repositoryId: String!, $hackathonBlacklisted: Boolean!) {
+  setHackathonBlacklist(repositoryId: $repositoryId, hackathonBlacklisted: $hackathonBlacklisted) {
+    id
+		hackathonBlacklisted
+		  }
+}`;
+
+const SET_IS_CONTEST = gql`
+mutation SetIsContest( $repositoryId: String!, $isContest: Boolean!, $organizationId: String!, $startDate: String!, $registrationDeadline: String!) {
+  setIsContest(repositoryId: $repositoryId, isContest: $isContest, organizationId: $organizationId, startDate: $startDate, registrationDeadline: $registrationDeadline) {
+    id
+	startDate
+		  }
+}`;
 
 const GET_REPOSITORY = gql`
 query GetRepository( $id: String!) {
   repository(id: $id){
     id
+	participants{
+		id
+	}
     organization{
       id
     }
+	hackathonBlacklisted
+	isContest
+	startDate
+	registrationDeadline
   }
 }`;
 
@@ -183,6 +213,9 @@ module.exports = {
 	GET_USER,
 	UPSERT_USER,
 	CREATE_NEW_REPOSITORY,
+	ADD_USER_TO_REPOSITORY,
+	SET_HACKATHON_BLACKLIST,
+	SET_IS_CONTEST,
 	GET_REPOSITORY,
 	GET_ORGANIZATION,
 	BLACKLIST_ORGANIZATION,

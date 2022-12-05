@@ -1,6 +1,6 @@
 
 const { getAuthenticatedClient, getAuthenticatedClientIntegration } = require('../utils/configureApolloClient');
-const { CREATE_NEW_REPOSITORY, GET_REPOSITORY } = require('../utils/queries');
+const { SET_HACKATHON_BLACKLIST, CREATE_NEW_REPOSITORY, GET_REPOSITORY } = require('../utils/queries');
 
 const { clearDb } = require('../utils/clearDb');
 
@@ -8,7 +8,6 @@ describe('createRepository', () => {
 	const contractAddress = '0x8daf17assdfdf20c9dba35f005b6324f493785d239719d';
 	const organizationId = 'organizationId';
 	const repositoryId = 'repositoryId';
-
 	let authenticatedClient;
 	let unauthenticatedClient;
 
@@ -26,11 +25,20 @@ describe('createRepository', () => {
 
 
 		});
-		it('Authenticated client can create repository', async () => {
+		it('Authenticated client can blacklist a hackathon', async () => {
+
+
+
 
 			await authenticatedClient.mutate({
 				mutation: CREATE_NEW_REPOSITORY,
 				variables: { address: contractAddress, organizationId, repositoryId }
+			});
+
+			await authenticatedClient.mutate({
+				mutation: SET_HACKATHON_BLACKLIST,
+				variables: { hackathonBlacklisted: true, repositoryId }
+
 			});
 
 			const { data } = await authenticatedClient.query({
@@ -41,18 +49,22 @@ describe('createRepository', () => {
 			expect(data.repository).toMatchObject({
 				id: 'repositoryId',
 				organization: { id: 'organizationId', __typename: 'Organization' },
-				__typename: 'Repository'
+				__typename: 'Repository',
+				hackathonBlacklisted: true
 			});
-
 		});
 	});
 	describe('Unsuccessful', () => {
 		it('should fail for unauthenticated calls', async () => {
 			try {
+
+
 				await unauthenticatedClient.mutate({
-					mutation: CREATE_NEW_REPOSITORY,
-					variables: { address: contractAddress, organizationId, repositoryId }
+					mutation: SET_HACKATHON_BLACKLIST,
+					variables: { hackathonBlacklisted: true, repositoryId }
+
 				});
+
 				throw ('Should not reach this point');
 			} catch (error) {
 				// eslint-disable-next-line jest/no-conditional-expect

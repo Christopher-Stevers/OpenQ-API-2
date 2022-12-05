@@ -1,6 +1,6 @@
 
 const { getAuthenticatedClient, getAuthenticatedClientIntegration } = require('../utils/configureApolloClient');
-const { CREATE_NEW_REPOSITORY, GET_REPOSITORY } = require('../utils/queries');
+const { ADD_USER_TO_REPOSITORY, GET_REPOSITORY, CREATE_USER, CREATE_NEW_REPOSITORY } = require('../utils/queries');
 
 const { clearDb } = require('../utils/clearDb');
 
@@ -8,6 +8,7 @@ describe('createRepository', () => {
 	const contractAddress = '0x8daf17assdfdf20c9dba35f005b6324f493785d239719d';
 	const organizationId = 'organizationId';
 	const repositoryId = 'repositoryId';
+	const github = process.env.GITHUB_USER_ID;
 
 	let authenticatedClient;
 	let unauthenticatedClient;
@@ -26,11 +27,24 @@ describe('createRepository', () => {
 
 
 		});
-		it('Authenticated client can create repository', async () => {
+		it('Authenticated client can add user to repository', async () => {
+
 
 			await authenticatedClient.mutate({
 				mutation: CREATE_NEW_REPOSITORY,
 				variables: { address: contractAddress, organizationId, repositoryId }
+			});
+
+			const user = await authenticatedClient.mutate({
+				mutation: CREATE_USER,
+				variables: { github }
+			});
+
+			const userId = user.data.upsertUser.id;
+
+			await authenticatedClient.mutate({
+				mutation: ADD_USER_TO_REPOSITORY,
+				variables: { userId, repositoryId }
 			});
 
 			const { data } = await authenticatedClient.query({
@@ -40,7 +54,7 @@ describe('createRepository', () => {
 
 			expect(data.repository).toMatchObject({
 				id: 'repositoryId',
-				organization: { id: 'organizationId', __typename: 'Organization' },
+				participants: [{ id: userId, __typename: 'User', }],
 				__typename: 'Repository'
 			});
 
@@ -49,9 +63,16 @@ describe('createRepository', () => {
 	describe('Unsuccessful', () => {
 		it('should fail for unauthenticated calls', async () => {
 			try {
+
+				const user = await authenticatedClient.mutate({
+					mutation: CREATE_USER,
+					variables: { github }
+				});
+
+				const userId = user.data.upsertUser.id;
 				await unauthenticatedClient.mutate({
-					mutation: CREATE_NEW_REPOSITORY,
-					variables: { address: contractAddress, organizationId, repositoryId }
+					mutation: ADD_USER_TO_REPOSITORY,
+					variables: { userId, repositoryId }
 				});
 				throw ('Should not reach this point');
 			} catch (error) {
