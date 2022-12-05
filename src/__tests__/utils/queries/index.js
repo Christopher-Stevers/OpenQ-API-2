@@ -24,22 +24,25 @@ mutation UpdateBounty( $address: String!, $organizationId: String!, $bountyId: S
 }`;
 
 const CREATE_NEW_REPOSITORY = gql`
-mutation CreateRepository( $organizationId: String!, $repositoryId: String!, $bountyId: String!) {
-  createBounty(organizationId: $organizationId, repositoryId: $repositoryId, bountyId: $bountyId) {
+mutation CreateRepository( $organizationId: String!, $repositoryId: String!) {
+  createRepository(organizationId: $organizationId, repositoryId: $repositoryId) {
     id
-		participants
-		organization
-		bounties
+		
+		organization{
+		id}
   }
 }`;
 
+
+
+
 const GET_REPOSITORY = gql`
-mutation GetRepository( $id: String!) {
-  getRepository(id: $id) {
+query GetRepository( $id: String!) {
+  repository(id: $id){
     id
-		participants
-		organization
-		bounties
+    organization{
+      id
+    }
   }
 }`;
 
@@ -169,7 +172,7 @@ const BLACKLIST_ORGANIZATION = gql`mutation blacklistOrg($organizationId: String
   }
 `;
 
-module.exports = { 
+module.exports = {
 	CREATE_NEW_BOUNTY,
 	UPDATE_BOUNTY,
 	WATCH_BOUNTY,

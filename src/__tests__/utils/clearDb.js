@@ -7,24 +7,18 @@ var url = 'mongodb://root:root@mongo:27018/openqdb?authSource=admin';
 const clearDb = async () => {
 	const promise = new Promise((resolve, reject) => {
 		MongoClient
-			.connect(url, function (err, db) {
+			.connect(url, async function (err, db) {
 				if (err) throw err;
-				var dbo = db.db('openqdb');
+				var dbo = db.db('openqDB');
 				try {
-					dbo.dropCollection('Bounty', function (err, delOK) {
-						if (err) throw err;
-						dbo.dropCollection('Repository', function (err, delOK) {
-							if (err) throw err;
-							dbo.dropCollection('Organization', function (err, delOK) {
-								if (err) throw err;
-								db.close();
-								resolve('true');
-							});
+					dbo.dropDatabase().then(async () => {
+						await db.close().then(() => {
+							resolve('true');
 						});
 					});
-				} catch (error) {
-					console.log('error', error);
-					reject(error);
+				}
+				catch (error) {
+					reject('Failed to clear database', error);
 				}
 			});
 	});
@@ -38,7 +32,7 @@ const clearDbUser = async () => {
 				if (err) throw err;
 				var dbo = db.db('openqdb');
 				try {
-					dbo.dropCollection('User', function (err, delOK) {
+					dbo.dropCollection('User', function (err) {
 						if (err) throw err;
 						db.close();
 						resolve('true');
@@ -59,7 +53,7 @@ const clearDbOrganization = async () => {
 				if (err) throw err;
 				var dbo = db.db('openqdb');
 				try {
-					dbo.dropCollection('Organization', function (err, delOK) {
+					dbo.dropCollection('Organization', function (err) {
 						if (err) throw err;
 						db.close();
 						resolve('true');
