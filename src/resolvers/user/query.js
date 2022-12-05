@@ -12,7 +12,7 @@ const Query = {
 		return value;
 	},
 	usersConnection: async (parent, args, { prisma }) => {
-		const cursor = args.after ? { address: args.after } : undefined;
+		const cursor = args.after ? { id: args.after } : undefined;
 		const users = await prisma.user.findMany({
 			skip: args.after ? 1 : 0,
 			cursor,
@@ -22,7 +22,7 @@ const Query = {
 
 		return {
 			users,
-			cursor: users[users.length - 1].address,
+			cursor: users[users.length - 1].id,
 		};
 	}
 };

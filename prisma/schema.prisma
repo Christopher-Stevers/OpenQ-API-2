@@ -81,6 +81,14 @@ model User {
   otherRoles              String[]
   languages               String[]
   frameworks              String[]
+  postalCode              String?
+  billingName             String?
+  invoiceNumber           Int?
+  phoneNumber             String?
+  taxId                   String?
+  vatNumber               String?
+  vatRate                 Float?
+  memo                    String?
 }
 
 model Organization {

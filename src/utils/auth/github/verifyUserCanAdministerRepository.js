@@ -24,7 +24,7 @@ const verifyUserCanAdministerRepository = async (req, repoId) => {
 			
 			let token;
 			if (regexMatch === null) {
-				return reject(NO_GITHUB_OAUTH_TOKEN({ repoId }));
+				return reject(NO_GITHUB_OAUTH_TOKEN({ id: repoId }));
 			} else {
 				token = req.headers.cookie.match(signatureRegex)[0].slice(28);
 			}
@@ -44,7 +44,7 @@ const verifyUserCanAdministerRepository = async (req, repoId) => {
 				);
 
 			if (resultViewerCanAdminister.data.errors && resultViewerCanAdminister.data.errors[0].type == 'RATE_LIMITED') {
-				return reject(RATE_LIMITED({ repoId }));
+				return reject(RATE_LIMITED({ id: repoId }));
 			}
 
 			const verifyUserCanAdministerRepository = resultViewerCanAdminister.data.data.node.viewerCanAdminister;
@@ -56,9 +56,9 @@ const verifyUserCanAdministerRepository = async (req, repoId) => {
 			}
 		} catch (error) {
 			if (error.response && error.response.status == 401) {
-				return reject(GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES({ repoId }));
+				return reject(GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES({ id: repoId }));
 			}
-			return reject(UNKNOWN_ERROR({ repoId, error }));
+			return reject(UNKNOWN_ERROR({ id: repoId, error }));
 		}
 	});
 };
