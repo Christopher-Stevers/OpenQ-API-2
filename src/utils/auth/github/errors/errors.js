@@ -1,21 +1,22 @@
-const INVALID_GITHUB_OAUTH_TOKEN = ({ viewerUserId, userId }) => {
-	return { id: userId, type: 'INVALID_GITHUB_OAUTH_TOKEN', errorMessage: `OAuth token for ${viewerUserId} cannot modify user with id ${userId}` };
+const INVALID_GITHUB_OAUTH_TOKEN = ({ viewerUserId, id }) => {
+	return { id, type: 'INVALID_GITHUB_OAUTH_TOKEN', errorMessage: `OAuth token for ${viewerUserId} cannot modify user with id ${id}` };
 };
 
-const NO_GITHUB_OAUTH_TOKEN = (userId) => {
-	return { id: userId, canWithdraw: false, type: 'NO_GITHUB_OAUTH_TOKEN', errorMessage: 'No GitHub OAuth token. You must sign in.' };
+const NO_GITHUB_OAUTH_TOKEN = (id) => {
+	return { id, canWithdraw: false, type: 'NO_GITHUB_OAUTH_TOKEN', errorMessage: 'No GitHub OAuth token. You must sign in.' };
 };
 
-const GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES = ({ issueId }) => {
-	return { issueId, canWithdraw: false, type: 'GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES', errorMessage: 'Your GitHub OAuth token is not authorized to access this resource' };
+const GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES = ({ id }) => {
+	console.log(id);
+	return { id, canWithdraw: false, type: 'GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES', errorMessage: 'Your GitHub OAuth token is not authorized to access this resource' };
 };
 
-const UNKNOWN_ERROR = ({ issueUrl, error }) => {
-	return { issueUrl, canWithdraw: false, type: 'UNKNOWN_ERROR', errorMessage: JSON.stringify(error) };
+const UNKNOWN_ERROR = ({ id, error }) => {
+	return { id, canWithdraw: false, type: 'UNKNOWN_ERROR', errorMessage: JSON.stringify(error) };
 };
 
-const RATE_LIMITED = ({ userId }) => {
-	return { id: userId, canWithdraw: false, type: 'RATE_LIMITED', errorMessage: 'It appears the Github user you are attempting to claim with has been rate limited by the API. Have you been using the API extensively lately? Please attempt claim again in one hour' };
+const RATE_LIMITED = ({ id }) => {
+	return { id, canWithdraw: false, type: 'RATE_LIMITED', errorMessage: 'It appears the Github user you are attempting to claim with has been rate limited by the API. Have you been using the API extensively lately? Please attempt claim again in one hour' };
 };
 
 module.exports = {

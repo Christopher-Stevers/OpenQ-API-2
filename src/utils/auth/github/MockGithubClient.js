@@ -11,6 +11,11 @@ const MockGithubClient = {
 			resolve(isValidGithub);
 		});
 	},
+	verifyUserCanAdministerRepository: async (req, github) => {
+		return new Promise(async (resolve, reject) => {
+			resolve(isValidGithub);
+		});
+	},
 };
 
 module.exports = MockGithubClient;

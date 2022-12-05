@@ -50,7 +50,7 @@ describe('verifyUserCanAdministerRepository', () => {
 				}
 			};
 
-			await expect(verifyUserCanAdministerRepository(reqWithNoCookie, repoId)).rejects.toEqual(NO_GITHUB_OAUTH_TOKEN({ userId: repoId }));
+			await expect(verifyUserCanAdministerRepository(reqWithNoCookie, repoId)).rejects.toEqual(NO_GITHUB_OAUTH_TOKEN({ id: repoId }));
 		});
 
 		it('RATE_LIMITED', async () => {
@@ -62,19 +62,18 @@ describe('verifyUserCanAdministerRepository', () => {
 
 			mock.onPost('https://api.github.com/graphql').reply(200, rateLimitedErrorResponse);
 			
-			await expect(verifyUserCanAdministerRepository(req, repoId)).rejects.toEqual(RATE_LIMITED({ userId: repoId }));
+			await expect(verifyUserCanAdministerRepository(req, repoId)).rejects.toEqual(RATE_LIMITED({ id: repoId }));
 		});
 
 		it('INVALID_GITHUB_OAUTH_TOKEN', async () => {
-			mock.onPost('https://api.github.com/graphql').reply(200, otherViewerData);
+			mock.onPost('https://api.github.com/graphql').reply(200, {});
 			
-			await expect(verifyUserCanAdministerRepository(req, repoId)).rejects.toEqual(INVALID_GITHUB_OAUTH_TOKEN({ userId: repoId, viewerUserId: otherUserId }));
+			await expect(verifyUserCanAdministerRepository(req, repoId)).rejects.toEqual(INVALID_GITHUB_OAUTH_TOKEN({ id:  repoId, viewerUserId: '' }));
 		});
 
 		it('GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES', async () => {
 			mock.onPost('https://api.github.com/graphql').reply(401);
-			
-			await expect(verifyUserCanAdministerRepository(req, repoId)).rejects.toEqual(GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES({ userId: repoId }));
+			await expect(verifyUserCanAdministerRepository(req, repoId)).rejects.toEqual(GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES({ id: repoId }));
 		});
 	});
 });

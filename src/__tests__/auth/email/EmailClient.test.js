@@ -17,7 +17,7 @@ describe('EmailClient', () => {
 	const otherUserId = process.env.OTHER_GITHUB_USER_ID;
 
 	it('EmailClient.verifyEmail should return TRUE if the OAuth Token matches the given email', async () => {
-		const result = await EmailClient.verifyEmail(req, userId);
+		const result = await EmailClient.verifyEmail(req, userId, );
 		expect(result).toEqual(true);
 	});
 });
