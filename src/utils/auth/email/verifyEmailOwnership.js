@@ -1,29 +1,18 @@
-// Third Party
-const axios = require('axios');
-
-const verifyEmailOwnership = (req, email) => {
+const verifyEmailOwnership = (req, email, magic) => {
 	return new Promise(async (resolve, reject) => {
 		try {
-			// const signatureRegex = /email_auth=\w+/;
-			// const regexMatch = req.headers.cookie.match(signatureRegex);
-			
-			// let token;
-			// if (regexMatch !== null) {
-			// 	token = req.headers.cookie.match(signatureRegex)[0].slice(11);
-			// }
-			
-			// const result = await axios
-			// 	.post(
-			// 		process.env.MAGIC_LINK_API_URL,
-			// 		{foo: 'bar'},
-			// 		{
-			// 			headers: {
-			// 				'Authorization': 'token ' + token,
-			// 			},
-			// 		}
-			// 	);
-			// return resolve(result);
-			return resolve(true);
+			const emailAuthRegex = /email_auth=\w+/;
+			const regexMatch = req.headers.cookie.match(emailAuthRegex);
+
+			let didToken;
+			if (regexMatch === null) {
+				return reject('No email_auth cookie found');
+			} else {
+				didToken = req.headers.cookie.match(regexMatch)[0].slice(28);
+			}
+
+			const isTokenValid = await magic.auth.verifyToken(didToken);
+			return resolve(isTokenValid);
 		} catch (error) {
 			return reject(error);
 		}

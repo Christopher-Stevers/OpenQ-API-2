@@ -22,9 +22,7 @@ const checkUserAuth = async (prisma, req, args, emailClient, githubClient) => {
 				return { error: true, errorMessage: 'Email not authorized' };
 			}
 			const user = await prisma.user.findUnique({ where: { email: args.email } });
-			if (user) {
-				userId = user.id;
-			}
+			userId = user ? user.id : null;
 		} catch (error) {
 			return { error: true, errorMessage: error };
 		}
@@ -37,9 +35,7 @@ const checkUserAuth = async (prisma, req, args, emailClient, githubClient) => {
 				return { error: true, errorMessage: 'Github not authorized' };
 			}
 			const user = await prisma.user.findUnique({ where: { github: args.github } });
-			if (user) {
-				userId = user.id;
-			}
+			userId = user ? user.id : null;
 		} catch (error) {
 			return { error: true, errorMessage: error };
 		}

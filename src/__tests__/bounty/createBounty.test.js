@@ -1,5 +1,5 @@
 
-const { getAuthenticatedClient } = require('../utils/configureApolloClient');
+const { getAuthenticatedClient, getAuthenticatedClientIntegration } = require('../utils/configureApolloClient');
 const { CREATE_NEW_BOUNTY, GET_BOUNTY_BY_ID } = require('../utils/queries');
 
 const { clearDb } = require('../utils/clearDb');
@@ -11,8 +11,16 @@ describe('createBounty', () => {
 	const repositoryId = 'repositoryId';
 	const type = '1';
 
-	const authenticatedClient = getAuthenticatedClient('secret123!', 'signature');
-	const unauthenticatedClient = getAuthenticatedClient('incorrect_secret', 'signature');
+	let authenticatedClient;
+	let unauthenticatedClient;
+
+	if(process.env.DEPLOY_ENV === 'production') {
+		authenticatedClient = getAuthenticatedClientIntegration(process.env.OPENQ_API_SECRET, process.env.GITHUB_OAUTH_TOKEN, process.env.EMAIL_OAUTH);
+		unauthenticatedClient = getAuthenticatedClientIntegration('incorrect_secret', 'invalid_oauth_token', 'invalid_email_oauth');
+	} else  {
+		authenticatedClient = getAuthenticatedClient(process.env.OPENQ_API_SECRET, true, true);
+		unauthenticatedClient  = getAuthenticatedClient('incorrect_secret', 'signature', false, false);
+	}
 
 	describe('Successful', () => {
 		afterEach(async () => {

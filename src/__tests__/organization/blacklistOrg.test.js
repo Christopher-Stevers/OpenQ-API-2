@@ -1,5 +1,5 @@
 
-const { getAuthenticatedClient } = require('../utils/configureApolloClient');
+const { getAuthenticatedClient, getAuthenticatedClientIntegration } = require('../utils/configureApolloClient');
 const { BLACKLIST_ORGANIZATION, GET_ORGANIZATION } = require('../utils/queries');
 
 const { clearDbOrganization } = require('../utils/clearDb');
@@ -7,15 +7,25 @@ const { clearDbOrganization } = require('../utils/clearDb');
 describe('blacklistOrg', () => {
 	const organizationId = 'organizationId';
 
-	const authenticatedClient = getAuthenticatedClient(process.env.BANHAMMER, 'signature', true, true);
-	const unauthenticatedClient = getAuthenticatedClient('incorrect_secret', 'signature', true, true);
+	let authenticatedClient;
+	let unauthenticatedClient;
+
+	if(process.env.DEPLOY_ENV === 'production') {
+		// For blacklisting, we need the BANHAMMER secret rather than the OPENQ_API_SECRET
+		authenticatedClient = getAuthenticatedClientIntegration(process.env.BANHAMMER, process.env.GITHUB_OAUTH_TOKEN, process.env.EMAIL_OAUTH);
+		unauthenticatedClient = getAuthenticatedClientIntegration('incorrect_secret', 'invalid_oauth_token', 'invalid_email_oauth');
+	} else  {
+		authenticatedClient = getAuthenticatedClient(process.env.BANHAMMER, true, true);
+		unauthenticatedClient  = getAuthenticatedClient('incorrect_secret', 'signature', false, false);
+	}
 
 	describe('Successful', () => {
 		afterEach(async () => {
 			await clearDbOrganization();
 		});
 
-		it.only('Authenticated client can create bounty', async () => {
+		it('Authenticated client can blacklist an organization', async () => {
+			// ARRANGE
 			await authenticatedClient.mutate({
 				mutation: BLACKLIST_ORGANIZATION,
 				variables: { organizationId, blacklist: true }
@@ -26,16 +36,19 @@ describe('blacklistOrg', () => {
 				variables: { organizationId }
 			});
 	
+			// ASSERT
 			expect(data.organization).toMatchObject({
 				id: organizationId,
 				blacklisted: true
 			});
 
+			// ACT
 			await authenticatedClient.mutate({
 				mutation: BLACKLIST_ORGANIZATION,
 				variables: { organizationId, blacklist: false }
 			});
 	
+			// ASSERT
 			const newOrgResult = await authenticatedClient.query({
 				query: GET_ORGANIZATION,
 				variables: { organizationId }
@@ -49,7 +62,7 @@ describe('blacklistOrg', () => {
 	});
 
 	describe('Unsuccessful', () => {
-		it.only('should fail for unauthenticated calls', async () => {
+		it('should fail for unauthenticated calls', async () => {
 			try {
 				await unauthenticatedClient.mutate({
 					mutation: BLACKLIST_ORGANIZATION,

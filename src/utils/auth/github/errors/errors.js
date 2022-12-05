@@ -1,9 +1,9 @@
-const INVALID_GITHUB_OAUTH_TOKEN = () => {
-	return { id: 'id', type: 'INVALID_GITHUB_OAUTH_TOKEN', errorMessage: 'Invalid GitHub OAuth toke unsigned by OpenQ' };
+const INVALID_GITHUB_OAUTH_TOKEN = ({ viewerUserId, userId }) => {
+	return { id: userId, type: 'INVALID_GITHUB_OAUTH_TOKEN', errorMessage: `OAuth token for ${viewerUserId} cannot modify user with id ${userId}` };
 };
 
-const NO_GITHUB_OAUTH_TOKEN = ({ payoutAddress }) => {
-	return { id: payoutAddress, canWithdraw: false, type: 'NO_GITHUB_OAUTH_TOKEN', errorMessage: 'No GitHub OAuth token. You must sign in.' };
+const NO_GITHUB_OAUTH_TOKEN = (userId) => {
+	return { id: userId, canWithdraw: false, type: 'NO_GITHUB_OAUTH_TOKEN', errorMessage: 'No GitHub OAuth token. You must sign in.' };
 };
 
 const GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES = ({ issueId }) => {
@@ -14,8 +14,8 @@ const UNKNOWN_ERROR = ({ issueUrl, error }) => {
 	return { issueUrl, canWithdraw: false, type: 'UNKNOWN_ERROR', errorMessage: JSON.stringify(error) };
 };
 
-const RATE_LIMITED = ({ issueUrl }) => {
-	return { issueUrl, canWithdraw: false, type: 'RATE_LIMITED', errorMessage: 'It appears the Github user you are attempting to claim with has been rate limited by the API. Have you been using the API extensively lately? Please attempt claim again in one hour' };
+const RATE_LIMITED = ({ userId }) => {
+	return { id: userId, canWithdraw: false, type: 'RATE_LIMITED', errorMessage: 'It appears the Github user you are attempting to claim with has been rate limited by the API. Have you been using the API extensively lately? Please attempt claim again in one hour' };
 };
 
 module.exports = {

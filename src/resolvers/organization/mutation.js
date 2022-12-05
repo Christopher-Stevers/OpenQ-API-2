@@ -1,5 +1,5 @@
 const { AuthenticationError } = require('apollo-server');
-const checkUserAuth = require('../utils/userAuth');
+const checkUserAuth = require('../utils/checkUserAuth');
 
 const Mutation = {
 	blacklistOrg: async (parent, args, { req, prisma }) => {
@@ -15,30 +15,29 @@ const Mutation = {
 		);
 	},
 	starOrg: async (parent, args, { req, prisma, githubClient, emailClient }) => {
-		const identifier = await checkUserAuth(prisma, req, args, emailClient, githubClient);
+		const { error, errorMessage, github, email, id } = await checkUserAuth(prisma, req, args, emailClient, githubClient);
+
+		if (error) {
+			throw new AuthenticationError(errorMessage);
+		}
 
 		const user = await prisma.user.findUnique({
-			where: { id: args.userId }
+			where: { id }
 		});
 
 		if (user.starredOrganizationIds.includes(args.organizationId)) {
 			throw new Error('ALREADY_STARRED');
 		}
 
-		await prisma.user.upsert({
-			where: identifier,
-			update: {
+		console.log('iddddd', id);
+		await prisma.user.update({
+			where: { id },
+			data: {
 				starredOrganizationIds: {
 					push: args.organizationId,
 				},
-			},
-			create: {
-				...identifier,
-				starredOrganizationIds: [args.organizationId],
-			},
+			}
 		});
-
-		console.log(args.userId);
 
 		const organization = await prisma.organization.update({
 			where: { id: args.organizationId },
@@ -52,7 +51,11 @@ const Mutation = {
 		return organization;
 	},
 	unstarOrg: async (parent, args, { req, prisma, githubClient, emailClient }) => {
-		const identifier = await checkUserAuth(prisma, req, args, emailClient, githubClient);
+		const { error, errorMessage, github, email, id } = await checkUserAuth(prisma, req, args, emailClient, githubClient);
+
+		if (error) {
+			throw new AuthenticationError(errorMessage);
+		}
 
 		const organization = await prisma.organization.upsert({
 			where: { id: args.organizationId },
@@ -61,7 +64,7 @@ const Mutation = {
 		});
 
 		const user = await prisma.user.findUnique({
-			where: { id: args.userId },
+			where: { id },
 		});
 
 		const newOrgs = user.starredOrganizationIds.filter(
@@ -73,7 +76,7 @@ const Mutation = {
 		);
 
 		await prisma.user.update({
-			where: identifier,
+			where: { id },
 			data: {
 				starredOrganizationIds: { set: newOrgs },
 			},

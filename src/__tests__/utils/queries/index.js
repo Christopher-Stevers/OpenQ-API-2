@@ -52,8 +52,8 @@ const STAR_ORGANIZATION = gql`mutation StarOrg($userId: String!, $organizationId
   }
 }`;
 
-const UNSTAR_ORGANIZATION = gql`mutation StarOrg($userId: String!, $organizationId: String!) {
-  unstarOrg(userId: $userId, organizationId: $organizationId) {
+const UNSTAR_ORGANIZATION = gql`mutation StarOrg($userId: String!, $organizationId: String!, $github: String, $email: String) {
+  unstarOrg(userId: $userId, organizationId: $organizationId, github: $github, email: $email) {
     id
 		starringUsers {
 			id
@@ -61,10 +61,12 @@ const UNSTAR_ORGANIZATION = gql`mutation StarOrg($userId: String!, $organization
   }
 }`;
 
-const WATCH_BOUNTY = gql`mutation AddUser($contractAddress: String, $userId: String) {
+const WATCH_BOUNTY = gql`mutation WatchBounty($contractAddress: String!, $userId: String!, $github: String, $email: String) {
   watchBounty(
     contractAddress: $contractAddress
-    userId: $userId
+    userId: $userId,
+		github: $github,
+		email: $email
   ) {
     address
 		watchingUsers {
@@ -73,18 +75,16 @@ const WATCH_BOUNTY = gql`mutation AddUser($contractAddress: String, $userId: Str
   }
 }`;
 
-const CREATE_USER = gql`mutation CreateUser($github: String!) {
-  upsertUser(github: $github) {
+const CREATE_USER = gql`mutation CreateUser($github: String, $email: String) {
+  upsertUser(github: $github, email: $email) {
     id
     github
+		email
   }
 }`;
 
-const UNWATCH_BOUNTY = gql`mutation AddUser($contractAddress: String, $userId: String) {
-  unwatchBounty(
-    contractAddress: $contractAddress
-    userId: $userId
-  ) {
+const UNWATCH_BOUNTY = gql`mutation UnwatchBounty($contractAddress: String!, $userId: String!, $github: String, $email: String) {
+  unwatchBounty(contractAddress: $contractAddress, userId: $userId, github: $github, email: $email) {
     address
 		watchingUsers {
 			id
