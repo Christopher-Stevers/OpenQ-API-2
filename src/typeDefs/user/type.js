@@ -28,7 +28,7 @@ const typeDef = gql`
 		company: String 		@auth
 		city: String			@auth
 		streetAddress: String	@auth
-		country: String			@auth	
+		country: String			@auth			
 		twitter:String
 		discord: String
 		devRoles: [String]		

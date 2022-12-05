@@ -14,9 +14,19 @@ const typeDef = gql`
 			types: [String]
 		): Bounties
 		isContest: Boolean
+		hackathonBlacklisted: Boolean
 		startDate: String
 		registrationDeadline: String
-		hackathonBlacklisted: Boolean
+	}
+	
+	type Repositories {
+		repositoryConnection: RepositoryConnection
+		nodes: [Repository]
+	}
+
+	type RepositoryConnection {
+		nodes:[Repository]
+		cursor: ID
 	}
 `;
 

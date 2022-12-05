@@ -87,7 +87,7 @@ const Mutation = {
 		
 		return prisma.repository.update({
 			where: { id: args.repositoryId },
-			data: { hackathonBlacklist: args.hackathonBlacklist }
+			data: { hackathonBlacklisted: args.hackathonBlacklisted }
 		});
 	},
 };
