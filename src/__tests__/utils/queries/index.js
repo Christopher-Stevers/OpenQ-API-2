@@ -202,6 +202,50 @@ const BLACKLIST_ORGANIZATION = gql`mutation blacklistOrg($organizationId: String
   }
 `;
 
+const UPSERT_PR = gql`mutation UpsertPr($prId: String!, $blacklisted: Boolean!) {
+  upsertPr(prId: $prId, blacklisted: $blacklisted) {
+    prId
+	  }
+}`;
+
+const ADD_CONTRIBUTOR = gql`mutation AddContributor($prId: String!, $userId: String!) {
+  addContributor(prId: $prId, userId: $userId) {
+    prId
+	  }
+}`;
+
+const REMOVE_CONTRIBUTOR = gql`mutation AddContributor($prId: String!, $userId: String!) {
+  addContributor(prId: $prId, userId: $userId) {
+    prId
+	  }
+}`;
+
+const UPSERT_PRICES = gql`mutation UpsertPrices($priceObj: JSON!, $pricesId: String!) {
+  updatePrices(priceObj: $priceObj, pricesId: $pricesId) {
+    priceObj
+	    }
+}`;
+
+const GET_PRICES = gql`query GetPrices($pricesId: String!) {
+  prices(pricesId: $pricesId) {
+    prices {
+	  id
+	  }
+	    }
+}`;
+
+
+
+
+const GET_PR = gql`query GetPr($prId: String!) {
+  pr(prId: $prId) {
+    prId
+	contributors {
+		id
+	}
+}
+}`;
+
 module.exports = {
 	CREATE_NEW_BOUNTY,
 	UPDATE_BOUNTY,
@@ -220,5 +264,11 @@ module.exports = {
 	GET_ORGANIZATION,
 	BLACKLIST_ORGANIZATION,
 	STAR_ORGANIZATION,
-	UNSTAR_ORGANIZATION
+	UNSTAR_ORGANIZATION,
+	UPSERT_PR,
+	ADD_CONTRIBUTOR,
+	REMOVE_CONTRIBUTOR,
+	GET_PR,
+	UPSERT_PRICES,
+	GET_PRICES
 };
