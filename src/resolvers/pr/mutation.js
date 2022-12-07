@@ -15,12 +15,12 @@ const Mutation = {
 			throw new AuthenticationError(`User is not authorized to administer repository with id ${args.repositoryId}`);
 		}
 
-		const { prId, userId, address } = args;
+		const { prId, userId } = args;
 		await prisma.contributor.upsert({
 
 			where: { userId },
 			create: {
-				userId, address, prIds: { set: [prId] }
+				userId, prIds: { set: [prId] }
 			},
 			update: {
 				prIds: { push: prId }
