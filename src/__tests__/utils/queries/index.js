@@ -79,8 +79,12 @@ query GetRepository( $id: String!) {
 const STAR_ORGANIZATION = gql`mutation StarOrg($userId: String!, $organizationId: String!, $github: String, $email: String) {
   starOrg(userId: $userId, organizationId: $organizationId, github: $github, email: $email) {
     id
-		starringUsers {
-			id
+		starringUsers(limit:10) {
+			 
+		nodes{
+		id}
+			
+		
 		}
   }
 }`;
@@ -88,8 +92,12 @@ const STAR_ORGANIZATION = gql`mutation StarOrg($userId: String!, $organizationId
 const UNSTAR_ORGANIZATION = gql`mutation StarOrg($userId: String!, $organizationId: String!, $github: String, $email: String) {
   unstarOrg(userId: $userId, organizationId: $organizationId, github: $github, email: $email) {
     id
-		starringUsers {
-			id
+	starringUsers(limit:10) {
+			 
+		nodes{
+		id}
+			
+		
 		}
   }
 }`;
@@ -159,7 +167,9 @@ const GET_USER = gql`query GetUser($id: String, $email: String, $github: String)
 		email
 		github
 		starredOrganizations {
+		nodes{
 			id
+		}			
 		}
 		watchedBounties(limit: 10) {
       bountyConnection{
@@ -189,8 +199,12 @@ const GET_ORGANIZATION = gql`query GetOrganization($organizationId: String!) {
   organization(organizationId: $organizationId) {
 		id
 		blacklisted
-		starringUsers {
-			id
+		starringUsers 
+			(limit:10) {
+		nodes{
+		id}
+			
+		
 		}
   }
 }`;
@@ -226,12 +240,12 @@ const UPSERT_PRICES = gql`mutation UpsertPrices($priceObj: JSON!, $pricesId: Str
 	    }
 }`;
 
-const GET_PRICES = gql`query GetPrices($pricesId: String!) {
-  prices(pricesId: $pricesId) {
-    prices {
-	  id
-	  }
-	    }
+const GET_PRICES = gql`query GetPrices {
+  prices{
+    pricesId
+    priceObj
+  
+  }
 }`;
 
 
@@ -241,7 +255,7 @@ const GET_PR = gql`query GetPr($prId: String!) {
   pr(prId: $prId) {
     prId
 	contributors {
-		id
+		userId
 	}
 }
 }`;

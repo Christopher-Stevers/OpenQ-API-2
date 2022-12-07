@@ -6,12 +6,12 @@ directive @auth(
   requires: String,
 ) on FIELD_DEFINITION
 	extend type Query {
-		usersConnection(
+		users(
 			after: ID
 			limit: Int
 			orderBy: String
 			sortOrder: String
-		): UserConnection
+		): Users
 		user(id: String, email: String, github: String): User
 		other: String
 	}

@@ -14,7 +14,7 @@ const typeDef = gql`
 			category: String
 			types: [String]
 		): Bounties! @auth
-		starredOrganizations: [Organization]
+		starredOrganizations: Organizations
 		starredOrganizationIds: [String]
 		province: String		@auth		
  		postalCode: String 		@auth
@@ -37,8 +37,15 @@ const typeDef = gql`
 		otherRoles: [String]
 	}
 
+
+
+	type Users {
+		userConnection: UserConnection
+		nodes: [User]
+	}
+
 	type UserConnection {
-		users: [User]
+		nodes:[User]
 		cursor: ID
 	}
 `;

@@ -15,7 +15,7 @@ const Mutation = {
 		);
 	},
 	starOrg: async (parent, args, { req, prisma, githubClient, emailClient }) => {
-		const { error, errorMessage, github, email, id } = await checkUserAuth(prisma, req, args, emailClient, githubClient);
+		const { error, errorMessage, id } = await checkUserAuth(prisma, req, args, emailClient, githubClient);
 
 		if (error) {
 			throw new AuthenticationError(errorMessage);
@@ -29,7 +29,6 @@ const Mutation = {
 			throw new Error('ALREADY_STARRED');
 		}
 
-		console.log('iddddd', id);
 		await prisma.user.update({
 			where: { id },
 			data: {
