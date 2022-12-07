@@ -1,7 +1,6 @@
 
 const { getAuthenticatedClient, getAuthenticatedClientIntegration } = require('../utils/configureApolloClient');
 const { GET_PRICES, UPSERT_PRICES } = require('../utils/queries');
-
 const { clearDb } = require('../utils/clearDb');
 
 describe('updatePrices', () => {
@@ -29,18 +28,19 @@ describe('updatePrices', () => {
 
 		});
 		it('Authenticated client can add user to repository', async () => {
+
 			await authenticatedClient.mutate({
 				mutation: UPSERT_PRICES,
 				variables: { pricesId, priceObj }
 			});
-
 			const { data } = await authenticatedClient.query({
 				query: GET_PRICES,
 				variables: { pricesId }
 			});
-			expect(data.repository).toMatchObject({
-				id: pricesId,
-				priceObj
+			expect(data.prices).toMatchObject({
+				__typename: 'Prices',
+				priceObj,
+				pricesId
 			});
 		});
 	});

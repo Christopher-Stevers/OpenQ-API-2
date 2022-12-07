@@ -17,51 +17,51 @@ describe('watchBounty', () => {
 	let authenticatedClient;
 	let unauthenticatedClient;
 
-	if(process.env.DEPLOY_ENV === 'production') {
+	if (process.env.DEPLOY_ENV === 'production') {
 		authenticatedClient = getAuthenticatedClientIntegration(process.env.OPENQ_API_SECRET, process.env.GITHUB_OAUTH_TOKEN, process.env.EMAIL_OAUTH);
 		unauthenticatedClient = getAuthenticatedClientIntegration('incorrect_secret', 'invalid_oauth_token', 'invalid_email_oauth');
-	} else  {
+	} else {
 		authenticatedClient = getAuthenticatedClient(process.env.OPENQ_API_SECRET, true, true);
-		unauthenticatedClient  = getAuthenticatedClient('incorrect_secret', 'signature', false, false);
+		unauthenticatedClient = getAuthenticatedClient('incorrect_secret', 'signature', false, false);
 	}
 
-	describe('GITHUB', () => { 
+	describe('GITHUB', () => {
 		describe('Successful', () => {
 			afterEach(async () => {
 				await clearDb();
 			});
-	
+
 			it('Authorized user can watch a bounty', async () => {
 				// ARRANGE
 				await authenticatedClient.mutate({
 					mutation: CREATE_NEW_BOUNTY,
 					variables: { address: contractAddress, organizationId, bountyId, repositoryId, type }
 				});
-	
+
 				const user = await authenticatedClient.mutate({
 					mutation: CREATE_USER,
 					variables: { github }
 				});
-	
+
 				const userId = user.data.upsertUser.id;
-				
+
 				// ACT
 				await authenticatedClient.mutate({
 					mutation: WATCH_BOUNTY,
 					variables: { contractAddress, userId, github }
 				});
-	
+
 				// ASSERT
 				const userResult = await authenticatedClient.query({
 					query: GET_USER,
 					variables: { id: userId }
 				});
-	
+
 				const bountyResult = await authenticatedClient.query({
 					query: GET_BOUNTY_BY_ID,
 					variables: { contractAddress }
 				});
-	
+
 				expect(bountyResult.data.bounty).toMatchObject({
 					__typename: 'Bounty',
 					organizationId,
@@ -73,7 +73,7 @@ describe('watchBounty', () => {
 						}
 					]
 				});
-				
+
 				expect(userResult.data.user).toMatchObject({
 					__typename: 'User',
 					id: userId,
@@ -95,46 +95,46 @@ describe('watchBounty', () => {
 			it('Unauthorized user cannot watch a bounty', async () => {
 				expect(true).toBe(true);
 			});
-		 });
-	 });
+		});
+	});
 
 	describe('EMAIL', () => {
 		describe('Successful', () => {
 			afterEach(async () => {
 				await clearDb();
 			});
-	
+
 			it('Authorized user can watch a bounty', async () => {
 				// ARRANGE
 				await authenticatedClient.mutate({
 					mutation: CREATE_NEW_BOUNTY,
 					variables: { address: contractAddress, organizationId, bountyId, repositoryId, type }
 				});
-	
+
 				const user = await authenticatedClient.mutate({
 					mutation: CREATE_USER,
 					variables: { email }
 				});
-	
+
 				const userId = user.data.upsertUser.id;
-				
+
 				// ACT
 				await authenticatedClient.mutate({
 					mutation: WATCH_BOUNTY,
 					variables: { contractAddress, userId, email }
 				});
-	
+
 				// ASSERT
 				const userResult = await authenticatedClient.query({
 					query: GET_USER,
 					variables: { id: userId }
 				});
-	
+
 				const bountyResult = await authenticatedClient.query({
 					query: GET_BOUNTY_BY_ID,
 					variables: { contractAddress }
 				});
-	
+
 				expect(bountyResult.data.bounty).toMatchObject({
 					__typename: 'Bounty',
 					organizationId,
@@ -146,7 +146,7 @@ describe('watchBounty', () => {
 						}
 					]
 				});
-				
+
 				expect(userResult.data.user).toMatchObject({
 					__typename: 'User',
 					id: userId,
@@ -168,6 +168,6 @@ describe('watchBounty', () => {
 			it('Unauthorized user cannot watch a bounty', async () => {
 				expect(true).toBe(true);
 			});
-		 });
-	 });
+		});
+	});
 });

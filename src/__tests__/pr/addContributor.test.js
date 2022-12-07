@@ -29,38 +29,29 @@ describe('createRepository', () => {
 		});
 		it('Authenticated client can add user to repository', async () => {
 
-			try {
+			const user = await authenticatedClient.mutate({
+				mutation: UPSERT_USER,
+				variables: { github }
+			});
+			const userId = user.data.upsertUser.id;
+			await authenticatedClient.mutate({
+				mutation: ADD_CONTRIBUTOR,
+				variables: { prId, blacklisted, userId }
+			});
 
-
-
-				const user = await authenticatedClient.mutate({
-					mutation: UPSERT_USER,
-					variables: { github }
-				});
-				const userId = user.data.upsertUser.id;
-				await authenticatedClient.mutate({
-					mutation: ADD_CONTRIBUTOR,
-					variables: { prId, blacklisted, userId }
-				});
-
-				const { data } = await authenticatedClient.query({
-					query: GET_PR,
-					variables: { prId }
-				});
-				expect(data.repository).toMatchObject({
-					id: prId,
-					blacklisted: true,
+			const { data } = await authenticatedClient.query({
+				query: GET_PR,
+				variables: { prId }
+			});
+			expect(data).toMatchObject({
+				pr: {
 					contributors: [
 						{
-							id: userId
+							userId: userId
 						}
 					]
-				});
-			}
-			catch (err) {
-				console.log(JSON.stringify(err));
-			}
-
+				}
+			});
 		});
 	});
 	describe('Unsuccessful', () => {

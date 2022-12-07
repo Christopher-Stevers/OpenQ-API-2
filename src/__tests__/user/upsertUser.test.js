@@ -2,7 +2,7 @@ const { getAuthenticatedClient, getAuthenticatedClientIntegration } = require('.
 const { UPSERT_USER, GET_USER } = require('../utils/queries');
 
 const dotenv = require('dotenv');
-const { clearDbUser } = require('../utils/clearDb');
+const { clearDb } = require('../utils/clearDb');
 dotenv.config({ path: '../../../.env.test' });
 
 describe('upsertUser.test', () => {
@@ -27,7 +27,7 @@ describe('upsertUser.test', () => {
 		describe('EMAIL', () => {
 			describe('SUCCESS', () => {
 				afterEach(async () => {
-					await clearDbUser();
+					await clearDb();
 				});
 
 				it('Authenticated client can create user with email', async () => {
@@ -69,7 +69,7 @@ describe('upsertUser.test', () => {
 		describe('GITHUB', () => {
 			describe('SUCCESS', () => {
 				afterEach(async () => {
-					await clearDbUser();
+					await clearDb();
 				});
 				it('Authenticated client can create user with github and valid oauth', async () => {
 					// ARRANGE

@@ -38,9 +38,8 @@ describe('createRepository', () => {
 				variables: { prId }
 			});
 			console.log(data);
-			expect(data.repository).toMatchObject({
-				id: prId,
-				blacklisted: true,
+			expect(data.pr).toMatchObject({
+				contributors: [], __typename: 'PR'
 			});
 
 

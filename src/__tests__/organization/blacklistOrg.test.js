@@ -2,7 +2,7 @@
 const { getAuthenticatedClient, getAuthenticatedClientIntegration } = require('../utils/configureApolloClient');
 const { BLACKLIST_ORGANIZATION, GET_ORGANIZATION } = require('../utils/queries');
 
-const { clearDbOrganization } = require('../utils/clearDb');
+const { clearDb } = require('../utils/clearDb');
 
 describe('blacklistOrg', () => {
 	const organizationId = 'organizationId';
@@ -10,32 +10,32 @@ describe('blacklistOrg', () => {
 	let authenticatedClient;
 	let unauthenticatedClient;
 
-	if(process.env.DEPLOY_ENV === 'production') {
+	if (process.env.DEPLOY_ENV === 'production') {
 		// For blacklisting, we need the BANHAMMER secret rather than the OPENQ_API_SECRET
 		authenticatedClient = getAuthenticatedClientIntegration(process.env.BANHAMMER, process.env.GITHUB_OAUTH_TOKEN, process.env.EMAIL_OAUTH);
 		unauthenticatedClient = getAuthenticatedClientIntegration('incorrect_secret', 'invalid_oauth_token', 'invalid_email_oauth');
-	} else  {
+	} else {
 		authenticatedClient = getAuthenticatedClient(process.env.BANHAMMER, true, true);
-		unauthenticatedClient  = getAuthenticatedClient('incorrect_secret', 'signature', false, false);
+		unauthenticatedClient = getAuthenticatedClient('incorrect_secret', 'signature', false, false);
 	}
 
 	describe('Successful', () => {
 		afterEach(async () => {
-			await clearDbOrganization();
+			await clearDb();
 		});
 
 		it('Authenticated client can blacklist an organization', async () => {
+
 			// ARRANGE
 			await authenticatedClient.mutate({
 				mutation: BLACKLIST_ORGANIZATION,
 				variables: { organizationId, blacklist: true }
 			});
-	
+
 			const { data } = await authenticatedClient.query({
 				query: GET_ORGANIZATION,
 				variables: { organizationId }
 			});
-	
 			// ASSERT
 			expect(data.organization).toMatchObject({
 				id: organizationId,
@@ -47,17 +47,18 @@ describe('blacklistOrg', () => {
 				mutation: BLACKLIST_ORGANIZATION,
 				variables: { organizationId, blacklist: false }
 			});
-	
+
 			// ASSERT
 			const newOrgResult = await authenticatedClient.query({
 				query: GET_ORGANIZATION,
 				variables: { organizationId }
 			});
-	
+
 			expect(newOrgResult.data.organization).toMatchObject({
 				id: organizationId,
 				blacklisted: false
 			});
+
 		});
 	});
 
@@ -68,10 +69,10 @@ describe('blacklistOrg', () => {
 					mutation: BLACKLIST_ORGANIZATION,
 					variables: { organizationId }
 				});
-				throw('Should not reach this point');
+				throw ('Should not reach this point');
 			} catch (error) {
 				expect(error.graphQLErrors[0].extensions.code).toEqual('UNAUTHENTICATED');
 			}
 		});
-	 });
+	});
 });
