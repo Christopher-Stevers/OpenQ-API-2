@@ -9,11 +9,11 @@ const generateFilter = (organizationId, repositoryId, addresses, types, category
 
 const Bounties = {
 	bountyConnection: async (parent, args, { prisma }) => {
-		const { organizationId, addresses, types, category, repositoryId } = parent; 
+		const { organizationId, addresses, types, category, repositoryId } = parent;
 		const filters = generateFilter(organizationId, repositoryId, addresses, types, category);
-		
+
 		const cursor = parent.after ? { address: parent.after } : undefined;
-		
+
 		const nodes = await prisma.bounty.findMany({
 			skip: (!parent.after) ? 0 : 1,
 			cursor,
@@ -42,7 +42,7 @@ const Bounties = {
 
 
 	nodes: async (parent, args, { prisma }) => {
-		const { organizationId, addresses, types, category, repositoryId } = parent; 
+		const { organizationId, addresses, types, category, repositoryId } = parent;
 		const filters = generateFilter(organizationId, repositoryId, addresses, types, category);
 
 		const bounties = await prisma.bounty.findMany({
