@@ -24,30 +24,67 @@ mutation UpdateBounty( $address: String!, $organizationId: String!, $bountyId: S
 }`;
 
 const CREATE_NEW_REPOSITORY = gql`
-mutation CreateRepository( $organizationId: String!, $repositoryId: String!, $bountyId: String!) {
-  createBounty(organizationId: $organizationId, repositoryId: $repositoryId, bountyId: $bountyId) {
-    id
-		participants
-		organization
-		bounties
+mutation CreateRepository( $organizationId: String!, $repositoryId: String!) {
+  createRepository(organizationId: $organizationId, repositoryId: $repositoryId) {
+    id		
+		organization{
+		id}
   }
 }`;
 
-const GET_REPOSITORY = gql`
-mutation GetRepository( $id: String!) {
-  getRepository(id: $id) {
+
+const ADD_USER_TO_REPOSITORY = gql`
+mutation AddUserToRepository( $repositoryId: String!, $userId: String!) {
+  addUserToRepository(repositoryId: $repositoryId, userId: $userId) {
     id
-		participants
-		organization
-		bounties
+		participants{
+			id
+		}
+		  }
+}`;
+
+const SET_HACKATHON_BLACKLIST = gql`
+mutation SetHackathonBlacklist( $repositoryId: String!, $hackathonBlacklisted: Boolean!) {
+  setHackathonBlacklist(repositoryId: $repositoryId, hackathonBlacklisted: $hackathonBlacklisted) {
+    id
+		hackathonBlacklisted
+		  }
+}`;
+
+const SET_IS_CONTEST = gql`
+mutation SetIsContest( $repositoryId: String!, $isContest: Boolean!, $organizationId: String!, $startDate: String!, $registrationDeadline: String!) {
+  setIsContest(repositoryId: $repositoryId, isContest: $isContest, organizationId: $organizationId, startDate: $startDate, registrationDeadline: $registrationDeadline) {
+    id
+	startDate
+		  }
+}`;
+
+const GET_REPOSITORY = gql`
+query GetRepository( $id: String!) {
+  repository(id: $id){
+    id
+	participants{
+		id
+	}
+    organization{
+      id
+    }
+	hackathonBlacklisted
+	isContest
+	startDate
+	registrationDeadline
   }
 }`;
 
 const STAR_ORGANIZATION = gql`mutation StarOrg($userId: String!, $organizationId: String!, $github: String, $email: String) {
   starOrg(userId: $userId, organizationId: $organizationId, github: $github, email: $email) {
     id
-		starringUsers {
-			id
+		starringUsers(limit:10) {
+			 
+		nodes{
+		id}
+			
+		
 		}
   }
 }`;
@@ -55,8 +92,12 @@ const STAR_ORGANIZATION = gql`mutation StarOrg($userId: String!, $organizationId
 const UNSTAR_ORGANIZATION = gql`mutation StarOrg($userId: String!, $organizationId: String!, $github: String, $email: String) {
   unstarOrg(userId: $userId, organizationId: $organizationId, github: $github, email: $email) {
     id
-		starringUsers {
-			id
+	starringUsers(limit:10) {
+			 
+		nodes{
+		id}
+			
+		
 		}
   }
 }`;
@@ -126,7 +167,9 @@ const GET_USER = gql`query GetUser($id: String, $email: String, $github: String)
 		email
 		github
 		starredOrganizations {
+		nodes{
 			id
+		}			
 		}
 		watchedBounties(limit: 10) {
       bountyConnection{
@@ -156,8 +199,12 @@ const GET_ORGANIZATION = gql`query GetOrganization($organizationId: String!) {
   organization(organizationId: $organizationId) {
 		id
 		blacklisted
-		starringUsers {
-			id
+		starringUsers 
+			(limit:10) {
+		nodes{
+		id}
+			
+		
 		}
   }
 }`;
@@ -169,7 +216,51 @@ const BLACKLIST_ORGANIZATION = gql`mutation blacklistOrg($organizationId: String
   }
 `;
 
-module.exports = { 
+const UPSERT_PR = gql`mutation UpsertPr($prId: String!, $blacklisted: Boolean!) {
+  upsertPr(prId: $prId, blacklisted: $blacklisted) {
+    prId
+	  }
+}`;
+
+const ADD_CONTRIBUTOR = gql`mutation AddContributor($prId: String!, $userId: String!) {
+  addContributor(prId: $prId, userId: $userId) {
+    prId
+	  }
+}`;
+
+const REMOVE_CONTRIBUTOR = gql`mutation AddContributor($prId: String!, $userId: String!) {
+  addContributor(prId: $prId, userId: $userId) {
+    prId
+	  }
+}`;
+
+const UPSERT_PRICES = gql`mutation UpsertPrices($priceObj: JSON!, $pricesId: String!) {
+  updatePrices(priceObj: $priceObj, pricesId: $pricesId) {
+    priceObj
+	    }
+}`;
+
+const GET_PRICES = gql`query GetPrices {
+  prices{
+    pricesId
+    priceObj
+  
+  }
+}`;
+
+
+
+
+const GET_PR = gql`query GetPr($prId: String!) {
+  pr(prId: $prId) {
+    prId
+	contributors {
+		userId
+	}
+}
+}`;
+
+module.exports = {
 	CREATE_NEW_BOUNTY,
 	UPDATE_BOUNTY,
 	WATCH_BOUNTY,
@@ -180,9 +271,18 @@ module.exports = {
 	GET_USER,
 	UPSERT_USER,
 	CREATE_NEW_REPOSITORY,
+	ADD_USER_TO_REPOSITORY,
+	SET_HACKATHON_BLACKLIST,
+	SET_IS_CONTEST,
 	GET_REPOSITORY,
 	GET_ORGANIZATION,
 	BLACKLIST_ORGANIZATION,
 	STAR_ORGANIZATION,
-	UNSTAR_ORGANIZATION
+	UNSTAR_ORGANIZATION,
+	UPSERT_PR,
+	ADD_CONTRIBUTOR,
+	REMOVE_CONTRIBUTOR,
+	GET_PR,
+	UPSERT_PRICES,
+	GET_PRICES
 };

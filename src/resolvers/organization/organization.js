@@ -3,8 +3,11 @@ const Organization = {
 		return { organizationId: parent.id, ...args };
 	},
 	repositories: async (parent, args) => {
-		console.log(parent, args);
 		return { organizationId: parent.id, ...args };
+	},
+	starringUsers: async (parent, args,) => {
+		return { ...args, userIds: parent.starringUserIds };
+
 	}
 
 

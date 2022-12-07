@@ -6,24 +6,13 @@ const Query = {
 
 		const value = await prisma.user.findUnique({
 			where: { ...args },
-			include: { starredOrganizations: true, watchedBounties: true }
+			include: { starredOrganizations: true }
 		});
-		
 		return value;
 	},
-	usersConnection: async (parent, args, { prisma }) => {
-		const cursor = args.after ? { id: args.after } : undefined;
-		const users = await prisma.user.findMany({
-			skip: args.after ? 1 : 0,
-			cursor,
-			take: args.limit,
-			orderBy: { [args.orderBy]: args.sortOrder },
-		});
 
-		return {
-			users,
-			cursor: users[users.length - 1].id,
-		};
+	users: async (parent, args) => {
+		return args;
 	}
 };
 

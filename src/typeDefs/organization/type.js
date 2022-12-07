@@ -4,7 +4,11 @@ const typeDef = gql`
 	type Organization {
 		id: String!
 		blacklisted: Boolean
-		starringUsers: [User]
+		starringUsers(
+			after: ID
+			limit: Int!
+			orderBy: String
+			sortOrder: String): Users
 		bounties(
 			after: ID
 			limit: Int!
@@ -21,6 +25,16 @@ const typeDef = gql`
 			category: String
 			types: [String]
 		): Repositories
+	}
+	
+	type Organizations {
+		organizationConnection: OrganizationConnection
+		nodes: [Organization]
+	}
+
+	type OrganizationConnection {
+		nodes:[Organization]
+		cursor: ID
 	}
 `;
 

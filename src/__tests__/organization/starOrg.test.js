@@ -2,7 +2,7 @@
 const { getAuthenticatedClient, getAuthenticatedClientIntegration } = require('../utils/configureApolloClient');
 const { STAR_ORGANIZATION, UNSTAR_ORGANIZATION, GET_USER, GET_ORGANIZATION, BLACKLIST_ORGANIZATION, CREATE_USER } = require('../utils/queries');
 
-const { clearDbOrganization, clearDbUser } = require('../utils/clearDb');
+const { clearDb } = require('../utils/clearDb');
 
 describe('starOrg', () => {
 	const organizationId = 'organizationId';
@@ -11,19 +11,18 @@ describe('starOrg', () => {
 	let authenticatedClient;
 	let unauthenticatedClient;
 
-	if(process.env.DEPLOY_ENV === 'production') {
+	if (process.env.DEPLOY_ENV === 'production') {
 		// For blacklisting, we need the BANHAMMER secret rather than the OPENQ_API_SECRET
 		authenticatedClient = getAuthenticatedClientIntegration(process.env.BANHAMMER, process.env.GITHUB_OAUTH_TOKEN, process.env.EMAIL_OAUTH);
 		unauthenticatedClient = getAuthenticatedClientIntegration('incorrect_secret', 'invalid_oauth_token', 'invalid_email_oauth');
-	} else  {
+	} else {
 		authenticatedClient = getAuthenticatedClient(process.env.BANHAMMER, true, true);
-		unauthenticatedClient  = getAuthenticatedClient('incorrect_secret', 'signature', false, false);
+		unauthenticatedClient = getAuthenticatedClient('incorrect_secret', 'signature', false, false);
 	}
 
 	describe('Successful', () => {
 		afterEach(async () => {
-			await clearDbOrganization();
-			await clearDbUser();
+			await clearDb();
 		});
 
 		it('Authenticated client can starOrg', async () => {
@@ -45,7 +44,7 @@ describe('starOrg', () => {
 				mutation: STAR_ORGANIZATION,
 				variables: { organizationId, userId, github }
 			});
-	
+
 			const { data } = await authenticatedClient.query({
 				query: GET_ORGANIZATION,
 				variables: { organizationId }
@@ -55,15 +54,30 @@ describe('starOrg', () => {
 				query: GET_USER,
 				variables: { id: userId }
 			});
-	
+
 			expect(data.organization).toMatchObject({
 				id: organizationId,
-				starringUsers: [{ id: userId }]
+				starringUsers: {
+					__typename: 'Users',
+					nodes: [
+						{
+							__typename: 'User',
+							id: userId,
+						},
+					],
+				},
 			});
 
 			expect(userResult.data.user).toMatchObject({
 				id: userId,
-				starredOrganizations: [{ id: organizationId }]
+				starredOrganizations: {
+					__typename: 'Organizations',
+					nodes: [
+						{
+							__typename: 'Organization',
+							id: organizationId,
+						}]
+				}
 			});
 
 			// ACT
@@ -82,23 +96,28 @@ describe('starOrg', () => {
 				query: GET_USER,
 				variables: { id: userId }
 			});
-	
+
 			expect(organizationUnstarResult.data.organization).toMatchObject({
 				id: organizationId,
-				starringUsers: []
+				starringUsers: {
+					__typename: 'Users',
+					nodes: [],
+				},
 			});
 
 			expect(userUnstarResult.data.user).toMatchObject({
 				id: userId,
-				starredOrganizations: []
+				starredOrganizations: {
+					__typename: 'Organizations',
+					nodes: []
+				}
 			});
 		});
 	});
 
 	describe('Unsuccessful', () => {
 		afterEach(async () => {
-			await clearDbOrganization();
-			await clearDbUser();
+			await clearDb();
 		});
 
 		it('should fail for unauthenticated calls', async () => {
@@ -116,17 +135,18 @@ describe('starOrg', () => {
 					variables: { github }
 				});
 				const userId = result.data.upsertUser.id;
-			
+
 				// ACT
 				await unauthenticatedClient.mutate({
 					mutation: STAR_ORGANIZATION,
 					variables: { organizationId, userId, github }
 				});
-				throw('Should not reach this point');
+				throw ('Should not reach this point');
 			} catch (error) {
 				console.log(error);
+				// eslint-disable-next-line jest/no-conditional-expect
 				expect(error.graphQLErrors[0].extensions.code).toEqual('UNAUTHENTICATED');
 			}
 		});
-	 });
+	});
 });

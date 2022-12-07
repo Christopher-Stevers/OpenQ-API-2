@@ -17,49 +17,48 @@ describe('unwatchBounty', () => {
 	let authenticatedClient;
 	let unauthenticatedClient;
 
-	if(process.env.DEPLOY_ENV === 'production') {
+	if (process.env.DEPLOY_ENV === 'production') {
 		authenticatedClient = getAuthenticatedClientIntegration(process.env.OPENQ_API_SECRET, process.env.GITHUB_OAUTH_TOKEN, process.env.EMAIL_OAUTH);
 		unauthenticatedClient = getAuthenticatedClientIntegration('incorrect_secret', 'invalid_oauth_token', 'invalid_email_oauth');
-	} else  {
+	} else {
 		authenticatedClient = getAuthenticatedClient(process.env.OPENQ_API_SECRET, true, true);
-		unauthenticatedClient  = getAuthenticatedClient('incorrect_secret', 'signature', false, false);
+		unauthenticatedClient = getAuthenticatedClient('incorrect_secret', 'signature', false, false);
 	}
 
-	describe('GITHUB', () => { 
+	describe('GITHUB', () => {
 		describe('Successful', () => {
 			afterEach(async () => {
 				await clearDb();
 			});
-	
+
 			it('Authorized user can unwatch a bounty', async () => {
 				// ARRANGE
+
 				await authenticatedClient.mutate({
 					mutation: CREATE_NEW_BOUNTY,
 					variables: { address: contractAddress, organizationId, bountyId, repositoryId, type }
 				});
-	
 				const user = await authenticatedClient.mutate({
 					mutation: CREATE_USER,
 					variables: { github }
 				});
-	
+
 				const userId = user.data.upsertUser.id;
-				
 				await authenticatedClient.mutate({
 					mutation: WATCH_BOUNTY,
 					variables: { contractAddress: contractAddress, userId, github }
 				});
-	
+
 				const userResult = await authenticatedClient.query({
 					query: GET_USER,
 					variables: { id: userId }
 				});
-	
+
 				const bountyResult = await authenticatedClient.query({
 					query: GET_BOUNTY_BY_ID,
 					variables: { contractAddress }
 				});
-	
+
 				// ASSUME
 				expect(bountyResult.data.bounty).toMatchObject({
 					__typename: 'Bounty',
@@ -72,7 +71,7 @@ describe('unwatchBounty', () => {
 						}
 					]
 				});
-				
+
 				expect(userResult.data.user).toMatchObject({
 					__typename: 'User',
 					id: userId,
@@ -87,24 +86,25 @@ describe('unwatchBounty', () => {
 						}
 					}
 				});
-	
+
+
 				// ACT
 				await authenticatedClient.mutate({
 					mutation: UNWATCH_BOUNTY,
 					variables: { contractAddress, userId, github }
 				});
-	
+
 				// ASSERT
 				const userResultUnwatched = await authenticatedClient.query({
 					query: GET_USER,
 					variables: { id: userId }
 				});
-	
+
 				const bountyResultUnwatched = await authenticatedClient.query({
 					query: GET_BOUNTY_BY_ID,
 					variables: { contractAddress }
 				});
-	
+
 				expect(userResultUnwatched.data.user).toMatchObject({
 					__typename: 'User',
 					id: userId,
@@ -114,16 +114,18 @@ describe('unwatchBounty', () => {
 						}
 					}
 				});
-				
+
 				expect(bountyResultUnwatched.data.bounty).toMatchObject({
 					__typename: 'Bounty',
 					organizationId,
 					address: contractAddress,
 					watchingUsers: []
 				});
+
 			});
+
 		});
-	
+
 		describe('Unsuccessful', () => {
 			it('should fail for unauthenticated calls', async () => {
 				try {
@@ -131,49 +133,49 @@ describe('unwatchBounty', () => {
 						mutation: CREATE_NEW_BOUNTY,
 						variables: { address: contractAddress, organizationId, bountyId, repositoryId, type }
 					});
-					throw('Should not reach this point');
+					throw ('Should not reach this point');
 				} catch (error) {
 					expect(error.graphQLErrors[0].extensions.code).toEqual('UNAUTHENTICATED');
 				}
 			});
-		 });
-	 });
+		});
+	});
 
-	describe('EMAIL', () => { 
+	describe('EMAIL', () => {
 		describe('Successful', () => {
 			afterEach(async () => {
 				await clearDb();
 			});
-	
+
 			it('Authorized user can unwatch a bounty', async () => {
 				// ARRANGE
 				await authenticatedClient.mutate({
 					mutation: CREATE_NEW_BOUNTY,
 					variables: { address: contractAddress, organizationId, bountyId, repositoryId, type }
 				});
-	
+
 				const user = await authenticatedClient.mutate({
 					mutation: CREATE_USER,
 					variables: { email }
 				});
-	
+
 				const userId = user.data.upsertUser.id;
-				
+
 				await authenticatedClient.mutate({
 					mutation: WATCH_BOUNTY,
 					variables: { contractAddress: contractAddress, userId, email }
 				});
-	
+
 				const userResult = await authenticatedClient.query({
 					query: GET_USER,
 					variables: { id: userId }
 				});
-	
+
 				const bountyResult = await authenticatedClient.query({
 					query: GET_BOUNTY_BY_ID,
 					variables: { contractAddress }
 				});
-	
+
 				// ASSUME
 				expect(bountyResult.data.bounty).toMatchObject({
 					__typename: 'Bounty',
@@ -186,7 +188,7 @@ describe('unwatchBounty', () => {
 						}
 					]
 				});
-				
+
 				expect(userResult.data.user).toMatchObject({
 					__typename: 'User',
 					id: userId,
@@ -201,24 +203,24 @@ describe('unwatchBounty', () => {
 						}
 					}
 				});
-	
+
 				// ACT
 				await authenticatedClient.mutate({
 					mutation: UNWATCH_BOUNTY,
 					variables: { contractAddress, userId, email }
 				});
-	
+
 				// ASSERT
 				const userResultUnwatched = await authenticatedClient.query({
 					query: GET_USER,
 					variables: { id: userId }
 				});
-	
+
 				const bountyResultUnwatched = await authenticatedClient.query({
 					query: GET_BOUNTY_BY_ID,
 					variables: { contractAddress }
 				});
-	
+
 				expect(userResultUnwatched.data.user).toMatchObject({
 					__typename: 'User',
 					id: userId,
@@ -228,7 +230,7 @@ describe('unwatchBounty', () => {
 						}
 					}
 				});
-				
+
 				expect(bountyResultUnwatched.data.bounty).toMatchObject({
 					__typename: 'Bounty',
 					organizationId,
@@ -237,7 +239,7 @@ describe('unwatchBounty', () => {
 				});
 			});
 		});
-	
+
 		describe('Unsuccessful', () => {
 			it('should fail for unauthenticated calls', async () => {
 				try {
@@ -245,11 +247,11 @@ describe('unwatchBounty', () => {
 						mutation: CREATE_NEW_BOUNTY,
 						variables: { address: contractAddress, organizationId, bountyId, repositoryId, type }
 					});
-					throw('Should not reach this point');
+					throw ('Should not reach this point');
 				} catch (error) {
 					expect(error.graphQLErrors[0].extensions.code).toEqual('UNAUTHENTICATED');
 				}
 			});
-		 });
-	 });
+		});
+	});
 });

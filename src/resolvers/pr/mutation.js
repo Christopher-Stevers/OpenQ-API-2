@@ -1,28 +1,26 @@
 
-const validateOwnership = require('./validateOwnership');
+const checkRepositoryAdmin = require('../utils/checkRepositoryAdmin');
+const { AuthenticationError } = require('apollo-server');
 
 const Mutation = {
-	updatePr: async (parent, args, { req, prisma }) => {
-		const cookie = req.headers.cookie;
-		await validateOwnership(prId, cookie);
-		const { prId, contributorIds } = args;
-		return prisma.pr.update({
-			where: { prId },
-			data: {
-				contributorIds
-			},
-		});
-	},
 
-	addContributor: async (parent, args, { req, prisma }) => {
-		const { prId, userId, address } = args;
-		const cookie = req.headers.cookie;
-		await validateOwnership(prId, cookie);
+	addContributor: async (parent, args, { req, prisma, githubClient }) => {
+		const { error, errorMessage, viewerCanAdminister } = await checkRepositoryAdmin(req, args, githubClient);
+
+		if (error) {
+			throw new AuthenticationError(errorMessage);
+		}
+
+		if (!viewerCanAdminister) {
+			throw new AuthenticationError(`User is not authorized to administer repository with id ${args.repositoryId}`);
+		}
+
+		const { prId, userId } = args;
 		await prisma.contributor.upsert({
 
 			where: { userId },
 			create: {
-				userId, address, prIds: { set: [prId] }
+				userId, prIds: { set: [prId] }
 			},
 			update: {
 				prIds: { push: prId }
@@ -43,26 +41,40 @@ const Mutation = {
 		});
 	},
 
-	blacklistPr: async (parent, args, { req, prisma }) => {
-		const { prId, blacklisted } = args;
-		const cookie = req.headers.cookie;
-		await validateOwnership(prId, cookie);
+	upsertPr: async (parent, args, { req, prisma, githubClient }) => {
+		const { error, errorMessage, viewerCanAdminister } = await checkRepositoryAdmin(req, args, githubClient);
+
+		if (error) {
+			throw new AuthenticationError(errorMessage);
+		}
+
+		if (!viewerCanAdminister) {
+			throw new AuthenticationError(`User is not authorized to administer repository with id ${args.repositoryId}`);
+		}
+		const { prId, ...remainingArgs } = args;
 		return prisma.pr.upsert({
 			where: { prId },
 			create: {
 				prId,
-				blacklisted
+				...remainingArgs
 			},
 			update: {
-				blacklisted
+				...remainingArgs
 			},
 		});
 	},
 
-	removeContributor: async (parent, args, { req, prisma }) => {
+	removeContributor: async (parent, args, { req, prisma, githubClient }) => {
+		const { error, errorMessage, viewerCanAdminister } = await checkRepositoryAdmin(req, args, githubClient);
+
+		if (error) {
+			throw new AuthenticationError(errorMessage);
+		}
+
+		if (!viewerCanAdminister) {
+			throw new AuthenticationError(`User is not authorized to administer repository with id ${args.repositoryId}`);
+		}
 		const { prId, userId } = args;
-		const cookie = req.headers.cookie;
-		await validateOwnership(prId, cookie);
 		const contributor = await prisma.contributor.findUnique({
 			where: { userId },
 		});
