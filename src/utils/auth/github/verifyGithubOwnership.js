@@ -28,7 +28,6 @@ const verifyGithubOwnership = async (req, userId) => {
 			} else {
 				token = req.headers.cookie.match(signatureRegex)[0].slice(28);
 			}
-			console.log(token,userId);
 			const resultViewer = await axios
 				.post(
 					'https://api.github.com/graphql',
@@ -41,7 +40,6 @@ const verifyGithubOwnership = async (req, userId) => {
 						},
 					}
 				);
-			console.log(resultViewer);
 			if (resultViewer.data.errors && resultViewer.data.errors[0].type == 'RATE_LIMITED') {
 				return reject(RATE_LIMITED({ userId }));
 			}
