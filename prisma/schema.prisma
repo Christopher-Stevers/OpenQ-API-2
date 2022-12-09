@@ -17,7 +17,7 @@ model Bounty {
     tvc             Float?
     bountyId        String       @unique
     watchingUserIds String[]     @db.ObjectId
-    watchingUsers   User[]       @relation(fields: [watchingUserIds], references: [id]) @id
+    watchingUsers   User[]       @relation(fields: [watchingUserIds], references: [id])
     createdAt       DateTime     @default(now())
     prs             Pr[]
     views           Int          @default(0)
