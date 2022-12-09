@@ -18,9 +18,21 @@ function authDirectiveTransformer(schema, directiveName) {
 							return result;
 						}
 						else{
+							const idObj = {};
+							if(parent.github){
+								idObj.github = parent.github;
+							}
+							else if(parent.email){
+								idObj.email = parent.email;
+							}
+							else{
+								throw new AuthenticationError('Not logged in');                            
+							}
 							const {req, prisma, emailClient, githubClient } = context;
-							const user = await checkUserAuth  (prisma, req, args, emailClient, githubClient);
+							const user = await checkUserAuth  (prisma, req, idObj, emailClient, githubClient);
+							
 							const {error} = user;
+
 							if(error){                        
 								throw new AuthenticationError(error);
 							}
