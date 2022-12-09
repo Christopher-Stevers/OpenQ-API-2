@@ -6,7 +6,8 @@ const Mutation = {
 
 	addContributor: async (parent, args, { req, prisma, githubClient }) => {
 		const { error, errorMessage, viewerCanAdminister } = await checkRepositoryAdmin(req, args, githubClient);
-
+		console.log('errorMessage', errorMessage);
+		
 		if (error) {
 			throw new AuthenticationError(errorMessage);
 		}
@@ -51,7 +52,9 @@ const Mutation = {
 		if (!viewerCanAdminister) {
 			throw new AuthenticationError(`User is not authorized to administer repository with id ${args.repositoryId}`);
 		}
+
 		const { prId, ...remainingArgs } = args;
+
 		return prisma.pr.upsert({
 			where: { prId },
 			create: {

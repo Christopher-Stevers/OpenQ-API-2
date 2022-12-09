@@ -38,6 +38,7 @@ describe('unwatchBounty', () => {
 					mutation: CREATE_NEW_BOUNTY,
 					variables: { address: contractAddress, organizationId, bountyId, repositoryId, type }
 				});
+
 				const user = await authenticatedClient.mutate({
 					mutation: CREATE_USER,
 					variables: { github }

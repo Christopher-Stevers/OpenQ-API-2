@@ -8,10 +8,12 @@
 const checkRepositoryAdmin = async (req, args, githubClient) => {
 	try {
 		const viewerCanAdminister = await githubClient.verifyUserCanAdministerRepository(req, args.repositoryId);
-		if (!viewerCanAdminister) {
+		
+		if (viewerCanAdminister) {
+			return { error: false, errorMessage: null, viewerCanAdminister: true };
+		} else {
 			return { error: true, errorMessage: `Github not authorized to administer repository with id ${args.repositoryId}`, viewerCanAdminister: false };
 		}
-		return { error: false, errorMessage: null, viewerCanAdminister: true };
 	} catch (error) {
 		return { error: true, errorMessage: error, viewerCanAdminister: false };
 	}

@@ -1,5 +1,6 @@
 const verifyGithubOwnership = require('./verifyGithubOwnership');
 const verifyUserCanAdministerRepository = require('./verifyUserCanAdministerRepository');
+const verifyUserIsSubmissionAuthor = require('./verifyUserIsSubmissionAuthor');
 
 const GithubClient = {
 	verifyGithub: async (req, github) => {
@@ -16,6 +17,16 @@ const GithubClient = {
 		return new Promise(async (resolve, reject) => {
 			try {
 				const result = await verifyUserCanAdministerRepository(req, repoId);
+				resolve(result);
+			} catch (error) {
+				return reject(error);
+			}
+		});
+	},
+	verifyUserIsSubmissionAuthor: async (req, submissionId) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const result = await verifyUserCanAdministerRepository(req, submissionId);
 				resolve(result);
 			} catch (error) {
 				return reject(error);

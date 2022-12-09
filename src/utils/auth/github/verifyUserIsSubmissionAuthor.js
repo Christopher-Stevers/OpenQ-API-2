@@ -16,7 +16,7 @@ const {
 /***
  *  Verifies the OAuth token holder matches 
  * ***/
-const verifyUserCanAdministerRepository = async (req, repoId) => {
+const verifyUserIsSubmissionAuthor = async (req, repoId) => {
 	console.log(repoId);
 	console.log('req.headers', req.headers);
 	return new Promise(async (resolve, reject) => {
@@ -52,11 +52,11 @@ const verifyUserCanAdministerRepository = async (req, repoId) => {
 				return reject(RATE_LIMITED({ id: repoId }));
 			}
 
-			const verifyUserCanAdministerRepository = resultViewerCanAdminister.data.data.node.viewerCanAdminister;
+			const verifyUserIsSubmissionAuthor = resultViewerCanAdminister.data.data.node.viewerCanAdminister;
 			const viewerLogin = resultViewerCanAdminister.data.data.viewer.login;
 			console.log('viewerLogin', viewerLogin);
 
-			if (verifyUserCanAdministerRepository) {
+			if (verifyUserIsSubmissionAuthor) {
 				return resolve(true);
 			} else {
 				return reject(INVALID_GITHUB_OAUTH_TOKEN({viewerUserId: viewerLogin, id: repoId}));
@@ -70,4 +70,4 @@ const verifyUserCanAdministerRepository = async (req, repoId) => {
 	});
 };
 
-module.exports = verifyUserCanAdministerRepository;
+module.exports = verifyUserIsSubmissionAuthor;

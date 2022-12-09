@@ -22,7 +22,11 @@ describe('verifyUserCanAdministerRepository', () => {
 	const repoId = '123456789';
 
 	const viewerCanAdministerRepositoryReturnData = {
-		data: { node: { viewerCanAdminister: true } }
+		data: { viewer: {login: 'FlacoJones'}, node: { viewerCanAdminister: true } }
+	};
+
+	const viewerCanAdministerRepositoryReturnData_FALSE = {
+		data: { viewer: {login: 'FlacoJones'}, node: { viewerCanAdminister: false } }
 	};
 
 	beforeAll(() => {
@@ -66,9 +70,9 @@ describe('verifyUserCanAdministerRepository', () => {
 		});
 
 		it('INVALID_GITHUB_OAUTH_TOKEN', async () => {
-			mock.onPost('https://api.github.com/graphql').reply(200, {});
+			mock.onPost('https://api.github.com/graphql').reply(200, viewerCanAdministerRepositoryReturnData_FALSE);
 			
-			await expect(verifyUserCanAdministerRepository(req, repoId)).rejects.toEqual(INVALID_GITHUB_OAUTH_TOKEN({ id:  repoId, viewerUserId: '' }));
+			await expect(verifyUserCanAdministerRepository(req, repoId)).rejects.toEqual(INVALID_GITHUB_OAUTH_TOKEN({ id:  repoId, viewerUserId: 'FlacoJones' }));
 		});
 
 		it('GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES', async () => {

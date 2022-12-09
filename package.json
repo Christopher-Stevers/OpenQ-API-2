@@ -7,8 +7,8 @@
 	"scripts": {
 		"start":  "nodemon --ignore generated --ignore src/__tests__/ --exec 'npx prisma generate && node ./src/index.js'",
 		"start:dev": "nodemon --ignore generated --ignore src/__tests__/ --exec 'npx prisma generate && node ./src/index.js'",
-		"test:docker:unit": "docker exec -it openq-api yarn test --runInBand --forceExit",
-		"test:docker": "docker exec -it openq-api yarn test:all",
+		"test:docker": "docker exec -it openq-api yarn test --runInBand --forceExit",
+		"test:docker:all": "docker exec -it openq-api yarn test:all",
 		"boot:test": "docker-compose down && docker-compose up",
 		"test": "jest",
 		"test:all": "jest --testPathIgnorePatterns src/__tests__/utils/** --runInBand"

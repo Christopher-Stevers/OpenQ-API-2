@@ -24,11 +24,12 @@ mutation UpdateBounty( $address: String!, $organizationId: String!, $bountyId: S
 }`;
 
 const CREATE_NEW_REPOSITORY = gql`
-mutation CreateRepository( $organizationId: String!, $repositoryId: String!) {
+mutation CreateRepository($organizationId: String!, $repositoryId: String!) {
   createRepository(organizationId: $organizationId, repositoryId: $repositoryId) {
     id		
-		organization{
-		id}
+		organization {
+			id
+		}
   }
 }`;
 
@@ -222,8 +223,8 @@ const UPSERT_PR = gql`mutation UpsertPr($prId: String!, $blacklisted: Boolean!) 
 	  }
 }`;
 
-const ADD_CONTRIBUTOR = gql`mutation AddContributor($prId: String!, $userId: String!) {
-  addContributor(prId: $prId, userId: $userId) {
+const ADD_CONTRIBUTOR = gql`mutation AddContributor($repositoryId: String!, $prId: String!, $userId: String!) {
+  addContributor(repositoryId: $repositoryId, prId: $prId, userId: $userId) {
     prId
 	  }
 }`;
