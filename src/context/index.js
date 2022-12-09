@@ -10,8 +10,11 @@ const MockGithubClient = require('../utils/auth/github/MockGithubClient');
 const prisma = new PrismaClient();
 const gAnalyticsDataClient = new BetaAnalyticsDataClient();
 
+const { Magic } = require('@magic-sdk/admin');
+
 const createContext = async ({ req, res }) => {
-	return { req, res, prisma, gAnalyticsDataClient, emailClient: EmailClient, githubClient: GithubClient };
+	let magic = new Magic(process.env.MAGIC_SECRET_KEY);
+	return { req, res, prisma, gAnalyticsDataClient, emailClient: EmailClient(magic), githubClient: GithubClient };
 };
 
 const createMockContext = async ({ req, res }) => {
