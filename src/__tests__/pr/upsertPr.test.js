@@ -29,7 +29,7 @@ describe('upsertPr', () => {
 		it('Authenticated client can add user to repository', async () => {
 			await authenticatedClient.mutate({
 				mutation: UPSERT_PR,
-				variables: { prId, blacklisted, github }
+				variables: { prId, blacklisted }
 			});
 
 			const { data } = await authenticatedClient.query({

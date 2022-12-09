@@ -24,11 +24,12 @@ mutation UpdateBounty( $address: String!, $organizationId: String!, $bountyId: S
 }`;
 
 const CREATE_NEW_REPOSITORY = gql`
-mutation CreateRepository( $organizationId: String!, $repositoryId: String!) {
+mutation CreateRepository($organizationId: String!, $repositoryId: String!) {
   createRepository(organizationId: $organizationId, repositoryId: $repositoryId) {
     id		
-		organization{
-		id}
+		organization {
+			id
+		}
   }
 }`;
 

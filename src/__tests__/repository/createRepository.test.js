@@ -8,6 +8,7 @@ describe('createRepository', () => {
 	const contractAddress = '0x8daf17assdfdf20c9dba35f005b6324f493785d239719d';
 	const organizationId = 'organizationId';
 	const repositoryId = 'repositoryId';
+	const github = process.env.GITHUB_USER_ID;
 
 	let authenticatedClient;
 	let unauthenticatedClient;
@@ -23,11 +24,9 @@ describe('createRepository', () => {
 	describe('Successful', () => {
 		afterEach(async () => {
 			await clearDb();
-
-
 		});
-		it('Authenticated client can create repository', async () => {
 
+		it('Authenticated client can create repository', async () => {
 			await authenticatedClient.mutate({
 				mutation: CREATE_NEW_REPOSITORY,
 				variables: { address: contractAddress, organizationId, repositoryId }

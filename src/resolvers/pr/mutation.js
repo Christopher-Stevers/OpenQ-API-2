@@ -52,9 +52,7 @@ const Mutation = {
 			throw new AuthenticationError(`User is not authorized to administer repository with id ${args.repositoryId}`);
 		}
 
-		let mutableArgs = args;
-		delete mutableArgs.github;
-		const { prId, ...remainingArgs } = mutableArgs;
+		const { prId, ...remainingArgs } = args;
 
 		return prisma.pr.upsert({
 			where: { prId },

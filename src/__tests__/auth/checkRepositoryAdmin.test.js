@@ -6,20 +6,19 @@ describe('checkRepositoryAdmin', () => {
 		MockGithubClient.isValidGithub = true;
 	});
 	
-	const id = '123';
-	const github = process.env.GITHUB_USER_ID;
-	const args_EMAIL = { github, id };
-	const invalidArgs = { id };
+	const repositoryId = '123';
+	const args = { repositoryId };
 	
 	const req = null;
 
-	it('should return viewerCanAdminister true', async () => {
-		const result = await checkRepositoryAdmin(req, args_EMAIL, MockGithubClient);
+	it('should return true if can admin', async () => {
+		const result = await checkRepositoryAdmin(req, args, MockGithubClient);
 		expect(result).toMatchObject({ error: false, errorMessage: null, viewerCanAdminister: true });
 	});
 
-	it('should return error if no email or github passed', async () => {
-		const result = await checkRepositoryAdmin(req, invalidArgs, MockGithubClient);
-		expect(result).toMatchObject({ error: true, errorMessage: 'Must provide a github' });
+	it('should return error if github is not admin', async () => {
+		MockGithubClient.isValidGithub = false;
+		const result = await checkRepositoryAdmin(req, args, MockGithubClient);
+		expect(result).toMatchObject({ error: true, errorMessage: `Github not authorized to administer repository with id ${args.repositoryId}`, viewerCanAdminister: false });
 	});
 }); 
