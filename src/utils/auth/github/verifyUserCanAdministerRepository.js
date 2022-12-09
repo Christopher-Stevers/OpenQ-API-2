@@ -48,11 +48,12 @@ const verifyUserCanAdministerRepository = async (req, repoId) => {
 			}
 
 			const verifyUserCanAdministerRepository = resultViewerCanAdminister.data.data.node.viewerCanAdminister;
+			const viewerLogin = resultViewerCanAdminister.data.data.viewer.login;
 
 			if (verifyUserCanAdministerRepository) {
 				return resolve(true);
 			} else {
-				return reject(INVALID_GITHUB_OAUTH_TOKEN({repoId}));
+				return reject(INVALID_GITHUB_OAUTH_TOKEN({viewerUserId: viewerLogin, id: repoId}));
 			}
 		} catch (error) {
 			if (error.response && error.response.status == 401) {

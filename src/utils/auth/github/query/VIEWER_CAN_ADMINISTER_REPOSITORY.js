@@ -1,5 +1,9 @@
 const VIEWER_CAN_ADMINISTER_REPOSITORY = `query VIEWER_CAN_ADMINISTER_REPOSITORY($repoId: ID!) {
-  node(id: $repoId) {
+	viewer {
+		id
+		login
+	}
+	node(id: $repoId) {
     ...on Repository {
       viewerCanAdminister
     }

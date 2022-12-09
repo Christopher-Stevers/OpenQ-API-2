@@ -6,14 +6,18 @@
  * @returns If valid, returns userId. If invalid, returns an error message.
  */
 const checkRepositoryAdmin = async (req, args, githubClient) => {
-	try {
-		const viewerCanAdminister = await githubClient.verifyUserCanAdministerRepository(req, args.repositoryId);
-		if (!viewerCanAdminister) {
-			return { error: true, errorMessage: `Github not authorized to administer repository with id ${args.repositoryId}`, viewerCanAdminister: false };
+	if (args.github !== undefined) {
+		try {
+			const viewerCanAdminister = await githubClient.verifyUserCanAdministerRepository(req, args.repositoryId);
+			if (!viewerCanAdminister) {
+				return { error: true, errorMessage: `Github not authorized to administer repository with id ${args.repositoryId}`, viewerCanAdminister: false };
+			}
+			return { error: false, errorMessage: null, viewerCanAdminister: true };
+		} catch (error) {
+			return { error: true, errorMessage: error, viewerCanAdminister: false };
 		}
-		return { error: false, errorMessage: null, viewerCanAdminister: true };
-	} catch (error) {
-		return { error: true, errorMessage: error, viewerCanAdminister: false };
+	} else {
+		return { error: true, errorMessage: 'Must provide a github', viewerCanAdminister: false };
 	}
 };
 

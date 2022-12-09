@@ -9,7 +9,7 @@ const clearDb = async () => {
 		MongoClient
 			.connect(url, async function (err, db) {
 				if (err) throw err;
-				var dbo = db.db('openqDB');
+				var dbo = db.db('openqdb');
 				try {
 					dbo.dropDatabase().then(async () => {
 						await db.close().then(() => {
@@ -25,46 +25,4 @@ const clearDb = async () => {
 	return promise;
 };
 
-const clearDbUser = async () => {
-	const promise = new Promise((resolve, reject) => {
-		MongoClient
-			.connect(url, function (err, db) {
-				if (err) throw err;
-				var dbo = db.db('openqdb');
-				try {
-					dbo.dropCollection('User', function (err) {
-						if (err) throw err;
-						db.close();
-						resolve('true');
-					});
-				} catch (error) {
-					console.log('error', error);
-					reject(error);
-				}
-			});
-	});
-	return promise;
-};
-
-const clearDbOrganization = async () => {
-	const promise = new Promise((resolve, reject) => {
-		MongoClient
-			.connect(url, function (err, db) {
-				if (err) throw err;
-				var dbo = db.db('openqdb');
-				try {
-					dbo.dropCollection('Organization', function (err) {
-						if (err) throw err;
-						db.close();
-						resolve('true');
-					});
-				} catch (error) {
-					console.log('error', error);
-					reject(error);
-				}
-			});
-	});
-	return promise;
-};
-
-module.exports = { clearDb, clearDbUser, clearDbOrganization };
+module.exports = { clearDb };
