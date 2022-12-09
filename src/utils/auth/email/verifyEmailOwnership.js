@@ -11,7 +11,14 @@ const verifyEmailOwnership = (req, email, magic) => {
 				didToken = req.headers.cookie.match(regexMatch)[0].slice(28);
 			}
 
-			const isTokenValid = await magic.auth.verifyToken(didToken);
+			// TODO: Implement actual magic verify token
+			// const isTokenValid = await magic.auth.verifyToken(didToken);
+			
+			// TODO: how to do this? probably a follow up call to magic
+			// returnEmail = desiredUpdateEmail;
+
+			const isTokenValid = true;
+			
 			return resolve(isTokenValid);
 		} catch (error) {
 			return reject(error);

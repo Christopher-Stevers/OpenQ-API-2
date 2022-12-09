@@ -7,7 +7,6 @@ const NO_GITHUB_OAUTH_TOKEN = (id) => {
 };
 
 const GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES = ({ id }) => {
-	console.log(id);
 	return { id, canWithdraw: false, type: 'GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES', errorMessage: 'Your GitHub OAuth token is not authorized to access this resource' };
 };
 

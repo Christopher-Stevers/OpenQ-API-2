@@ -72,7 +72,6 @@ const Mutation = {
 			},
 		});
 	},
-
 	setHackathonBlacklist: async (parent, args, { req, prisma, githubClient }) => {
 		const { error, errorMessage, viewerCanAdminister } = await checkRepositoryAdmin(req, args, githubClient);
 

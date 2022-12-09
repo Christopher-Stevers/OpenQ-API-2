@@ -14,7 +14,7 @@ const { Magic } = require('@magic-sdk/admin');
 
 const createContext = async ({ req, res }) => {
 	let magic = new Magic(process.env.MAGIC_SECRET_KEY);
-	return { req, res, prisma, gAnalyticsDataClient, emailClient: EmailClient(magic), githubClient: GithubClient };
+	return { req, res, prisma, gAnalyticsDataClient, emailClient: new EmailClient(magic), githubClient: GithubClient };
 };
 
 const createMockContext = async ({ req, res }) => {

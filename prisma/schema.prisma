@@ -2,106 +2,109 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
-    output   = "../generated/client"
+  provider = "prisma-client-js"
+  output   = "../generated/client"
 }
 
 datasource db {
-    provider = "mongodb"
-    url      = env("DATABASE_URL")
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 model Bounty {
-    address         String       @id @map("_id")
-    tvl             Float
-    tvc             Float?
-    bountyId        String       @unique
-    watchingUserIds String[]     @db.ObjectId
-    watchingUsers   User[]       @relation(fields: [watchingUserIds], references: [id])
-    createdAt       DateTime     @default(now())
-    prs             Pr[]
-    views           Int          @default(0)
-    blacklisted     Boolean      @default(false)
-    type            String
-    category        String?
-    organization    Organization @relation(fields: [organizationId], references: [id])
-    organizationId  String
-    repository      Repository   @relation(fields: [repositoryId], references: [id])
-    repositoryId    String
+  address         String       @id @map("_id")
+  tvl             Float
+  tvc             Float?
+  bountyId        String       @unique
+  watchingUserIds String[]     @db.ObjectId
+  watchingUsers   User[]       @relation(fields: [watchingUserIds], references: [id])
+  createdAt       DateTime     @default(now())
+  submissions     Submission[]
+  views           Int          @default(0)
+  blacklisted     Boolean      @default(false)
+  type            String
+  category        String?
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  organizationId  String
+  repository      Repository   @relation(fields: [repositoryId], references: [id])
+  repositoryId    String
 }
 
-model Contributor {
-    userId String   @id @map("_id")
-    prs    Pr[]     @relation(fields: [prIds], references: [prId])
-    prIds  String[]
-}
-
-model Pr {
-    prId           String        @id @map("_id")
-    thumbnail      String?
-    contributorIds String[]
-    contributors   Contributor[] @relation(fields: [contributorIds], references: [userId])
-    Bounty         Bounty?       @relation(fields: [bountyAddress], references: [address])
-    bountyAddress  String?
-    blacklisted    Boolean       @default(false)
+model Submission {
+  id                String       @id @map("_id")
+  organizationId    String
+  organization      Organization @relation(fields: [organizationId], references: [id])
+  repositoryId      String
+  repository        Repository   @relation(fields: [repositoryId], references: [id])
+  thumbnail         String?
+  userIds           String[]     @db.ObjectId
+  users             User[]       @relation(fields: [userIds], references: [id])
+  Bounty            Bounty?      @relation(fields: [bountyAddress], references: [address])
+  bountyAddress     String?
+  blacklisted       Boolean      @default(false)
+  contributorUserId String?
 }
 
 model Repository {
-    id                   String       @id @map("_id")
-    participantIds       String[]     @db.ObjectId
-    participants         User[]       @relation(fields: [participantIds], references: [id])
-    organizationId       String
-    organization         Organization @relation(fields: [organizationId], references: [id])
-    isContest            Boolean      @default(false)
-    Bounty               Bounty[]
-    startDate            DateTime?
-    registrationDeadline DateTime?
-    hackathonBlacklisted Boolean      @default(false)
+  id                   String       @id @map("_id")
+  participantIds       String[]     @db.ObjectId
+  participants         User[]       @relation(fields: [participantIds], references: [id])
+  organizationId       String
+  organization         Organization @relation(fields: [organizationId], references: [id])
+  isContest            Boolean      @default(false)
+  Bounty               Bounty[]
+  startDate            DateTime?
+  registrationDeadline DateTime?
+  hackathonBlacklisted Boolean      @default(false)
+  Submissions          Submission[]
 }
 
 model User {
-    id                      String         @id @default(auto()) @map("_id") @db.ObjectId
-    email                   String?        @unique
-    github                  String?        @unique
-    watchedBountyIds        String[]
-    watchedBounties         Bounty[]       @relation(fields: [watchedBountyIds], references: [address])
-    starredOrganizationIds  String[]
-    starredOrganizations    Organization[] @relation(fields: [starredOrganizationIds], references: [id])
-    repositoryIds           String[]
-    participantRepositories Repository[]   @relation(fields: [repositoryIds], references: [id])
-    company                 String?
-    city                    String?
-    streetAddress           String?
-    country                 String?
-    province                String?
-    discord                 String?
-    twitter                 String?
-    devRoles                String[]
-    otherRoles              String[]
-    languages               String[]
-    frameworks              String[]
-    postalCode              String?
-    billingName             String?
-    invoiceNumber           Int?
-    phoneNumber             String?
-    taxId                   String?
-    vatNumber               String?
-    vatRate                 Float?
-    memo                    String?
+  id                      String         @id @default(auto()) @map("_id") @db.ObjectId
+  email                   String?        @unique
+  github                  String?        @unique
+  watchedBountyIds        String[]
+  watchedBounties         Bounty[]       @relation(fields: [watchedBountyIds], references: [address])
+  starredOrganizationIds  String[]
+  starredOrganizations    Organization[] @relation(fields: [starredOrganizationIds], references: [id])
+  repositoryIds           String[]
+  participantRepositories Repository[]   @relation(fields: [repositoryIds], references: [id])
+  company                 String?
+  city                    String?
+  streetAddress           String?
+  country                 String?
+  province                String?
+  discord                 String?
+  twitter                 String?
+  devRoles                String[]
+  otherRoles              String[]
+  languages               String[]
+  frameworks              String[]
+  postalCode              String?
+  billingName             String?
+  invoiceNumber           Int?
+  phoneNumber             String?
+  taxId                   String?
+  vatNumber               String?
+  vatRate                 Float?
+  memo                    String?
+  Submission              Submission[]   @relation(fields: [submissionIds], references: [id])
+  submissionIds           String[]
 }
 
 model Organization {
-    id              String       @id @map("_id")
-    blacklisted     Boolean      @default(false)
-    starringUserIds String[]     @db.ObjectId
-    starringUsers   User[]       @relation(fields: [starringUserIds], references: [id])
-    Repositories    Repository[]
-    Bounty          Bounty[]
+  id              String       @id @map("_id")
+  blacklisted     Boolean      @default(false)
+  starringUserIds String[]     @db.ObjectId
+  starringUsers   User[]       @relation(fields: [starringUserIds], references: [id])
+  Repositories    Repository[]
+  Bounty          Bounty[]
+  Submission      Submission[]
 }
 
 model Prices {
-    id        String @id @default(auto()) @map("_id") @db.ObjectId
-    pricesId  String @unique
-    priceObj  Json?
-    timestamp Int
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  pricesId  String @unique
+  priceObj  Json?
+  timestamp Int
 }

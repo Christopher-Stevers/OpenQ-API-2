@@ -71,6 +71,7 @@ describe('upsertUser.test', () => {
 				afterEach(async () => {
 					await clearDb();
 				});
+				
 				it('Authenticated client can create user with github and valid oauth', async () => {
 					// ARRANGE
 					await authenticatedClient.mutate({

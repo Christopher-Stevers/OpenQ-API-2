@@ -11,7 +11,7 @@ const { createContext, createMockContext } = require('./context');
 const apolloLogger = require('./plugins/index.js');
 const authDirectiveTransformer = require('./utils/auth/authDirectiveTransformer');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
-
+ 
 let schema = makeExecutableSchema({
 	typeDefs,
 	resolvers
