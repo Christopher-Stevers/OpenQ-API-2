@@ -216,8 +216,8 @@ const BLACKLIST_ORGANIZATION = gql`mutation blacklistOrg($organizationId: String
   }
 `;
 
-const UPSERT_PR = gql`mutation UpsertPr($prId: String!, $blacklisted: Boolean!) {
-  upsertPr(prId: $prId, blacklisted: $blacklisted) {
+const UPSERT_PR = gql`mutation UpsertPr($github: String, $prId: String!, $blacklisted: Boolean!) {
+  upsertPr(github: $github, prId: $prId, blacklisted: $blacklisted) {
     prId
 	  }
 }`;

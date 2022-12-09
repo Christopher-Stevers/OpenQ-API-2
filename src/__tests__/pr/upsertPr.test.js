@@ -4,7 +4,9 @@ const { GET_PR, UPSERT_PR } = require('../utils/queries');
 
 const { clearDb } = require('../utils/clearDb');
 
-describe('createRepository', () => {
+describe('upsertPr', () => {
+	
+	const github = process.env.GITHUB_USER_ID;
 	const prId = 'prId';
 	const blacklisted = true;
 
@@ -22,29 +24,25 @@ describe('createRepository', () => {
 	describe('Successful', () => {
 		afterEach(async () => {
 			await clearDb();
-
-
 		});
+
 		it('Authenticated client can add user to repository', async () => {
-
-
 			await authenticatedClient.mutate({
 				mutation: UPSERT_PR,
-				variables: { prId, blacklisted }
+				variables: { prId, blacklisted, github }
 			});
 
 			const { data } = await authenticatedClient.query({
 				query: GET_PR,
 				variables: { prId }
 			});
-			console.log(data);
+			
 			expect(data.pr).toMatchObject({
 				contributors: [], __typename: 'PR'
 			});
-
-
 		});
 	});
+
 	describe('Unsuccessful', () => {
 		it('should fail for unauthenticated calls', async () => {
 			try {

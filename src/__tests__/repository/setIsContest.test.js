@@ -28,14 +28,11 @@ describe('createRepository', () => {
 
 		});
 		it('Authenticated client can blacklist a hackathon', async () => {
-
-
-
-
 			await authenticatedClient.mutate({
 				mutation: CREATE_NEW_REPOSITORY,
 				variables: { address: contractAddress, organizationId, repositoryId }
 			});
+			
 			await authenticatedClient.mutate({
 				mutation: SET_IS_CONTEST,
 				variables: {

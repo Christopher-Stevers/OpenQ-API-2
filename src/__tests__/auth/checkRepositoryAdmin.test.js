@@ -7,7 +7,7 @@ describe('checkRepositoryAdmin', () => {
 	});
 	
 	const id = '123';
-	const github = 'github';
+	const github = process.env.GITHUB_USER_ID;
 	const args_EMAIL = { github, id };
 	const invalidArgs = { id };
 	

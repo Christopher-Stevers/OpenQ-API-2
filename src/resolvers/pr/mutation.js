@@ -51,7 +51,11 @@ const Mutation = {
 		if (!viewerCanAdminister) {
 			throw new AuthenticationError(`User is not authorized to administer repository with id ${args.repositoryId}`);
 		}
-		const { prId, ...remainingArgs } = args;
+
+		let mutableArgs = args;
+		delete mutableArgs.github;
+		const { prId, ...remainingArgs } = mutableArgs;
+
 		return prisma.pr.upsert({
 			where: { prId },
 			create: {
