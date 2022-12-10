@@ -3,7 +3,7 @@ const { AuthenticationError } = require('apollo-server');
 
 const Mutation = {
 	upsertUser: async (parent, args, { req, prisma, emailClient, githubClient }) => {
-		const { error, errorMessage, github, email } = await checkUserAuth(prisma, req, args, emailClient, githubClient);
+		const { error, errorMessage, github, email, username } = await checkUserAuth(prisma, req, args, emailClient, githubClient);
 
 		if (error) {
 			throw new AuthenticationError(errorMessage);
@@ -13,10 +13,12 @@ const Mutation = {
 			return prisma.user.upsert({
 				where: { github },
 				create: {
-					...args
+					...args,
+					username
 				},
 				update: {
-					...args
+					...args,
+					username
 				}
 			});
 		}

@@ -14,6 +14,7 @@ const checkUserAuth = async (prisma, req, args, emailClient, githubClient) => {
 	}
 
 	let userId = null;
+	let username = null;
 
 	if (args.email !== undefined) {
 		try {
@@ -30,18 +31,19 @@ const checkUserAuth = async (prisma, req, args, emailClient, githubClient) => {
 
 	if (args.github !== undefined) {
 		try {
-			const githubIsValid = await githubClient.verifyGithub(req, args.github);
+			const { githubIsValid, login } = await githubClient.verifyGithub(req, args.github);
 			if (!githubIsValid) {
 				return { error: true, errorMessage: 'Github not authorized' };
 			}
 			const user = await prisma.user.findUnique({ where: { github: args.github } });
 			userId = user ? user.id : null;
+			username = login;
 		} catch (error) {
 			return { error: true, errorMessage: error };
 		}
 	}
 
-	return { error: false, errorMessage: null, id: userId, github: args.github, email: args.email };
+	return { error: false, errorMessage: null, id: userId, github: args.github, username, email: args.email };
 };
 
 module.exports = checkUserAuth;

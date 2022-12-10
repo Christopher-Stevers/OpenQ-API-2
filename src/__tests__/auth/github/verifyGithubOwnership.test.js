@@ -19,10 +19,11 @@ describe('verifyGithubOwnership', () => {
 		}
 	};
 
-	const userId = '123456789';
+	const userId = process.env.OTHER_GITHUB_USER_ID;
+	const login = process.env.GITHUB_USER_LOGIN;
 
 	const viewerData = {
-		data: { viewer: { login: 'FlacoJones', id: userId } }
+		data: { viewer: { login, id: userId } }
 	};
 
 	beforeAll(() => {
@@ -38,7 +39,7 @@ describe('verifyGithubOwnership', () => {
 			mock.onPost('https://api.github.com/graphql').reply(200, viewerData);
 
 			const result = await verifyGithubOwnership(req, userId);
-			expect(result).toBe(true);
+			expect(result).toMatchObject({githubIsValid: true, login: process.env.GITHUB_USER_LOGIN});
 		});
 	});
 

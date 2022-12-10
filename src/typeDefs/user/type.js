@@ -4,6 +4,7 @@ const typeDef = gql`
 
 	type User {
 		id: ID!
+		username: String!
 		email: String			@auth
 	  github: String 			
 		watchedBountyIds: [String] @auth

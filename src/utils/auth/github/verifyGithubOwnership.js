@@ -45,9 +45,10 @@ const verifyGithubOwnership = async (req, userId) => {
 			}
 
 			const viewerUserId = resultViewer.data.data.viewer.id;
+			const viewerLogin = resultViewer.data.data.viewer.login;
 
 			if (viewerUserId == userId) {
-				return resolve(true);
+				return resolve({ githubIsValid: true, login: viewerLogin });
 			} else {
 				return reject(INVALID_GITHUB_OAUTH_TOKEN({viewerUserId, userId}));
 			}
