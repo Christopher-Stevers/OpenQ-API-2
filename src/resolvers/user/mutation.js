@@ -4,7 +4,7 @@ const { AuthenticationError } = require('apollo-server');
 const Mutation = {
 	upsertUser: async (parent, args, { req, prisma, emailClient, githubClient }) => {
 		const { error, errorMessage, github, email, username } = await checkUserAuth(prisma, req, args, emailClient, githubClient);
-
+		
 		if (error) {
 			throw new AuthenticationError(errorMessage);
 		}

@@ -39,8 +39,6 @@ const typeDef = gql`
 		otherRoles: [String]
 	}
 
-
-
 	type Users {
 		userConnection: UserConnection
 		nodes: [User]

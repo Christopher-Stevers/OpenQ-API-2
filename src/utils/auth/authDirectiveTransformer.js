@@ -14,44 +14,36 @@ function authDirectiveTransformer(schema, directiveName) {
 					try {
 						if (context.req.headers.authorization === process.env.OPENQ_API_SECRET) {
 							const result = await resolve(parent, args, context, info);
-						
 							return result;
-						}
-						else{
+						} else {
 							const idObj = {};
-							if(parent.github){
+							
+							if(parent.github) {
 								idObj.github = parent.github;
-							}
-							else if(parent.email){
+							} else if (parent.email) {
 								idObj.email = parent.email;
-							}
-							else{
+							} else {
 								throw new AuthenticationError('Not logged in');                            
 							}
-							const {req, prisma, emailClient, githubClient } = context;
-							const user = await checkUserAuth  (prisma, req, idObj, emailClient, githubClient);
-							
-							const {error} = user;
 
-							if(error){                        
-								throw new AuthenticationError(error);
-							}
-							else
-							{
+							const {req, prisma, emailClient, githubClient } = context;
+							
+							const { error, errorMessage } = await checkUserAuth(prisma, req, idObj, emailClient, githubClient);
+
+							if (error) {
+								throw new AuthenticationError(errorMessage);
+							} else {
 								const result = await resolve(parent, args, context, info);
 								return result;
 							}
 						}
+					} catch (error) {
+						throw new AuthenticationError(error);
 					}
-					catch (err) {
-						throw new AuthenticationError(err);
-					}
-
 				};
 				return fieldConfig;
 			}
 		}
-
 	});
 }
 module.exports = authDirectiveTransformer;

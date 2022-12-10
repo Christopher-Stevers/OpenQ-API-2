@@ -159,12 +159,14 @@ const UPSERT_USER = gql`mutation UpsertUser($email: String, $github: String) {
     id
 		email
 		github
+		username
   }
 }`;
 
 const GET_USER = gql`query GetUser($id: String, $email: String, $github: String) {
   user(id: $id, email: $email, github: $github) {
 		id
+		username
 		email
 		github
 		starredOrganizations {

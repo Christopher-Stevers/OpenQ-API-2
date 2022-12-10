@@ -17,8 +17,6 @@ const {
  *  Verifies the OAuth token holder matches 
  * ***/
 const verifyUserCanAdministerRepository = async (req, repoId) => {
-	console.log(repoId);
-	console.log('req.headers', req.headers);
 	return new Promise(async (resolve, reject) => {
 		try {
 			const signatureRegex = /github_oauth_token_unsigned=\w+/;
@@ -29,7 +27,6 @@ const verifyUserCanAdministerRepository = async (req, repoId) => {
 				return reject(NO_GITHUB_OAUTH_TOKEN({ id: repoId }));
 			} else {
 				token = req.headers.cookie.match(signatureRegex)[0].slice(28);
-				console.log('token', token);
 			}
 			
 			const resultViewerCanAdminister = await axios
@@ -46,15 +43,12 @@ const verifyUserCanAdministerRepository = async (req, repoId) => {
 					}
 				);
 
-			console.log('resultViewerCanAdminister', resultViewerCanAdminister);
-			console.log('resultViewerCanAdminister.data.errors', resultViewerCanAdminister.data.errors);
 			if (resultViewerCanAdminister.data.errors && resultViewerCanAdminister.data.errors[0].type == 'RATE_LIMITED') {
 				return reject(RATE_LIMITED({ id: repoId }));
 			}
 
 			const verifyUserCanAdministerRepository = resultViewerCanAdminister.data.data.node.viewerCanAdminister;
 			const viewerLogin = resultViewerCanAdminister.data.data.viewer.login;
-			console.log('viewerLogin', viewerLogin);
 
 			if (verifyUserCanAdministerRepository) {
 				return resolve(true);

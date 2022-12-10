@@ -8,6 +8,7 @@ const Query = {
 			where: { ...args },
 			include: { starredOrganizations: true }
 		});
+		
 		return value;
 	},
 
