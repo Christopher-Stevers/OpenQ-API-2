@@ -67,13 +67,13 @@ describe('upsertUser.test', () => {
 			});
 		});
 
-		describe.only('GITHUB', () => {
+		describe('GITHUB', () => {
 			describe('SUCCESS', () => {
 				afterEach(async () => {
 					await clearDb();
 				});
 				
-				it.only('Authenticated client can create user with github and valid oauth', async () => {
+				it('Authenticated client can create user with github and valid oauth', async () => {
 					// ARRANGE
 					await authenticatedClient.mutate({
 						mutation: UPSERT_USER,
