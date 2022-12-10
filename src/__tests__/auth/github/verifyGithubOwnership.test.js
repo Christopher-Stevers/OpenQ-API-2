@@ -39,7 +39,7 @@ describe('verifyGithubOwnership', () => {
 			mock.onPost('https://api.github.com/graphql').reply(200, viewerData);
 
 			const result = await verifyGithubOwnership(req, userId);
-			expect(result).toMatchObject({githubIsValid: true, login: process.env.GITHUB_USER_LOGIN});
+			expect(result).toMatchObject({githubIsValid: true, login});
 		});
 	});
 

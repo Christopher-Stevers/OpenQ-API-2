@@ -16,11 +16,12 @@ describe('GithubClient', () => {
 	const userId = process.env.GITHUB_USER_ID;
 	const otherUserId = process.env.OTHER_GITHUB_USER_ID;
 	const repoId = process.env.OPENQ_FRONTEND_REPO_ID;
+	const login = process.env.GITHUB_USER_LOGIN;
 
 	describe('verifyGithubOwnership', () => {
 		it('GithubClient.verifyGithub should return TRUE if the OAuth Token matches the given userId', async () => {
 			const result = await GithubClient.verifyGithub(req, userId);
-			expect(result).toEqual(true);
+			expect(result).toEqual({githubIsValid: true, login});
 		});
 	
 		it('GithubClient.verifyGithub should return FALSE if the OAuth Token is not present', async () => {
@@ -42,7 +43,7 @@ describe('GithubClient', () => {
 		});
 	 });
 
-	describe.only('verifyUserCanAdministerRepository', () => {
+	describe('verifyUserCanAdministerRepository', () => {
 		it('GithubClient.verifyUserCanAdministerRepository should return TRUE if the user can administer the repo', async () => {
 			const result = await GithubClient.verifyUserCanAdministerRepository(req, repoId);
 			expect(result).toEqual(true);

@@ -9,7 +9,7 @@ describe('checkUserAuth', () => {
 	});
 	
 	const id = '123';
-	const github = 'github';
+	const github = process.env.GITHUB_USER_LOGIN;
 	const email = 'email';
 	const args_GITHUB = { github, id };
 	const args_EMAIL = { email, id };
@@ -47,7 +47,7 @@ describe('checkUserAuth', () => {
 
 	it('should return error false and identifier if successful - GITHUB', async () => {
 		const result = await checkUserAuth(prisma, req, args_GITHUB, MockEmailClient, MockGithubClient);
-		expect(result).toMatchObject({ error: false, errorMessage: null, id });
+		expect(result).toMatchObject({ error: false, errorMessage: null, id, username: github });
 	});
 
 	it('should return error false and identifier if successful - EMAIL', async () => {

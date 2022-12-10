@@ -8,10 +8,15 @@ const MockGithubClient = {
 	},
 	verifyGithub: async (req, github) => {
 		return new Promise(async (resolve, reject) => {
-			resolve(isValidGithub);
+			resolve({ githubIsValid: isValidGithub, login: process.env.GITHUB_USER_LOGIN });
 		});
 	},
 	verifyUserCanAdministerRepository: async (req, github) => {
+		return new Promise(async (resolve, reject) => {
+			resolve(isValidGithub);
+		});
+	},
+	verifyUserIsSubmissionAuthor: async (req, github) => {
 		return new Promise(async (resolve, reject) => {
 			resolve(isValidGithub);
 		});
