@@ -2,7 +2,7 @@
 const axios = require('axios');
 
 // Issue Query
-const VIEWER_CAN_ADMINISTER_REPOSITORY = require('./query/VIEWER_CAN_ADMINISTER_REPOSITORY');
+const VERIFY_USER_IS_PR_AUTHOR = require('./query/VERIFY_USER_IS_PR_AUTHOR');
 
 // Errors
 const {
@@ -16,9 +16,7 @@ const {
 /***
  *  Verifies the OAuth token holder matches 
  * ***/
-const verifyUserIsSubmissionAuthor = async (req, repoId) => {
-	console.log(repoId);
-	console.log('req.headers', req.headers);
+const verifyUserIsSubmissionAuthor = async (req, submissionId) => {
 	return new Promise(async (resolve, reject) => {
 		try {
 			const signatureRegex = /github_oauth_token_unsigned=\w+/;
@@ -26,18 +24,17 @@ const verifyUserIsSubmissionAuthor = async (req, repoId) => {
 			
 			let token;
 			if (regexMatch === null) {
-				return reject(NO_GITHUB_OAUTH_TOKEN({ id: repoId }));
+				return reject(NO_GITHUB_OAUTH_TOKEN({ id: submissionId }));
 			} else {
 				token = req.headers.cookie.match(signatureRegex)[0].slice(28);
-				console.log('token', token);
 			}
 			
-			const resultViewerCanAdminister = await axios
+			const resultViewerIsPRAuthor = await axios
 				.post(
 					'https://api.github.com/graphql',
 					{
-						query: VIEWER_CAN_ADMINISTER_REPOSITORY,
-						variables: { repoId }
+						query: VERIFY_USER_IS_PR_AUTHOR,
+						variables: { submissionId }
 					},
 					{
 						headers: {
@@ -46,26 +43,23 @@ const verifyUserIsSubmissionAuthor = async (req, repoId) => {
 					}
 				);
 
-			console.log('resultViewerCanAdminister', resultViewerCanAdminister);
-			console.log('resultViewerCanAdminister.data.errors', resultViewerCanAdminister.data.errors);
-			if (resultViewerCanAdminister.data.errors && resultViewerCanAdminister.data.errors[0].type == 'RATE_LIMITED') {
-				return reject(RATE_LIMITED({ id: repoId }));
+			if (resultViewerIsPRAuthor.data.errors && resultViewerIsPRAuthor.data.errors[0].type == 'RATE_LIMITED') {
+				return reject(RATE_LIMITED({ id: submissionId }));
 			}
 
-			const verifyUserIsSubmissionAuthor = resultViewerCanAdminister.data.data.node.viewerCanAdminister;
-			const viewerLogin = resultViewerCanAdminister.data.data.viewer.login;
-			console.log('viewerLogin', viewerLogin);
+			const prAuthor = resultViewerIsPRAuthor.data.data.node.author.login;
+			const viewerLogin = resultViewerIsPRAuthor.data.data.viewer.login;
 
-			if (verifyUserIsSubmissionAuthor) {
+			if (viewerLogin == prAuthor) {
 				return resolve(true);
 			} else {
-				return reject(INVALID_GITHUB_OAUTH_TOKEN({viewerUserId: viewerLogin, id: repoId}));
+				return reject(INVALID_GITHUB_OAUTH_TOKEN({viewerUserId: viewerLogin, id: submissionId}));
 			}
 		} catch (error) {
 			if (error.response && error.response.status == 401) {
-				return reject(GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES({ id: repoId }));
+				return reject(GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES({ id: submissionId }));
 			}
-			return reject(UNKNOWN_ERROR({ id: repoId, error }));
+			return reject(UNKNOWN_ERROR({ id: submissionId, error }));
 		}
 	});
 };

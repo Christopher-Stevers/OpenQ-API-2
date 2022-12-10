@@ -26,7 +26,7 @@ const GithubClient = {
 	verifyUserIsSubmissionAuthor: async (req, submissionId) => {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const result = await verifyUserCanAdministerRepository(req, submissionId);
+				const result = await verifyUserIsSubmissionAuthor(req, submissionId);
 				resolve(result);
 			} catch (error) {
 				return reject(error);
