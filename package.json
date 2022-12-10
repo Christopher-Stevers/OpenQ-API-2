@@ -5,7 +5,7 @@
 	"private": true,
 	"main": "index.js",
 	"scripts": {
-		"start": "node ./src/index.js",
+		"start":  "nodemon --ignore generated --ignore src/__tests__/ --exec 'npx prisma generate && node ./src/index.js'",
 		"start:dev": "nodemon --ignore generated --ignore src/__tests__/ --exec 'npx prisma generate && node ./src/index.js'",
 		"test:docker": "docker exec -it openq-api yarn test --runInBand --forceExit",
 		"test:docker:all": "docker exec -it openq-api yarn test:all",

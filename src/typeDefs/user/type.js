@@ -1,10 +1,11 @@
 const { gql } = require('apollo-server');
 
 const typeDef = gql`
+
 	type User {
 		id: ID!
 		email: String			@auth
-	  github: String 			@auth
+	  github: String 			
 		watchedBountyIds: [String] @auth
 		watchedBounties(
 			after: ID
