@@ -27,10 +27,13 @@ const Mutation = {
 			return prisma.user.upsert({
 				where: { email },
 				create: {
-					...args
+					...args,
+					username
+
 				},
 				update: {
-					...args
+					...args,
+					username
 				}
 			});
 		}

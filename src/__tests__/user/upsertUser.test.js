@@ -46,7 +46,8 @@ describe('upsertUser.test', () => {
 
 					expect(data.user).toMatchObject({
 						__typename: 'User',
-						email
+						email,
+						username: email
 					});
 				});
 			});

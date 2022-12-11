@@ -6,9 +6,9 @@ const verifyEmailOwnership = (req, _email, magic) => {
 
 			let didToken;
 			if (regexMatch === null) {
-				return reject('No email_auth cookie found');
+				return reject('verifyEmailOwnership failed to extract cookie');
 			} else {
-				didToken = req.headers.cookie.match(regexMatch)[0].slice(28);
+				didToken = req.headers.cookie.match(regexMatch)[0].slice(11);
 			}
 			
 			try {
@@ -20,11 +20,9 @@ const verifyEmailOwnership = (req, _email, magic) => {
 					return resolve(true);
 				}
 			} catch (error) {
-				console.log('Failed on Magic Link auth');
 				reject(error);
 			}
 		} catch (error) {
-			console.log('Failed on cookie extraction');
 			return reject(error);
 		}
 	});

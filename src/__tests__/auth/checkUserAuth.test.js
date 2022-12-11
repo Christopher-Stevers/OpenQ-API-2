@@ -10,10 +10,13 @@ describe('checkUserAuth', () => {
 	
 	const id = '123';
 	const github = process.env.GITHUB_USER_LOGIN;
-	const email = 'email';
+	const email = process.env.EMAIL;
+	const otherEmail = process.env.OTHER_EMAIL;
+	
 	const args_GITHUB = { github, id };
 	const args_EMAIL = { email, id };
 	const args_BOTH = { email, github, id };
+	
 	const invalidArgs = { id };
 
 	const prisma = {

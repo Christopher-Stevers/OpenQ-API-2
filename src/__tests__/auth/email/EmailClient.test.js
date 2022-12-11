@@ -5,8 +5,8 @@ describe('EmailClient', () => {
 	let emailClient;
 
 	beforeEach(() => {
-		MockMagicLinkClient.isValidToken = true;
-		emailClient = new EmailClient(MockMagicLinkClient);
+		const magic = new MockMagicLinkClient();
+		emailClient = new EmailClient(magic);
 	});
 
 	const req = {
@@ -15,25 +15,36 @@ describe('EmailClient', () => {
 		}
 	};
 
-	const req_NO_OAUTH_TOKEN = {
-		headers: {
-			cookie: 'foo=bar',
-		}
-	};
+	const email = process.env.EMAIL;
 
-	const userId = process.env.GITHUB_USER_ID;
-	const otherUserId = process.env.OTHER_GITHUB_USER_ID;
-
-	it('EmailClient.verifyEmail should return TRUE if the OAuth Token matches the given email', async () => {
-		const result = await emailClient.verifyEmail(req, userId);
+	it('EmailClient.verifyEmail should return TRUE if the DID Token matches the given email', async () => {
+		const result = await emailClient.verifyEmail(req, email);
 		expect(result).toEqual(true);
 	});
 
-	it.only('EmailClient.verifyEmail should return FALSE if the OAuth Token is invalid', async () => {
-		MockMagicLinkClient.isValidToken = false;
-		emailClient = new EmailClient(MockMagicLinkClient);
+	it('EmailClient.verifyEmail should return FALSE if the DID Token is invalid', async () => {
+		const magic = new MockMagicLinkClient();
+		magic.setIsValidToken(false);
+		emailClient = new EmailClient(magic);
 
-		const result = await emailClient.verifyEmail(req, userId);
-		expect(result).toEqual(false);
+		await expect(emailClient.verifyEmail(req, email)).rejects.toEqual('Invalid DID Token');
+	});
+
+	it('EmailClient.verifyEmail should return FALSE if the DID Token is Valid but does not match email', async () => {
+		const magic = new MockMagicLinkClient();
+		magic.setIsViewersEmail(false);
+		emailClient = new EmailClient(magic);
+
+		await expect(emailClient.verifyEmail(req, email)).rejects.toEqual('Email ownership verification failed');
+	});
+
+	it('EmailClient.verifyEmail should return FALSE if there is no email_auth token', async () => {
+		const reqWithNoCookie = {
+			headers: {
+				cookie: 'foo=bar'
+			}
+		};
+
+		await expect(emailClient.verifyEmail(reqWithNoCookie, email)).rejects.toEqual('verifyEmailOwnership failed to extract cookie');
 	});
 });
