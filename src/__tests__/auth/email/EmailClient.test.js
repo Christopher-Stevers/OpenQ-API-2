@@ -11,7 +11,7 @@ describe('EmailClient', () => {
 
 	const req = {
 		headers: {
-			cookie: `email_auth=${process.env.EMAIL_OAUTH}`,
+			cookie: `email_auth=${process.env.EMAIL_DID_TOKEN}`,
 		}
 	};
 

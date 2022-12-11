@@ -1,4 +1,4 @@
-const verifyEmailOwnership = (req, email, magic) => {
+const verifyEmailOwnership = (req, _email, magic) => {
 	return new Promise(async (resolve, reject) => {
 		try {
 			const emailAuthRegex = /email_auth=\w+/;
@@ -10,17 +10,21 @@ const verifyEmailOwnership = (req, email, magic) => {
 			} else {
 				didToken = req.headers.cookie.match(regexMatch)[0].slice(28);
 			}
-
-			// TODO: Implement actual magic verify token
-			// const isTokenValid = await magic.auth.verifyToken(didToken);
 			
-			// TODO: how to do this? probably a follow up call to magic
-			// returnEmail = desiredUpdateEmail;
-
-			const isTokenValid = true;
-			
-			return resolve(isTokenValid);
+			try {
+				await magic.token.validate(didToken);
+				const { email } = await magic.users.getMetadataByToken(didToken);
+				if (email !== _email) {
+					return reject('Email ownership verification failed');
+				} else {
+					return resolve(true);
+				}
+			} catch (error) {
+				console.log('Failed on Magic Link auth');
+				reject(error);
+			}
 		} catch (error) {
+			console.log('Failed on cookie extraction');
 			return reject(error);
 		}
 	});

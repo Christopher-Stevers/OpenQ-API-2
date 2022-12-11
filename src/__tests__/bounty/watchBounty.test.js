@@ -18,7 +18,7 @@ describe('watchBounty', () => {
 	let unauthenticatedClient;
 
 	if (process.env.DEPLOY_ENV === 'production') {
-		authenticatedClient = getAuthenticatedClientIntegration(process.env.OPENQ_API_SECRET, process.env.GITHUB_OAUTH_TOKEN, process.env.EMAIL_OAUTH);
+		authenticatedClient = getAuthenticatedClientIntegration(process.env.OPENQ_API_SECRET, process.env.GITHUB_OAUTH_TOKEN, process.env.EMAIL_DID_TOKEN);
 		unauthenticatedClient = getAuthenticatedClientIntegration('incorrect_secret', 'invalid_oauth_token', 'invalid_email_oauth');
 	} else {
 		authenticatedClient = getAuthenticatedClient(process.env.OPENQ_API_SECRET, true, true);

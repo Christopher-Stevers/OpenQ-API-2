@@ -24,6 +24,7 @@ const checkUserAuth = async (prisma, req, args, emailClient, githubClient) => {
 			}
 			const user = await prisma.user.findUnique({ where: { email: args.email } });
 			userId = user ? user.id : null;
+			username = args.email;
 		} catch (error) {
 			return { error: true, errorMessage: error };
 		}

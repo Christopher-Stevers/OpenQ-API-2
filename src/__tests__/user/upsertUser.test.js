@@ -16,7 +16,7 @@ describe('upsertUser.test', () => {
 		let unauthenticatedClient_INVALID_EMAIL;
 
 		if (process.env.DEPLOY_ENV === 'production') {
-			authenticatedClient = getAuthenticatedClientIntegration(process.env.OPENQ_API_SECRET, process.env.GITHUB_OAUTH_TOKEN, process.env.EMAIL_OAUTH);
+			authenticatedClient = getAuthenticatedClientIntegration(process.env.OPENQ_API_SECRET, process.env.GITHUB_OAUTH_TOKEN, process.env.EMAIL_DID_TOKEN);
 			unauthenticatedClient_INVALID_GITHUB = getAuthenticatedClientIntegration(process.env.OPENQ_API_SECRET, true, 'invalid');
 			unauthenticatedClient_INVALID_EMAIL = getAuthenticatedClientIntegration(process.env.OPENQ_API_SECRET, 'invalid', true);
 		} else {
