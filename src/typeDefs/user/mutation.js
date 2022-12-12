@@ -8,6 +8,7 @@ const mutationDefs = gql`
 			github: String
 			email: String
 			company: String
+            username: String
       city: String
       streetAddress: String
       country: String
