@@ -79,6 +79,7 @@ model User {
   twitter                 String?
   devRoles                String[]
   otherRoles              String[]
+  interests               String[]
   languages               String[]
   frameworks              String[]
   postalCode              String?

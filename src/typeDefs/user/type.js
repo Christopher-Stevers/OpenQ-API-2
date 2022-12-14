@@ -37,6 +37,7 @@ const typeDef = gql`
 		frameworks: [String]
 		languages: [String]
 		otherRoles: [String]
+        interests: [String]
 	}
 
 	type Users {
