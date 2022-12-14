@@ -12,6 +12,7 @@ const verifyEmailOwnership = (req, _email, magic) => {
 			}
 			
 			try {
+				console.log('here I am ');
 				await magic.token.validate(didToken);
 				const { email } = await magic.users.getMetadataByToken(didToken);
 				if (email !== _email) {
