@@ -17,6 +17,7 @@ const mutationDefs = gql`
       twitter: String
       devRoles: [String]
       otherRoles: [String]
+      interests: [String]
       frameworks: [String]
       languages: [String]
       postalCode: String

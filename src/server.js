@@ -7,10 +7,10 @@ dotenv.config();
 
 const typeDefs = require('./typeDefs');
 const resolvers = require('./resolvers');
-const { createContext, createMockContext } = require('./context');
 const apolloLogger = require('./plugins/index.js');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
 const authDirectiveTransformer = require('./utils/auth/authDirectiveTransformer');
+const chooseContext = require('./chooseContext');
 
 const upperDirectiveTypeDefs = (directiveName) =>  `
   directive @${directiveName} on FIELD_DEFINITION`;
@@ -21,7 +21,7 @@ let schema = makeExecutableSchema({
 
 schema = authDirectiveTransformer(schema, 'auth');
 
-const context = process.env.DEPLOY_ENV === 'production' ? createContext : createMockContext;
+const context = chooseContext(process.env.DEPLOY_ENV);
 
 const server = new ApolloServer({
 	schema,

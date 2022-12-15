@@ -38,6 +38,7 @@ const typeDef = gql`
 		languages: [String]
 		otherRoles: [String]
         invoicingEmail: String
+        interests: [String]
 	}
 
 	type Users {

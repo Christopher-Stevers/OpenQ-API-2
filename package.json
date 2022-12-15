@@ -7,7 +7,8 @@
 	"scripts": {
 		"start":  "node ./src/index.js",
 		"start:dev": "nodemon --ignore generated --ignore src/__tests__/ --exec 'npx prisma generate && node ./src/index.js'",
-		"test": "docker exec -it openq-api yarn jest --testPathIgnorePatterns src/__tests__/utils/** --runInBand --forceExit"
+		"test": "docker exec -it openq-api yarn jest --testPathIgnorePatterns src/__tests__/utils/** --runInBand --forceExit",
+		"test:local": "jest"
 	},
 	"keywords": [],
 	"author": "Christopher-Stevers",
