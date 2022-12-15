@@ -64,6 +64,7 @@ model User {
   username                String?        @unique
   email                   String?        @unique
   github                  String?        @unique
+  invoicingEmail          String?        
   watchedBountyIds        String[]
   watchedBounties         Bounty[]       @relation(fields: [watchedBountyIds], references: [address])
   starredOrganizationIds  String[]

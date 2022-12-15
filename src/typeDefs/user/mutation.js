@@ -28,7 +28,13 @@ const mutationDefs = gql`
       vatNumber: String
       vatRate: Float
       memo: String
+      invoicingEmail: String
 		): User!
+        combineUser(
+            id: String
+            github: String  
+            email: String
+        ): User!
   }
 `;
 
