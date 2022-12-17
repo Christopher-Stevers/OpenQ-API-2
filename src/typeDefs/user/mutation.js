@@ -30,7 +30,7 @@ const mutationDefs = gql`
       memo: String
       invoicingEmail: String
 		): User!
-        combineUser(
+        combineUsers(
             id: String
             github: String  
             email: String
