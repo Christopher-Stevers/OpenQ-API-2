@@ -69,7 +69,7 @@ const Mutation = {
 			});
 		}
 	},
-	combineUser: async (parent, args, { req, prisma, emailClient, githubClient }) => {
+	combineUsers: async (parent, args, { req, prisma, emailClient, githubClient }) => {
 
 		const {github, email} = args;
 
