@@ -11,7 +11,7 @@
 		"test:local": "jest"
 	},
 	"keywords": [],
-	"author": "Christopher-Stevers",
+	"author": "OpenQ",
 	"license": "ISC",
 	"dependencies": {
 		"@google-analytics/data": "3.0.0",
