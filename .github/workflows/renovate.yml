@@ -1,0 +1,16 @@
+on:
+  schedule:
+    # You can customize the schedule to run Renovate at the frequency that you prefer
+    - cron: '0 0 * * *'
+
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: renovate/renovate-action@v2
+        with:
+          # You can customize the renovate action by specifying additional options here
+          # For example, you can specify a specific Renovate configuration file or set the `dry-run` option to true
+          # For a full list of options, see the Renovate documentation: https://docs.renovatebot.com/renovate-action/
+          config: .github/renovate.json
