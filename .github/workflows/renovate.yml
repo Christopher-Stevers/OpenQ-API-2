@@ -1,8 +1,5 @@
 on:
-  schedule:
-    # You can customize the schedule to run Renovate at the frequency that you prefer
-    - cron: '0 0 * * *'
-
+  workflow_dispatch:
 jobs:
   renovate:
     runs-on: ubuntu-latest
