@@ -1774,12 +1774,12 @@
     "@ethersproject/properties" "^5.7.0"
     "@ethersproject/strings" "^5.7.0"
 
-"@google-analytics/data@3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@google-analytics/data/-/data-3.0.0.tgz#c9015ab0d0614957de00744c1065ae5b94450da7"
-  integrity sha512-pRXSjQXKTn4c3ZCZdqCj1eK3DmkkujMZa/3ATVVo701STkGk8SybrCHcXRkLhI/kPM8taPcW+nvQfahwxiyRMw==
+"@google-analytics/data@3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@google-analytics/data/-/data-3.1.2.tgz#3ecb572c6e271dc09f51c8cc72445855edf6ed73"
+  integrity sha512-IhSAqmnkTX+REmagPv8d9Nm6tq32d1lIaSmbX1Wz/v697x7uqJ9poBDQyEc3OmbNXoGPZuKe+AOQeTNgyjo//g==
   dependencies:
-    google-gax "^3.0.1"
+    google-gax "^3.5.2"
 
 "@graphql-tools/merge@8.3.1":
   version "8.3.1"
@@ -4290,7 +4290,7 @@ google-auth-library@^8.0.2:
     jws "^4.0.0"
     lru-cache "^6.0.0"
 
-google-gax@^3.0.1:
+google-gax@^3.5.2:
   version "3.5.2"
   resolved "https://registry.yarnpkg.com/google-gax/-/google-gax-3.5.2.tgz#7c3ad61dbf366a55527b803caead276668b160d8"
   integrity sha512-AyP53w0gHcWlzxm+jSgqCR3Xu4Ld7EpSjhtNBnNhzwwWaIUyphH9kBGNIEH+i4UGkTUXOY29K/Re8EiAvkBRGw==
