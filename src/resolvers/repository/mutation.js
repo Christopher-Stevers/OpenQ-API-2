@@ -52,7 +52,7 @@ const Mutation = {
 		const startDate = new Date(args.startDate);
 		const registrationDeadline = new Date(args.registrationDeadline);
 		// upsert repository as contest
-	 await prisma.repository.upsert({
+		await prisma.repository.upsert({
 			where: { id: args.repositoryId },
 			update: { isContest: args.isContest, startDate, registrationDeadline },
 			create: {
