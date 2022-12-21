@@ -32,9 +32,7 @@ model Bounty {
 
 model Submission {
   id                String       @id @map("_id")
-  organizationId    String
-  organization      Organization @relation(fields: [organizationId], references: [id])
-  repositoryId      String
+ repositoryId      String
   repository        Repository   @relation(fields: [repositoryId], references: [id])
   thumbnail         String?
   userIds           String[]     @db.ObjectId
@@ -91,7 +89,7 @@ model User {
   vatNumber               String?
   vatRate                 Float?
   memo                    String?
-  Submission              Submission[]   @relation(fields: [submissionIds], references: [id])
+  Submissions             Submission[]   @relation(fields: [submissionIds], references: [id])
   submissionIds           String[]
 }
 
@@ -102,7 +100,6 @@ model Organization {
   starringUsers   User[]       @relation(fields: [starringUserIds], references: [id])
   Repositories    Repository[]
   Bounty          Bounty[]
-  Submission      Submission[]
 }
 
 model Prices {

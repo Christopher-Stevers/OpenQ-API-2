@@ -1,14 +1,16 @@
 
 const { getAuthenticatedClient, getAuthenticatedClientIntegration } = require('../utils/configureApolloClient');
-const { GET_PR, REMOVE_CONTRIBUTOR, ADD_CONTRIBUTOR, UPSERT_USER } = require('../utils/queries');
+const { GET_SUBMISSION, UPSERT_SUBMISSION, CREATE_NEW_REPOSITORY } = require('../utils/queries');
 
 const { clearDb } = require('../utils/clearDb');
 
-describe('createRepository', () => {
-	const prId = 'prId';
+describe('upsertSubmission', () => {
+	
+	const repositoryId = 'repositoryId';
+	const submissionId = 'submissionId';
 	const blacklisted = true;
-	const github = process.env.GITHUB_USER_ID;
-
+	const contractAddress = '0x0000000000000000000000000000000000000000';
+	const organizationId = 'organizationId';
 
 	let authenticatedClient;
 	let unauthenticatedClient;
@@ -24,48 +26,43 @@ describe('createRepository', () => {
 	describe('Successful', () => {
 		afterEach(async () => {
 			await clearDb();
-
-
 		});
 		it('Authenticated client can add user to repository', async () => {
-
-			const user = await authenticatedClient.mutate({
-				mutation: UPSERT_USER,
-				variables: { github }
-			});
-			const userId = user.data.upsertUser.id;
 			await authenticatedClient.mutate({
-				mutation: ADD_CONTRIBUTOR,
-				variables: { prId, blacklisted, userId }
+				mutation: CREATE_NEW_REPOSITORY,
+				variables: { address: contractAddress, organizationId, repositoryId }
+			});
+			await authenticatedClient.mutate({
+				mutation: UPSERT_SUBMISSION,
+				variables: { submissionId, repositoryId,  blacklisted }
 			});
 
-			await authenticatedClient.mutate({
-				mutation: REMOVE_CONTRIBUTOR,
-				variables: { prId, blacklisted, userId }
-			});
 
 			const { data } = await authenticatedClient.query({
-				query: GET_PR,
-				variables: { prId }
+				query: GET_SUBMISSION,
+				variables: { id: submissionId }
 			});
-			expect(data).toMatchObject({
-				pr: {
-					contributors: [
-						{
-							userId: userId
-						}
-					]
-				}
-			});
-
+			
+			expect(data.submission).toMatchObject({
+				users: [], blacklisted, __typename: 'Submission'
+			});		
 		});
 	});
+
 	describe('Unsuccessful', () => {
+		afterEach(async () => {
+			await clearDb();
+		});
 		it('should fail for unauthenticated calls', async () => {
+        
 			try {
+				await authenticatedClient.mutate({
+					mutation: CREATE_NEW_REPOSITORY,
+					variables: { address: contractAddress, organizationId, repositoryId }
+				});
 				await unauthenticatedClient.mutate({
-					mutation: REMOVE_CONTRIBUTOR,
-					variables: { prId, blacklisted, userId: github }
+					mutation: UPSERT_SUBMISSION,
+					variables: { submissionId, repositoryId,  blacklisted }
 				});
 				throw ('Should not reach this point');
 			} catch (error) {

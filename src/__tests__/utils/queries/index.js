@@ -219,21 +219,34 @@ const BLACKLIST_ORGANIZATION = gql`mutation blacklistOrg($organizationId: String
   }
 `;
 
-const UPSERT_PR = gql`mutation UpsertPr($prId: String!, $blacklisted: Boolean!) {
-  upsertPr(prId: $prId, blacklisted: $blacklisted) {
-    prId
+const UPSERT_SUBMISSION = gql`mutation upsertSubmission($submissionId: String!, $blacklisted: Boolean, $repositoryId: String!) {
+   upsertSubmission(submissionId:$submissionId, repositoryId:$repositoryId, blacklisted:$blacklisted) {
+    blacklisted
+  }
+}`;
+
+
+const GET_SUBMISSION = gql`query GetSubmission($id: String!) {
+  submission(id: $id) {
+    id
+    blacklisted
+	users {
+		id
+	}
+}
+}`;
+
+const ADD_USER_TO_SUBMISSION= gql`mutation AddUser($repositoryId: String!, $submissionId: String!, $userId: String!) {
+  addUserToSubmission(repositoryId: $repositoryId, submissionId: $submissionId, userId: $userId) {
+    id
 	  }
 }`;
 
-const ADD_CONTRIBUTOR = gql`mutation AddContributor($repositoryId: String!, $prId: String!, $userId: String!) {
-  addContributor(repositoryId: $repositoryId, prId: $prId, userId: $userId) {
-    prId
-	  }
-}`;
-
-const REMOVE_CONTRIBUTOR = gql`mutation AddContributor($prId: String!, $userId: String!) {
-  addContributor(prId: $prId, userId: $userId) {
-    prId
+const REMOVE_USER_FROM_SUBMISSION = gql`mutation RemoveUser($submissionId: String! $userId: String!) {
+  removeUserFromSubmission(submissionId: $submissionId, userId: $userId) {
+    id
+    users{
+    id}
 	  }
 }`;
 
@@ -254,14 +267,6 @@ const GET_PRICES = gql`query GetPrices {
 
 
 
-const GET_PR = gql`query GetPr($prId: String!) {
-  pr(prId: $prId) {
-    prId
-	contributors {
-		userId
-	}
-}
-}`;
 
 module.exports = {
 	CREATE_NEW_BOUNTY,
@@ -282,10 +287,10 @@ module.exports = {
 	BLACKLIST_ORGANIZATION,
 	STAR_ORGANIZATION,
 	UNSTAR_ORGANIZATION,
-	UPSERT_PR,
-	ADD_CONTRIBUTOR,
-	REMOVE_CONTRIBUTOR,
-	GET_PR,
+	UPSERT_SUBMISSION,
+	ADD_USER_TO_SUBMISSION,
+	REMOVE_USER_FROM_SUBMISSION,
+	GET_SUBMISSION,
 	UPSERT_PRICES,
 	GET_PRICES
 };

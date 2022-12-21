@@ -55,21 +55,25 @@ const Mutation = {
 		if (error) {
 			throw new AuthenticationError(errorMessage);
 		}
-
-		const organization = await prisma.organization.upsert({
+		// upsert organization
+		await prisma.organization.upsert({
 			where: { id: args.organizationId },
+			create: { id: args.organizationId },
 			update: {},
-			create: { id: args.organizationId, blacklisted: false, }
 		});
+		const organization = await prisma.organization.findUnique({
+			where: { id: args.organizationId },
+		});
+        
+
+	
 
 		const user = await prisma.user.findUnique({
 			where: { id },
 		});
-
 		const newOrgs = user.starredOrganizationIds.filter(
 			(organizationId) => organizationId !== organization.id
 		);
-
 		const newUsers = organization.starringUserIds.filter(
 			(userId) => userId !== user.id
 		);

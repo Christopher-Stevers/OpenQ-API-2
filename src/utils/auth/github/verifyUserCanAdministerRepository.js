@@ -17,6 +17,7 @@ const {
  *  Verifies the OAuth token holder matches 
  * ***/
 const verifyUserCanAdministerRepository = async (req, repoId) => {
+	// eslint-disable-next-line no-async-promise-executor
 	return new Promise(async (resolve, reject) => {
 		try {
 			const signatureRegex = /github_oauth_token_unsigned=\w+/;
@@ -28,7 +29,6 @@ const verifyUserCanAdministerRepository = async (req, repoId) => {
 			} else {
 				token = req.headers.cookie.match(signatureRegex)[0].slice(28);
 			}
-			
 			const resultViewerCanAdminister = await axios
 				.post(
 					'https://api.github.com/graphql',
