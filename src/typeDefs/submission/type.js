@@ -1,11 +1,11 @@
 const { gql } = require('apollo-server');
 
 const typeDef = gql`
-	type PR {
-	prId:				ID!
+	type Submission {
+	id:				ID!
     thumbnail: 		String
-	contributors: 	[Contributor]
-    contributorIds: [String]
+	users: 	[User]
+    userIds: [String]
     Bounty:   		Bounty
     bountyAddress: 	String
 	blacklisted: 	Boolean

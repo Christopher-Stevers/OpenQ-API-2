@@ -61,7 +61,7 @@ describe('upsertUser.test', () => {
 						});
 						throw ('Should not reach this point');
 					} catch (error) {
-						console.log(error);
+						// eslint-disable-next-line jest/no-conditional-expect
 						expect(error.graphQLErrors[0].extensions.code).toEqual('UNAUTHENTICATED');
 					}
 				});
@@ -104,7 +104,7 @@ describe('upsertUser.test', () => {
 						});
 						throw ('Should not reach this point');
 					} catch (error) {
-						console.log(error);
+						// eslint-disable-next-line jest/no-conditional-expect
 						expect(error.graphQLErrors[0].extensions.code).toEqual('UNAUTHENTICATED');
 					}
 				});

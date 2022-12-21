@@ -8,10 +8,9 @@ const organization = require('./organization');
 const price = require('./price');
 const user = require('./user');
 const JSON = require('./JSON');
-const pr = require('./pr');
-const contributor = require('./contributor');
+const submission = require('./submission');
 const repository = require('./repository');
 
-const schema = [query, mutation, ...bounty, ...organization, ...price, ...user, ...batch, ...JSON, ...pr, ...contributor, ...repository];
+const schema = [query, mutation, ...bounty, ...organization, ...price, ...user, ...batch, ...JSON, ...submission, ...repository];
 
 module.exports = schema;

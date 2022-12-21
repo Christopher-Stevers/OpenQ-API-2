@@ -4,8 +4,7 @@ const { ADD_USER_TO_REPOSITORY, GET_REPOSITORY, CREATE_USER, CREATE_NEW_REPOSITO
 
 const { clearDb } = require('../utils/clearDb');
 
-describe('createRepository', () => {
-	const contractAddress = '0x8daf17assdfdf20c9dba35f005b6324f493785d239719d';
+describe('addUserFromSubmission', () => {
 	const organizationId = 'organizationId';
 	const repositoryId = 'repositoryId';
 	const github = process.env.GITHUB_USER_ID;
@@ -32,7 +31,7 @@ describe('createRepository', () => {
 
 			await authenticatedClient.mutate({
 				mutation: CREATE_NEW_REPOSITORY,
-				variables: { address: contractAddress, organizationId, repositoryId }
+				variables: { organizationId, repositoryId }
 			});
 
 			const user = await authenticatedClient.mutate({

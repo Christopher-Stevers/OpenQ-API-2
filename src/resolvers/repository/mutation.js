@@ -52,7 +52,7 @@ const Mutation = {
 		const startDate = new Date(args.startDate);
 		const registrationDeadline = new Date(args.registrationDeadline);
 		// upsert repository as contest
-		return prisma.repository.upsert({
+		await prisma.repository.upsert({
 			where: { id: args.repositoryId },
 			update: { isContest: args.isContest, startDate, registrationDeadline },
 			create: {
@@ -70,6 +70,9 @@ const Mutation = {
 
 				}
 			},
+		});
+		return prisma.repository.findUnique({
+			where: { id: args.repositoryId },
 		});
 	},
 	setHackathonBlacklist: async (parent, args, { req, prisma, githubClient }) => {

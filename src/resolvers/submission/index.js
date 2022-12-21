@@ -1,11 +1,11 @@
 const Mutation = require('./mutation');
 const Query = require('./query');
-const PR = require('./pr');
+const Submission = require('./submission');
 
 const prResolvers = {
 	Mutation,
 	Query,
-	PR
+	Submission
 };
 
 module.exports = prResolvers;

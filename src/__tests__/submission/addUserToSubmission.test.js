@@ -1,14 +1,17 @@
 
 const { getAuthenticatedClient, getAuthenticatedClientIntegration } = require('../utils/configureApolloClient');
-const { GET_PR, UPSERT_PR } = require('../utils/queries');
+const { GET_SUBMISSION, ADD_USER_TO_SUBMISSION, CREATE_NEW_REPOSITORY, UPSERT_USER } = require('../utils/queries');
 
 const { clearDb } = require('../utils/clearDb');
 
-describe('upsertPr', () => {
-	
-	const github = process.env.GITHUB_USER_ID;
-	const prId = 'prId';
+describe('addContributor', () => {
+	const submissionId = 'submissionId';
+	const repositoryId = 'repositoryId';
+	const organizationId = 'organizationId';
+    
 	const blacklisted = true;
+	const github = process.env.GITHUB_USER_ID;
+	const userId = 'userId';
 
 	let authenticatedClient;
 	let unauthenticatedClient;
@@ -26,30 +29,49 @@ describe('upsertPr', () => {
 			await clearDb();
 		});
 
-		it('Authenticated client can add user to repository', async () => {
-			await authenticatedClient.mutate({
-				mutation: UPSERT_PR,
-				variables: { prId, blacklisted }
+		// eslint-disable-next-line jest/no-focused-tests
+		it.only('Authenticated client can add user to repository', async () => {
+			const user = await authenticatedClient.mutate({
+				mutation: UPSERT_USER,
+				variables: { github }
 			});
 
-			const { data } = await authenticatedClient.query({
-				query: GET_PR,
-				variables: { prId }
+			const userId = user.data.upsertUser.id;
+			await authenticatedClient.mutate({
+				mutation: CREATE_NEW_REPOSITORY,
+				variables: { organizationId, repositoryId }
 			});
-			
-			expect(data.pr).toMatchObject({
-				contributors: [], __typename: 'PR'
+			await authenticatedClient.mutate({
+				mutation: ADD_USER_TO_SUBMISSION,
+				variables: { submissionId, blacklisted, userId, repositoryId }
+			});
+
+
+			const { data } = await authenticatedClient.query({
+				query: GET_SUBMISSION,
+				variables: { id: submissionId }
+			});
+			expect(data).toMatchObject({
+				submission: {
+					users: [
+						{
+							id: userId
+						}
+					]
+				}
 			});
 		});
 	});
-
+	
 	describe('Unsuccessful', () => {
 		it('should fail for unauthenticated calls', async () => {
 			try {
+			
 				await unauthenticatedClient.mutate({
-					mutation: UPSERT_PR,
-					variables: { prId, blacklisted }
+					mutation: ADD_USER_TO_SUBMISSION,
+					variables: { submissionId, blacklisted, userId, repositoryId }
 				});
+
 				throw ('Should not reach this point');
 			} catch (error) {
 				// eslint-disable-next-line jest/no-conditional-expect

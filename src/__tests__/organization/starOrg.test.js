@@ -81,6 +81,7 @@ describe('starOrg', () => {
 			});
 
 			// ACT
+		
 			await authenticatedClient.mutate({
 				mutation: UNSTAR_ORGANIZATION,
 				variables: { organizationId, userId, github }
@@ -112,6 +113,7 @@ describe('starOrg', () => {
 					nodes: []
 				}
 			});
+			
 		});
 	});
 
@@ -143,7 +145,6 @@ describe('starOrg', () => {
 				});
 				throw ('Should not reach this point');
 			} catch (error) {
-				console.log(error);
 				// eslint-disable-next-line jest/no-conditional-expect
 				expect(error.graphQLErrors[0].extensions.code).toEqual('UNAUTHENTICATED');
 			}
