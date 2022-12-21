@@ -95,7 +95,7 @@ const Mutation = {
 		
 			return id !== userId;});
 		const newSubmissionsIds = user.submissionIds.filter(id => id !== submissionId);
-		const newUSer = 	await prisma.user.update({
+		await prisma.user.update({
 			where: { id:userId },
 			data: {
 				submissionIds: { set: newSubmissionsIds }, 

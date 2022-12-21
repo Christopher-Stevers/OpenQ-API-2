@@ -7,7 +7,7 @@ const Query = {
 	submissions: async (_, args, { prisma }) => {
 		return prisma.submission.findMany({
 			where: {
-				id: { in: args.ids },
+				...args.ids? {id: { in: args.ids }}:{},
 			}
 		});
 	}
