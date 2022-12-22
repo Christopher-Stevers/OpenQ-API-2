@@ -3,14 +3,7 @@
   "extends": [
     "config:base"
   ],
-	"yarn": {
-		"lockFileMaintenance": {
-			"enabled": false
-		}
-	},
-	"npm": {
-		"lockFileMaintenance": {
-			"enabled": false
-		}
+	"lockFileMaintenance": {
+		"enabled": false
 	}
 }
