@@ -38,7 +38,7 @@ describe('GithubClient', () => {
 				await GithubClient.verifyGithub(req, otherUserId);
 				throw Error('should not reach here');
 			} catch (error) {
-				expect(error.type).toEqual('INVALID_GITHUB_OAUTH_TOKEN');
+				expect(error.type).toEqual('GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES');
 			}
 		});
 	 });
@@ -64,7 +64,7 @@ describe('GithubClient', () => {
 				await GithubClient.verifyUserCanAdministerRepository(req, otherRepoId);
 				throw Error('should not reach here');
 			} catch (error) {
-				expect(error.type).toEqual('INVALID_GITHUB_OAUTH_TOKEN');
+				expect(error.type).toEqual('GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES');
 			}
 		});
 	 });
