@@ -73,7 +73,7 @@ const Mutation = {
 
 		const {github, email} = args;
 
-		const { error, errorMessage } = await checkUserAuth(prisma, req, args, emailClient, githubClient);
+		const { error, errorMessage } = await checkUserAuth(prisma, req, args, emailClient, githubClient, {operationName: 'combineUsers'});
 
 		if (error) {
 			throw new AuthenticationError(errorMessage);

@@ -125,6 +125,35 @@ const CREATE_USER = gql`mutation CreateUser($github: String, $email: String) {
   }
 }`;
 
+
+const COMBINE_USERS = gql`
+  mutation combineUsers($id: String, $email: String, $github: String) {
+    combineUsers(id: $id, email: $email, github: $github) {
+      github
+      email
+      company
+      username
+      city
+      streetAddress
+      country
+      province
+      discord
+      github
+      twitter
+      postalCode
+      invoicingEmail
+      billingName
+      invoiceNumber
+      invoicingEmail
+      phoneNumber
+      taxId
+      vatNumber
+      vatRate
+      memo
+    }
+  }
+`;
+
 const UNWATCH_BOUNTY = gql`mutation UnwatchBounty($contractAddress: String!, $userId: String!, $github: String, $email: String) {
   unwatchBounty(contractAddress: $contractAddress, userId: $userId, github: $github, email: $email) {
     address
@@ -278,6 +307,7 @@ module.exports = {
 	CREATE_USER,
 	GET_USER,
 	UPSERT_USER,
+	COMBINE_USERS,
 	CREATE_NEW_REPOSITORY,
 	ADD_USER_TO_REPOSITORY,
 	SET_HACKATHON_BLACKLIST,
