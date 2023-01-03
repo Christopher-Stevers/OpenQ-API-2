@@ -47,16 +47,20 @@ const Mutation = {
 		if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
 			throw new AuthenticationError();
 		}
+		const date = new Date(parseInt(args.createdAt)*1000);
+		const ISOstring = date.toISOString();
+		console.log(ISOstring);
 
 		return prisma.bounty.upsert({
 			where: { address: args.address },
 			update: {
+				createdAt: ISOstring,
 				category: args.category || null,
 				...args.tvl && { tvl: args.tvl },
 				...args.tvc && { tvc: args.tvc },
 				type: args.type,
 				...args.organizationId && {
-					organization: {
+					organization: {        
 						connectOrCreate: {
 							where: {
 								id: args.organizationId
