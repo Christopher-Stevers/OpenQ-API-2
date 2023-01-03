@@ -125,6 +125,35 @@ const CREATE_USER = gql`mutation CreateUser($github: String, $email: String) {
   }
 }`;
 
+
+const COMBINE_USERS = gql`
+  mutation combineUsers($id: String, $email: String, $github: String) {
+    combineUsers(id: $id, email: $email, github: $github) {
+      github
+      email
+      company
+      username
+      city
+      streetAddress
+      country
+      province
+      discord
+      github
+      twitter
+      postalCode
+      invoicingEmail
+      billingName
+      invoiceNumber
+      invoicingEmail
+      phoneNumber
+      taxId
+      vatNumber
+      vatRate
+      memo
+    }
+  }
+`;
+
 const UNWATCH_BOUNTY = gql`mutation UnwatchBounty($contractAddress: String!, $userId: String!, $github: String, $email: String) {
   unwatchBounty(contractAddress: $contractAddress, userId: $userId, github: $github, email: $email) {
     address
@@ -137,6 +166,7 @@ const UNWATCH_BOUNTY = gql`mutation UnwatchBounty($contractAddress: String!, $us
 const GET_BOUNTY_BY_ID = gql`query bounty($contractAddress: String!) {
   bounty(address: $contractAddress) {
     tvl
+    tvc
 		address
 		bountyId
 		organizationId
@@ -263,6 +293,42 @@ const GET_PRICES = gql`query GetPrices {
   
   }
 }`;
+const ADD_TO_VALUE_CLAIMED = gql`
+		mutation addToTvc(
+		$tokenAddress: String!
+		$volume: String!
+		$address:String!
+		$add: Boolean! 
+	) {
+		addToTvc(
+			tokenAddress: $tokenAddress
+			volume: $volume
+			address: $address
+			add: $add
+		) {
+			address
+		}
+	}
+`;
+const ADD_TO_BOUNTY = gql`
+	mutation Mutation(
+		$address: String!
+		$tokenBalance: JSON!
+		$add: Boolean!
+	) {
+		addToTvl(
+			address: $address
+			tokenBalance: $tokenBalance
+			add: $add
+		) {
+			address
+		}
+	}
+`;
+
+
+
+
 
 
 
@@ -278,6 +344,7 @@ module.exports = {
 	CREATE_USER,
 	GET_USER,
 	UPSERT_USER,
+	COMBINE_USERS,
 	CREATE_NEW_REPOSITORY,
 	ADD_USER_TO_REPOSITORY,
 	SET_HACKATHON_BLACKLIST,
@@ -292,5 +359,7 @@ module.exports = {
 	REMOVE_USER_FROM_SUBMISSION,
 	GET_SUBMISSION,
 	UPSERT_PRICES,
-	GET_PRICES
+	GET_PRICES,
+	ADD_TO_VALUE_CLAIMED,
+	ADD_TO_BOUNTY
 };

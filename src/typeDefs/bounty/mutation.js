@@ -11,7 +11,8 @@ const mutationDefs = gql`
 			organizationId: String,
 			bountyId: String!,
 			repositoryId: String,
-			category: String
+			category: String,
+            createdAt: String
 		): Bounty!
 		watchBounty(userId: String!, contractAddress: String!, email: String, github: String): Bounty
 		unwatchBounty(userId: String!, contractAddress: String!, email: String, github: String): Bounty

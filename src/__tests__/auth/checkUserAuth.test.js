@@ -11,7 +11,6 @@ describe('checkUserAuth', () => {
 	const id = '123';
 	const github = process.env.GITHUB_USER_LOGIN;
 	const email = process.env.EMAIL;
-	const otherEmail = process.env.OTHER_EMAIL;
 	
 	const args_GITHUB = { github, id };
 	const args_EMAIL = { email, id };
@@ -22,6 +21,7 @@ describe('checkUserAuth', () => {
 	const prisma = {
 		user: {
 			findUnique: async () => {
+				// eslint-disable-next-line no-async-promise-executor
 				return new Promise(async (resolve) => {
 					resolve({ id });
 				});
@@ -30,7 +30,7 @@ describe('checkUserAuth', () => {
 	};
 	
 	const req = null;
-
+	
 	it('should return error if no email or github passed', async () => {
 		const result = await checkUserAuth(prisma, req, invalidArgs, MockEmailClient, MockGithubClient);
 		expect(result).toMatchObject({ error: true, errorMessage: 'Must provide a an email OR github' });
@@ -47,6 +47,33 @@ describe('checkUserAuth', () => {
 		const result = await checkUserAuth(prisma, req, args_GITHUB, MockEmailClient, MockGithubClient);
 		expect(result).toMatchObject({ error: true, errorMessage: 'Github not authorized' });
 	});
+    
+	it('should return true if valid auth from one of a user\'s two auth sources - GITHUB', async () => {
+		MockEmailClient.isValidEmail = false;
+		MockGithubClient.isValidGithub = true;
+		const result = await checkUserAuth(prisma, req, args_BOTH, MockEmailClient, MockGithubClient);
+		expect(result).toMatchObject({ error: false, errorMessage: null, id });
+	});
+
+	it('should return false if operationName is combine user and user can\'t fulfill GITHUB and EMAIL requirements from one of a user\'s two auth sources - GITHUB valid', async () => {
+		MockEmailClient.isValidEmail = false;
+		MockGithubClient.isValidGithub = true;
+		const result = await checkUserAuth(prisma, req, args_BOTH, MockEmailClient, MockGithubClient, { operationName: 'combineUsers' });
+		expect(result).toMatchObject({ error: false, errorMessage: null, id });
+	});
+	it('should return false if operationName is combine user and user can\'t fulfill GITHUB and EMAIL requirements from one of a user\'s two auth sources - EMAIL valid', async () => {
+		MockEmailClient.isValidEmail = true;
+		MockGithubClient.isValidGithub = false;
+		const result = await checkUserAuth(prisma, req, args_BOTH, MockEmailClient, MockGithubClient, { operationName: 'combineUsers' });
+		expect(result).toMatchObject({ error: false, errorMessage: null, id });
+	});
+
+	it('should return true if valid auth from one of a user\'s two auth sources - EMAIL', async () => {
+		MockEmailClient.isValidEmail = true;
+		MockGithubClient.isValidGithub = false;
+		const result = await checkUserAuth(prisma, req, args_BOTH, MockEmailClient, MockGithubClient);
+		expect(result).toMatchObject({ error: false, errorMessage: null, id });
+	});
 
 	it('should return error false and identifier if successful - GITHUB', async () => {
 		const result = await checkUserAuth(prisma, req, args_GITHUB, MockEmailClient, MockGithubClient);
@@ -62,4 +89,5 @@ describe('checkUserAuth', () => {
 		const result = await checkUserAuth(prisma, req, args_BOTH, MockEmailClient, MockGithubClient);
 		expect(result).toMatchObject({ error: false, errorMessage: null, id });
 	});
+    
 }); 

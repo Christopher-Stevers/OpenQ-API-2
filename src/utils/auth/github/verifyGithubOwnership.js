@@ -1,5 +1,6 @@
 // Third Party
 const axios = require('axios');
+const getGithubOAuthToken  =require( './getGithubOAuthToken.js');
 
 // Issue Query
 const GET_VIEWER = require('./query/GET_VIEWER');
@@ -17,17 +18,15 @@ const {
  *  Verifies the OAuth token holder matches 
  * ***/
 const verifyGithubOwnership = async (req, userId) => {
+	// eslint-disable-next-line no-async-promise-executor
 	return new Promise(async (resolve, reject) => {
 		try {
-			const signatureRegex = /github_oauth_token_unsigned=\w+/;
-			const regexMatch = req.headers.cookie.match(signatureRegex);
 			
-			let token;
-			if (regexMatch === null) {
+			const token = getGithubOAuthToken(req);
+			
+			if (token === null) {
 				return reject(NO_GITHUB_OAUTH_TOKEN({ userId }));
-			} else {
-				token = req.headers.cookie.match(signatureRegex)[0].slice(28);
-			}
+			} 
 			const resultViewer = await axios
 				.post(
 					'https://api.github.com/graphql',
