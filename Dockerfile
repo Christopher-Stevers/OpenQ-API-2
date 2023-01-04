@@ -7,6 +7,6 @@ COPY package.json .
 RUN yarn
 COPY . .
 ENV NODE_ENV="production"
-RUN npx prisma generate
+RUN prisma generate
 EXPOSE 4000
 ENTRYPOINT yarn start

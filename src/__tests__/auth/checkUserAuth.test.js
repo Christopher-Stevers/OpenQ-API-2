@@ -59,13 +59,13 @@ describe('checkUserAuth', () => {
 		MockEmailClient.isValidEmail = false;
 		MockGithubClient.isValidGithub = true;
 		const result = await checkUserAuth(prisma, req, args_BOTH, MockEmailClient, MockGithubClient, { operationName: 'combineUsers' });
-		expect(result).toMatchObject({ error: false, errorMessage: null, id });
+		expect(result).toMatchObject({ error: true, errorMessage: 'Email not authorized'});
 	});
 	it('should return false if operationName is combine user and user can\'t fulfill GITHUB and EMAIL requirements from one of a user\'s two auth sources - EMAIL valid', async () => {
 		MockEmailClient.isValidEmail = true;
 		MockGithubClient.isValidGithub = false;
 		const result = await checkUserAuth(prisma, req, args_BOTH, MockEmailClient, MockGithubClient, { operationName: 'combineUsers' });
-		expect(result).toMatchObject({ error: false, errorMessage: null, id });
+		expect(result).toMatchObject({ error: true, errorMessage: 'Github not authorized'});
 	});
 
 	it('should return true if valid auth from one of a user\'s two auth sources - EMAIL', async () => {

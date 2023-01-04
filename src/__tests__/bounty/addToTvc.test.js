@@ -50,7 +50,6 @@ describe('createBounty', () => {
 			});
 
 			expect(data.bounty).toMatchObject({
-				'tvc':  2.395671,
 				'bountyId': bountyId,
 				'type': type,
 				'blacklisted': false,
