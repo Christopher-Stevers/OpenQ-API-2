@@ -59,7 +59,9 @@ describe('GithubClient', () => {
 		});
 		
 		it('GithubClient.verifyUserCanAdministerRepository should return INVALID_GITHUB_OAUTH_TOKEN if the user CANNOT administer the repo', async () => {
-			const otherRepoId = 'MDEwOlJlcG9zaXRvcnk2MzQ2NTY2NA==';
+			
+			// svelte repo ID
+			const otherRepoId = 'MDEwOlJlcG9zaXRvcnk3NDI5MzMyMQ==';
 			try {
 				await GithubClient.verifyUserCanAdministerRepository(req, otherRepoId);
 				throw Error('should not reach here');
