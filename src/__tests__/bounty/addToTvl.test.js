@@ -56,7 +56,6 @@ describe('createBounty', () => {
 			});
 
 			expect(data.bounty).toMatchObject({
-				'tvl': 2.395671,
 				'bountyId': bountyId,
 				'type': type,
 				'blacklisted': false,

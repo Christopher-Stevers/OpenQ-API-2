@@ -53,11 +53,11 @@ const verifyUserCanAdministerRepository = async (req, repoId) => {
 			if (verifyUserCanAdministerRepository) {
 				return resolve(true);
 			} else {
-				return reject(INVALID_GITHUB_OAUTH_TOKEN({viewerUserId: viewerLogin, id: repoId}));
+				return reject(GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES({viewerUserId: viewerLogin, id: repoId}));
 			}
 		} catch (error) {
 			if (error.response && error.response.status == 401) {
-				return reject(GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES({ id: repoId }));
+				return reject(INVALID_GITHUB_OAUTH_TOKEN({ id: repoId }));
 			}
 			return reject(UNKNOWN_ERROR({ id: repoId, error }));
 		}

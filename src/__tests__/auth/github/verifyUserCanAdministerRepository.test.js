@@ -69,15 +69,15 @@ describe('verifyUserCanAdministerRepository', () => {
 			await expect(verifyUserCanAdministerRepository(req, repoId)).rejects.toEqual(RATE_LIMITED({ id: repoId }));
 		});
 
-		it('INVALID_GITHUB_OAUTH_TOKEN', async () => {
+		it('GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES', async () => {
 			mock.onPost('https://api.github.com/graphql').reply(200, viewerCanAdministerRepositoryReturnData_FALSE);
 			
-			await expect(verifyUserCanAdministerRepository(req, repoId)).rejects.toEqual(INVALID_GITHUB_OAUTH_TOKEN({ id:  repoId, viewerUserId: 'FlacoJones' }));
+			await expect(verifyUserCanAdministerRepository(req, repoId)).rejects.toEqual(GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES({ id: repoId, viewerUserId: 'FlacoJones'  }));
 		});
 
-		it('GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES', async () => {
+		it('INVALID_GITHUB_OAUTH_TOKEN', async () => {
 			mock.onPost('https://api.github.com/graphql').reply(401);
-			await expect(verifyUserCanAdministerRepository(req, repoId)).rejects.toEqual(GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES({ id: repoId }));
+			await expect(verifyUserCanAdministerRepository(req, repoId)).rejects.toEqual(INVALID_GITHUB_OAUTH_TOKEN({ id:  repoId,}));
 		});
 	});
 });
