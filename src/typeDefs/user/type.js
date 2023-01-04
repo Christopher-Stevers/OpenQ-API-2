@@ -5,9 +5,10 @@ const typeDef = gql`
 	type User {
 		id: ID!
 		username: String
-		email: String			
-	  github: String 			
-		watchedBountyIds: [String]
+		email: String	@auth	
+	    github: String
+        createdAt: String  @auth
+		watchedBountyIds: [String] @auth
 		watchedBounties(
 			after: ID
 			limit: Int!
@@ -15,30 +16,30 @@ const typeDef = gql`
 			sortOrder: String
 			category: String
 			types: [String]
-		): Bounties! 
+		): Bounties! @auth
 		starredOrganizations: Organizations
 		starredOrganizationIds: [String]
-		province: String				
- 		postalCode: String 		
-		billingName: String 	
-		phoneNumber: String 	
-		taxId: String 			
-		vatNumber: String 		
- 		vatRate: Float		 	
-		memo: String           
-		invoiceNumber: Int           
-		company: String 		
-		city: String			
-		streetAddress: String	
-		country: String						
-		twitter:String
+		province: String	@auth 		
+ 		postalCode: String 		@auth 
+		billingName: String 	@auth
+		phoneNumber: String 	@auth
+		taxId: String 			@auth
+		vatNumber: String 		@auth
+ 		vatRate: Float		@auth 	
+		memo: String    @auth    
+		invoiceNumber: Int    @auth    
+		company: String 	@auth
+		city: String		@auth	 
+		streetAddress: String	@auth
+		country: String		 			
+		twitter:String 
 		discord: String
 		devRoles: [String]		
 		frameworks: [String]
 		languages: [String]
 		otherRoles: [String]
-        invoicingEmail: String
-        interests: [String]
+        invoicingEmail: String  @auth
+        interests: [String] 
 	}
 
 	type Users {
