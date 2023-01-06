@@ -293,33 +293,16 @@ const GET_PRICES = gql`query GetPrices {
   
   }
 }`;
-const ADD_TO_VALUE_CLAIMED = gql`
-		mutation addToTvc(
-		$tokenAddress: String!
-		$volume: String!
-		$address:String!
-		$add: Boolean! 
-	) {
-		addToTvc(
-			tokenAddress: $tokenAddress
-			volume: $volume
-			address: $address
-			add: $add
-		) {
-			address
-		}
-	}
-`;
-const ADD_TO_BOUNTY = gql`
-	mutation Mutation(
+const  UPDATE_BOUNTY_VALUATION = gql`
+	mutation UpdateBountyValuation(
 		$address: String!
-		$tokenBalance: JSON!
-		$add: Boolean!
+		$tvl: Float
+		$tvc: Float
 	) {
-		addToTvl(
+		updateBountyValuation(
 			address: $address
-			tokenBalance: $tokenBalance
-			add: $add
+			tvl: $tvl
+			tvc: $tvc
 		) {
 			address
 		}
@@ -360,6 +343,5 @@ module.exports = {
 	GET_SUBMISSION,
 	UPSERT_PRICES,
 	GET_PRICES,
-	ADD_TO_VALUE_CLAIMED,
-	ADD_TO_BOUNTY
+	UPDATE_BOUNTY_VALUATION
 };

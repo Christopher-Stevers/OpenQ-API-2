@@ -1,13 +1,11 @@
 
-
 const { getAuthenticatedClient, getAuthenticatedClientIntegration } = require('../utils/configureApolloClient');
-const { CREATE_NEW_BOUNTY, GET_BOUNTY_BY_ID, ADD_TO_VALUE_CLAIMED } = require('../utils/queries');
+const { CREATE_NEW_BOUNTY, GET_BOUNTY_BY_ID, UPDATE_BOUNTY_VALUATION } = require('../utils/queries');
 
 const { clearDb } = require('../utils/clearDb');
 
 describe('createBounty', () => {
 	const contractAddress = '0x8daf17assdfdf20c9dba35f005b6324f493785d239719d';
-	const zeroAddress = '0x0000000000000000000000000000000000000000';
 	const organizationId = 'organizationId';
 	const bountyId = 'bountyId';
 	const repositoryId = 'repositoryId';
@@ -16,12 +14,12 @@ describe('createBounty', () => {
 	let authenticatedClient;
 	let unauthenticatedClient;
 
-	if (process.env.DEPLOY_ENV === 'production') {
+	if(process.env.DEPLOY_ENV === 'production') {
 		authenticatedClient = getAuthenticatedClientIntegration(process.env.OPENQ_API_SECRET, process.env.GITHUB_OAUTH_TOKEN, process.env.EMAIL_DID_TOKEN);
 		unauthenticatedClient = getAuthenticatedClientIntegration('incorrect_secret', 'invalid_oauth_token', 'invalid_email_oauth');
-	} else {
+	} else  {
 		authenticatedClient = getAuthenticatedClient(process.env.OPENQ_API_SECRET, true, true);
-		unauthenticatedClient = getAuthenticatedClient('incorrect_secret', 'signature', false, false);
+		unauthenticatedClient  = getAuthenticatedClient('incorrect_secret', 'signature', false, false);
 	}
 
 	describe('Successful', () => {
@@ -34,22 +32,20 @@ describe('createBounty', () => {
 				mutation: CREATE_NEW_BOUNTY,
 				variables: { address: contractAddress, organizationId, bountyId, repositoryId, type }
 			});
+			
 			await authenticatedClient.mutate({
-				mutation: ADD_TO_VALUE_CLAIMED,
-				variables: {
-					tokenAddress: zeroAddress,
-					volume:'3000000000000000000',
-					address: contractAddress,
-					add: true
-				},
+				mutation: UPDATE_BOUNTY_VALUATION,
+				variables: { address: contractAddress, tvl: 1, tvc: 2 }
 			});
-
+	
 			const { data } = await authenticatedClient.query({
 				query: GET_BOUNTY_BY_ID,
 				variables: { contractAddress }
 			});
-
+	
 			expect(data.bounty).toMatchObject({
+				'tvl': 1,
+				'tvc': 2,
 				'bountyId': bountyId,
 				'type': type,
 				'blacklisted': false,
@@ -67,22 +63,13 @@ describe('createBounty', () => {
 		it('should fail for unauthenticated calls', async () => {
 			try {
 				await unauthenticatedClient.mutate({
-					mutation: ADD_TO_VALUE_CLAIMED,
-					variables: {
-						tokenAddress: zeroAddress,
-						volume:'3000000000000000000',
-						address: contractAddress,
-						add: true
-					},
+					mutation: CREATE_NEW_BOUNTY,
+					variables: { address: contractAddress, organizationId, bountyId, repositoryId, type }
 				});
-				throw ('Should not reach this point');
+				throw('Should not reach this point');
 			} catch (error) {
-				// eslint-disable-next-line jest/no-conditional-expect
 				expect(error.graphQLErrors[0].extensions.code).toEqual('UNAUTHENTICATED');
 			}
 		});
-	});
+	 });
 });
-
-
-
