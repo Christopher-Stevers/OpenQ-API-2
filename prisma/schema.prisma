@@ -62,12 +62,14 @@ model User {
   username                String?        @unique
   email                   String?        @unique
   github                  String?        @unique
+  createdAt               DateTime?      @default(now())
   invoicingEmail          String?        
   watchedBountyIds        String[]
   watchedBounties         Bounty[]       @relation(fields: [watchedBountyIds], references: [address])
   starredOrganizationIds  String[]
   starredOrganizations    Organization[] @relation(fields: [starredOrganizationIds], references: [id])
   repositoryIds           String[]
+
   participantRepositories Repository[]   @relation(fields: [repositoryIds], references: [id])
   company                 String?
   city                    String?

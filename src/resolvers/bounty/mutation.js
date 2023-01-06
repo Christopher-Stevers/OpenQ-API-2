@@ -1,5 +1,4 @@
-const calculateTvl = require('../../utils/calculateTvl');
-const calculateTvc = require('../../utils/calculateTvc');
+
 const { AuthenticationError } = require('apollo-server');
 const checkUserAuth = require('../utils/checkUserAuth');
 
@@ -154,35 +153,21 @@ const Mutation = {
 			}
 		);
 	},
-	addToTvl: async (parent, args, { req, prisma }) => {
+	updateBountyValuation: async (parent, args, { req, prisma }) => {
 		if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
 			throw new AuthenticationError();
 		}
-		const { tokenBalance, address, add } = args;
-		const bounty = await prisma.bounty.findUnique({
-			where: { address },
-		});
-		const currentTvl = bounty?.tvl || 0;
-		const tvl = await calculateTvl(tokenBalance, currentTvl, add);
+		const { tvl=0, tvc=0, address,  } = args;
+	
 		return prisma.bounty.update({
 			where: { address },
 			data: {
-				tvl
-			},
-		});
-	},
-	addToTvc: async (parent, args, { req, prisma }) => {
-		if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
-			throw new AuthenticationError();
-		}
-		const { tokenAddress, volume, address, add } = args;
-		const tvc = await calculateTvc(tokenAddress, volume, add);
-		return prisma.bounty.update({
-			where: { address },
-			data: {
-				tvc: {
+				tvl:{
+					increment: tvl
+				},
+				tvc:{
 					increment: tvc
-				}
+				} 
 			},
 		});
 	},
