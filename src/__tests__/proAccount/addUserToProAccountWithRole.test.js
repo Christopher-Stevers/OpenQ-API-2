@@ -1,5 +1,5 @@
 const { getAuthenticatedClient, getAuthenticatedClientIntegration } = require('../utils/configureApolloClient');
-const { CREATE_PRO_ACCOUNT, GET_PRO_ACCOUNT, UPSERT_USER, CREATE_PRODUCT, ADD_USER_TO_PRO_ACCOUNT } = require('../utils/queries');
+const { CREATE_PRO_ACCOUNT, GET_PRO_ACCOUNT, UPSERT_USER,  ADD_USER_TO_PRO_ACCOUNT } = require('../utils/queries');
 
 const dotenv = require('dotenv');
 const { clearDb } = require('../utils/clearDb');
