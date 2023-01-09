@@ -48,7 +48,6 @@ const Mutation = {
 		}
 		const date = new Date(parseInt(args.createdAt)*1000);
 		const ISOstring = date.toISOString();
-		console.log(ISOstring);
 
 		return prisma.bounty.upsert({
 			where: { address: args.address },

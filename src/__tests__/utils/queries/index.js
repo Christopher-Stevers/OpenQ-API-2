@@ -309,10 +309,88 @@ const  UPDATE_BOUNTY_VALUATION = gql`
 	}
 `;
 
+const CREATE_PRODUCT = gql`mutation CreateProduct($name: String!) {
+  createProduct(name: $name){
+	name
+	id
+	}
+}`;
+
+const UPDATE_PRODUCT = gql`mutation UpdateProduct($id: String!, $name: String!) {
+  updateProduct(id: $id, name: $name){
+	name
+	id
+	}
+}`;
 
 
+const GET_PRODUCT = gql`query GetProduct($id: String!) {
+  product(id: $id) {
+    id
+	name
+	}
+}`;
+const DELETE_PRODUCT = gql`mutation DeleteProduct($name: String!) {
+  deleteProduct(name: $name){
+	name}
+}`;
 
+const CREATE_PERMISSIONED_ORGANIZATION = gql`mutation CreatePermissionedOrganization($userId: String!, $name: String!, $email: String, $github: String) {
+  createPermissionedOrganization(userId: $userId, name: $name, email: $email, github: $github) {
+    id
+  }
+}`;
 
+const GET_PERMISSIONED_ORGANIZATION = gql`query GetPermissionedOrganization($id: String!) {
+  permissionedOrganization(id: $id) {
+    id 
+	adminUsers(limit:10){
+		nodes{
+		id
+		github
+		email
+		}
+	}
+	ownerUsers(limit:10){
+		nodes{
+		id
+		github
+		email
+		}
+	}
+	memberUsers(limit:10){
+		nodes{
+		id
+		github
+		email
+		}
+	}
+ 	permissionedProducts(limit:10){
+		nodes{
+		id
+		name
+		}
+	}
+	name
+	}
+}`;
+/*ownerUsers(limit:10){
+		nodes{
+		id}
+		}*/
+
+const ADD_PRODUCT_TO_PERMISSIONED_ORGANIZATION = gql`mutation AddProductToPermissionedOrganization($permissionedOrganizationId: String!, $productId: String!, $userId: String! ) {
+  addProductToPermissionedOrganization(permissionedOrganizationId: $permissionedOrganizationId, productId: $productId, userId: $userId) {
+    id
+
+	  }
+}`;
+
+const ADD_USER_TO_PERMISSIONED_ORGANIZATION = gql`mutation addUserToPermissionedOrgWithRole($permissionedOrganizationId: String!, $targetUserId: String!, $currentUserId:String!, $role: String! ) {
+  addUserToPermissionedOrgWithRole(permissionedOrganizationId: $permissionedOrganizationId, targetUserId: $targetUserId, currentUserId: $currentUserId, role: $role) {
+    id
+  }
+}`;
 
 
 
@@ -324,6 +402,14 @@ module.exports = {
 	UNWATCH_BOUNTY,
 	GET_BOUNTY_BY_ID,
 	GET_BOUNTY_PAGE,
+	CREATE_PRODUCT,
+	UPDATE_PRODUCT,
+	DELETE_PRODUCT,
+	GET_PRODUCT,
+	CREATE_PERMISSIONED_ORGANIZATION,
+	ADD_PRODUCT_TO_PERMISSIONED_ORGANIZATION,
+	ADD_USER_TO_PERMISSIONED_ORGANIZATION,
+	GET_PERMISSIONED_ORGANIZATION,
 	CREATE_USER,
 	GET_USER,
 	UPSERT_USER,
