@@ -1,7 +1,7 @@
 const { gql } = require('apollo-server');
 
 const typeDef = gql`
-	type PermissionedOrganization {
+	type ProAccount {
 		id: String!
 		name: String!		
 		avatarUrl: String	
@@ -27,13 +27,13 @@ const typeDef = gql`
 			sortOrder: String): Products
 	}
 	
-	type PermissionedOrganizations {
-		permissionedOrganizationConnection: PermissionedOrganizationConnection
-		nodes: [PermissionedOrganization]
+	type ProAccounts {
+		proAccountConnection: ProAccountConnection
+		nodes: [ProAccount]
 	}
 
-	type PermissionedOrganizationConnection {
-		nodes:[PermissionedOrganization]
+	type ProAccountConnection {
+		nodes:[ProAccount]
 		cursor: ID
 	}
 `;

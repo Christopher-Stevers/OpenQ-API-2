@@ -1,15 +1,15 @@
 const { getAuthenticatedClient, getAuthenticatedClientIntegration } = require('../utils/configureApolloClient');
-const { CREATE_PERMISSIONED_ORGANIZATION, GET_PERMISSIONED_ORGANIZATION, UPSERT_USER, CREATE_PRODUCT, ADD_USER_TO_PERMISSIONED_ORGANIZATION } = require('../utils/queries');
+const { CREATE_PRO_ACCOUNT, GET_PRO_ACCOUNT, UPSERT_USER, CREATE_PRODUCT, ADD_USER_TO_PRO_ACCOUNT } = require('../utils/queries');
 
 const dotenv = require('dotenv');
 const { clearDb } = require('../utils/clearDb');
 dotenv.config({ path: '../../../.env.test' });
 
-describe('createPermissionedOrganization.test', () => {
+describe('createProAccount.test', () => {
 	const email = process.env.EMAIL;
 	const github = process.env.GITHUB_USER_ID;
 	const orgName = 'orgName';
-	describe('permissionedOrganization', () => {
+	describe('proAccount', () => {
 
 		let authenticatedClientGithub, authenticatedClientEmail;
 
@@ -21,7 +21,7 @@ describe('createPermissionedOrganization.test', () => {
 			authenticatedClientGithub = getAuthenticatedClient(process.env.OPENQ_API_SECRET, true, null);
 			authenticatedClientEmail = getAuthenticatedClient(process.env.OPENQ_API_SECRET, null, true);
 		}
-		beforeEach(async () => {
+		afterEach(async () => {
 			await clearDb();
 		});
 		describe('SUCCESS', () => {
@@ -42,35 +42,35 @@ describe('createPermissionedOrganization.test', () => {
 
 
 
-				const permissionedOrganization = await authenticatedClientGithub.mutate({
-					mutation: CREATE_PERMISSIONED_ORGANIZATION,
+				const proAccount = await authenticatedClientGithub.mutate({
+					mutation: CREATE_PRO_ACCOUNT,
 					variables: { name: orgName, userId: githubUserId, github }
 				});
-				const permissionedOrganizationId = permissionedOrganization.data.createPermissionedOrganization.id;
+				const proAccountId = proAccount.data.createProAccount.id;
 
 				await authenticatedClientGithub.mutate({
-					mutation: ADD_USER_TO_PERMISSIONED_ORGANIZATION,
-					variables: { targetUserId: emailUserId, currentUserId: githubUserId, permissionedOrganizationId, role: 'MEMBER' }
+					mutation: ADD_USER_TO_PRO_ACCOUNT,
+					variables: { targetUserId: emailUserId, currentUserId: githubUserId, proAccountId, role: 'MEMBER' }
 				});
 				const memberResult = await authenticatedClientGithub.query({
-					query: GET_PERMISSIONED_ORGANIZATION,
-					variables: { id: permissionedOrganizationId }
+					query: GET_PRO_ACCOUNT,
+					variables: { id: proAccountId }
 				});
 
-				expect(memberResult.data.permissionedOrganization).toMatchObject({ '__typename': 'PermissionedOrganization', 'adminUsers': { 'nodes': [{ 'id': githubUserId, }] }, 'ownerUsers': { 'nodes': [{ 'id': githubUserId, }] }, 'memberUsers': { 'nodes': [{ 'id': githubUserId, }, { 'id': emailUserId, }] } });
+				expect(memberResult.data.proAccount).toMatchObject({ '__typename': 'ProAccount', 'adminUsers': { 'nodes': [{ 'id': githubUserId, }] }, 'ownerUsers': { 'nodes': [{ 'id': githubUserId, }] }, 'memberUsers': { 'nodes': [{ 'id': githubUserId, }, { 'id': emailUserId, }] } });
 
 
 				await authenticatedClientGithub.mutate({
-					mutation: ADD_USER_TO_PERMISSIONED_ORGANIZATION,
-					variables: { targetUserId: emailUserId, currentUserId: githubUserId, permissionedOrganizationId, role: 'ADMIN' }
+					mutation: ADD_USER_TO_PRO_ACCOUNT,
+					variables: { targetUserId: emailUserId, currentUserId: githubUserId, proAccountId, role: 'ADMIN' }
 				});
 
 				const adminResult = await authenticatedClientGithub.query({
-					query: GET_PERMISSIONED_ORGANIZATION,
-					variables: { id: permissionedOrganizationId }
+					query: GET_PRO_ACCOUNT,
+					variables: { id: proAccountId }
 				});
 
-				expect(adminResult.data.permissionedOrganization).toMatchObject({ 'adminUsers': { 'nodes': [{ id: githubUserId }, { id: emailUserId }] }, ownerUsers: { 'nodes': [{ id: githubUserId, }] }, memberUsers: { nodes: [{ id: githubUserId, }, { id: emailUserId }] } });
+				expect(adminResult.data.proAccount).toMatchObject({ 'adminUsers': { 'nodes': [{ id: githubUserId }, { id: emailUserId }] }, ownerUsers: { 'nodes': [{ id: githubUserId, }] }, memberUsers: { nodes: [{ id: githubUserId, }, { id: emailUserId }] } });
 				
 
 
@@ -94,17 +94,17 @@ describe('createPermissionedOrganization.test', () => {
 				const githubUserId = githubUser.data.upsertUser.id;
 
 
-				const permissionedOrganization = await authenticatedClientEmail.mutate({
-					mutation: CREATE_PERMISSIONED_ORGANIZATION,
+				const proAccount = await authenticatedClientEmail.mutate({
+					mutation: CREATE_PRO_ACCOUNT,
 					variables: { name: orgName, userId: emailUserId, email }
 				});
-				const permissionedOrganizationId = permissionedOrganization.data.createPermissionedOrganization.id;
+				const proAccountId = proAccount.data.createProAccount.id;
 
 				try {
 
 					await authenticatedClientGithub.mutate({
-						mutation: ADD_USER_TO_PERMISSIONED_ORGANIZATION,
-						variables: { targetUserId: emailUserId, currentUserId: githubUserId, permissionedOrganizationId, role: 'ADMIN' }
+						mutation: ADD_USER_TO_PRO_ACCOUNT,
+						variables: { targetUserId: emailUserId, currentUserId: githubUserId, proAccountId, role: 'ADMIN' }
 					});
 					throw ('Should not reach this point');
 				} catch (error) {

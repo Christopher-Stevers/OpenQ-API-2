@@ -4,8 +4,8 @@ const generateFilter = (organizationIds) => {
 	return { ...inOrganizationIds };
 };
 
-const PermissionedOrganizations = {
-	permissionedOrganizationConnection: async (parent, args, { prisma }) => {
+const ProAccounts = {
+	proAccountConnection: async (parent, args, { prisma }) => {
 		const { organizationIds } = parent;
 		const filter = generateFilter(organizationIds);
 
@@ -44,4 +44,4 @@ const PermissionedOrganizations = {
 		return organizations;
 	}
 };
-module.exports = PermissionedOrganizations;
+module.exports = ProAccounts;

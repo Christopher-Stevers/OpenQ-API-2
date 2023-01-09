@@ -5,7 +5,7 @@ const typeDef = gql`
 		id: String!
 		name: String!
 		avatarUrl: String
-		permissionedOrganizations(
+		proAccounts(
 			after: ID
 			limit: Int!
 			orderBy: String

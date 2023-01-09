@@ -4,9 +4,9 @@ const userResolvers = require('./user');
 const submissionResolvers = require('./submission');
 const organizationResolvers = require('./organization');
 const repositoryResolvers = require('./repository');
-const permissioinedOrganizationResolvers = require('./permissionedOrganization');
+const proAccountResolvers = require('./proAccount');
 const productResolvers = require('./product');
 
-const resolvers = [bountyResolvers, priceResolvers, userResolvers, submissionResolvers,  organizationResolvers, repositoryResolvers, permissioinedOrganizationResolvers, productResolvers];
+const resolvers = [bountyResolvers, priceResolvers, userResolvers, submissionResolvers,  organizationResolvers, repositoryResolvers, proAccountResolvers, productResolvers];
 
 module.exports = resolvers;

@@ -1,15 +1,15 @@
 const { getAuthenticatedClient, getAuthenticatedClientIntegration } = require('../utils/configureApolloClient');
-const { CREATE_PERMISSIONED_ORGANIZATION, GET_PERMISSIONED_ORGANIZATION, UPSERT_USER, CREATE_PRODUCT, ADD_PRODUCT_TO_PERMISSIONED_ORGANIZATION } = require('../utils/queries');
+const { CREATE_PRO_ACCOUNT, GET_PRO_ACCOUNT, UPSERT_USER, CREATE_PRODUCT, ADD_PRODUCT_TO_PRO_ACCOUNT } = require('../utils/queries');
 
 const dotenv = require('dotenv');
 const { clearDb } = require('../utils/clearDb');
 dotenv.config({ path: '../../../.env.test' });
 
-describe('createPermissionedOrganization.test', () => {
+describe('createProAccount.test', () => {
 	const email = process.env.EMAIL;
 	const orgName = 'orgName';
 	const productName = 'productName';
-	describe('permissionedOrganization', () => {
+	describe('proAccount', () => {
 
 		let authenticatedClient;
 		let unauthenticatedClient;
@@ -26,7 +26,7 @@ describe('createPermissionedOrganization.test', () => {
 		});
 		describe('SUCCESS', () => {
 
-			it('API_SECRET can add Product to permissionedOrganization', async () => {
+			it('API_SECRET can add Product to proAccount', async () => {
 				// ACT
 				const user = await authenticatedClient.mutate({
 					mutation: UPSERT_USER,
@@ -34,8 +34,8 @@ describe('createPermissionedOrganization.test', () => {
 				});
 				const userId = user.data.upsertUser.id;
 
-				const permissionedOrganization = 	await authenticatedClient.mutate({
-					mutation: CREATE_PERMISSIONED_ORGANIZATION,
+				const proAccount = 	await authenticatedClient.mutate({
+					mutation: CREATE_PRO_ACCOUNT,
 					variables: { name: orgName, userId,  email }
 				});
 				const product = 	await authenticatedClient.mutate({
@@ -44,22 +44,22 @@ describe('createPermissionedOrganization.test', () => {
 				});
 			
 				const productId = product.data.createProduct.id;
-				const permissionedOrganizationId = permissionedOrganization.data.createPermissionedOrganization.id;
+				const proAccountId = proAccount.data.createProAccount.id;
 				
 				await authenticatedClient.mutate({
-					mutation: ADD_PRODUCT_TO_PERMISSIONED_ORGANIZATION,
-					variables: { productId, userId, permissionedOrganizationId}
+					mutation: ADD_PRODUCT_TO_PRO_ACCOUNT,
+					variables: { productId, userId, proAccountId}
 				});
 
 				// ASSERET
 				const { data } = await authenticatedClient.query({
-					query: GET_PERMISSIONED_ORGANIZATION,
-					variables: {  id: permissionedOrganizationId }
+					query: GET_PRO_ACCOUNT,
+					variables: {  id: proAccountId }
 				});
 
-				expect(data.permissionedOrganization).toMatchObject({
+				expect(data.proAccount).toMatchObject({
 					
-					__typename: 'PermissionedOrganization',
+					__typename: 'ProAccount',
 					permissionedProducts:  {
 						__typename: 'Products',
 						nodes:  [
@@ -83,11 +83,11 @@ describe('createPermissionedOrganization.test', () => {
 				});
 				const userId = user.data.upsertUser.id;
 
-				const permissionedOrganization = 	await authenticatedClient.mutate({
-					mutation: CREATE_PERMISSIONED_ORGANIZATION,
+				const proAccount = 	await authenticatedClient.mutate({
+					mutation: CREATE_PRO_ACCOUNT,
 					variables: { name: orgName, userId,  email }
 				});
-				const permissionedOrganizationId = permissionedOrganization.data.createPermissionedOrganization.id;
+				const proAccountId = proAccount.data.createProAccount.id;
 				const product = 	await authenticatedClient.mutate({
 					mutation: CREATE_PRODUCT,
 					variables: { name: productName }
@@ -95,8 +95,8 @@ describe('createPermissionedOrganization.test', () => {
 				const productId = product.data.createProduct.id;
 				try {
 					await unauthenticatedClient.mutate({
-						mutation: ADD_PRODUCT_TO_PERMISSIONED_ORGANIZATION,
-						variables: { productId, userId, permissionedOrganizationId}
+						mutation: ADD_PRODUCT_TO_PRO_ACCOUNT,
+						variables: { productId, userId, proAccountId}
 					});
 					throw ('Should not reach this point');
 				} catch (error) {

@@ -2,13 +2,13 @@ const { gql } = require('apollo-server');
 
 const queryDef = gql`
 	extend type Query{
-		permissionedOrganization(id: String!): PermissionedOrganization
-		permissionedOrganizations(
+		proAccount(id: String!): ProAccount
+		proAccounts(
 			after: ID
 			limit: Int
 			orderBy: String
 			sortOrder: String
-		): PermissionedOrganizations
+		): ProAccounts
 	}
 `;
 

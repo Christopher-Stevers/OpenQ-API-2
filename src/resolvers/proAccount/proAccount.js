@@ -1,4 +1,4 @@
-const PermissionedOrganization = {
+const ProAccount = {
 	
 	adminUsers: async (parent, args,) => {
 		return { ...args, userIds: parent.adminUserIds };
@@ -21,4 +21,4 @@ const PermissionedOrganization = {
 
 };
 
-module.exports = PermissionedOrganization;
+module.exports = ProAccount;

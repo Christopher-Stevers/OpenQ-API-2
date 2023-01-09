@@ -1,15 +1,15 @@
 const { getAuthenticatedClient, getAuthenticatedClientIntegration } = require('../utils/configureApolloClient');
-const { CREATE_PERMISSIONED_ORGANIZATION, GET_PERMISSIONED_ORGANIZATION, UPSERT_USER } = require('../utils/queries');
+const { CREATE_PRO_ACCOUNT, GET_PRO_ACCOUNT, UPSERT_USER } = require('../utils/queries');
 
 const dotenv = require('dotenv');
 const { clearDb } = require('../utils/clearDb');
 dotenv.config({ path: '../../../.env.test' });
 
-describe('createPermissionedOrganization.test', () => {
+describe('createProAccount.test', () => {
 	const github = 'github';
 	const email = 'email';
 	const userId = 'userId';
-	describe('permissionedOrganization', () => {
+	describe('proAccount', () => {
 		const name = 'name';
 
 		let authenticatedClient;
@@ -27,7 +27,7 @@ describe('createPermissionedOrganization.test', () => {
 				await clearDb();
 			});
 
-			it('Authenticated client can create permissionedOrganization with EMAIL', async () => {
+			it('Authenticated client can create proAccount with EMAIL', async () => {
 				// ACT
 				const user = await authenticatedClient.mutate({
 					mutation: UPSERT_USER,
@@ -35,27 +35,27 @@ describe('createPermissionedOrganization.test', () => {
 				});
 				const userId = user.data.upsertUser.id;
 
-				const permissionedOrganization = 	await authenticatedClient.mutate({
-					mutation: CREATE_PERMISSIONED_ORGANIZATION,
+				const proAccount = 	await authenticatedClient.mutate({
+					mutation: CREATE_PRO_ACCOUNT,
 					variables: { name, userId,  email }
 				});
-				const id = permissionedOrganization.data.createPermissionedOrganization.id;
+				const id = proAccount.data.createProAccount.id;
 
 
 				// ASSERET
 				const { data } = await authenticatedClient.query({
-					query: GET_PERMISSIONED_ORGANIZATION,
+					query: GET_PRO_ACCOUNT,
 					variables: {  id }
 				});
 
-				expect(data.permissionedOrganization).toMatchObject({
-					__typename: 'PermissionedOrganization',
+				expect(data.proAccount).toMatchObject({
+					__typename: 'ProAccount',
 					name
 				});
 				
 			});
 
-			it('Authenticated client can create permissionedOrganization with GITHUB', async () => {
+			it('Authenticated client can create proAccount with GITHUB', async () => {
 				// ACT
 				const user = await authenticatedClient.mutate({
 					mutation: UPSERT_USER,
@@ -63,21 +63,21 @@ describe('createPermissionedOrganization.test', () => {
 				});
 				const userId = user.data.upsertUser.id;
 
-				const permissionedOrganization = 	await authenticatedClient.mutate({
-					mutation: CREATE_PERMISSIONED_ORGANIZATION,
+				const proAccount = 	await authenticatedClient.mutate({
+					mutation: CREATE_PRO_ACCOUNT,
 					variables: { name, userId,  github }
 				});
-				const id = permissionedOrganization.data.createPermissionedOrganization.id;
+				const id = proAccount.data.createProAccount.id;
 
 
 				// ASSERET
 				const { data } = await authenticatedClient.query({
-					query: GET_PERMISSIONED_ORGANIZATION,
+					query: GET_PRO_ACCOUNT,
 					variables: {  id }
 				});
 
-				expect(data.permissionedOrganization).toMatchObject({
-					__typename: 'PermissionedOrganization',
+				expect(data.proAccount).toMatchObject({
+					__typename: 'ProAccount',
 					name
 				});
 				
@@ -88,7 +88,7 @@ describe('createPermissionedOrganization.test', () => {
 			it('should fail for unauthenticated calls - GITHUB WITH NO AUTH', async () => {
 				try {
 					await unauthenticatedClient.mutate({
-						mutation: CREATE_PERMISSIONED_ORGANIZATION,
+						mutation: CREATE_PRO_ACCOUNT,
 						variables: { name,  userId,  github }
 					});
 					throw ('Should not reach this point');

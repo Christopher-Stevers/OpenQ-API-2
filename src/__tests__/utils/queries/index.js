@@ -335,14 +335,14 @@ const DELETE_PRODUCT = gql`mutation DeleteProduct($name: String!) {
 	name}
 }`;
 
-const CREATE_PERMISSIONED_ORGANIZATION = gql`mutation CreatePermissionedOrganization($userId: String!, $name: String!, $email: String, $github: String) {
-  createPermissionedOrganization(userId: $userId, name: $name, email: $email, github: $github) {
+const CREATE_PRO_ACCOUNT = gql`mutation CreateProAccount($userId: String!, $name: String!, $email: String, $github: String) {
+  createProAccount(userId: $userId, name: $name, email: $email, github: $github) {
     id
   }
 }`;
 
-const GET_PERMISSIONED_ORGANIZATION = gql`query GetPermissionedOrganization($id: String!) {
-  permissionedOrganization(id: $id) {
+const GET_PRO_ACCOUNT = gql`query GetProAccount($id: String!) {
+  proAccount(id: $id) {
     id 
 	adminUsers(limit:10){
 		nodes{
@@ -379,15 +379,15 @@ const GET_PERMISSIONED_ORGANIZATION = gql`query GetPermissionedOrganization($id:
 		id}
 		}*/
 
-const ADD_PRODUCT_TO_PERMISSIONED_ORGANIZATION = gql`mutation AddProductToPermissionedOrganization($permissionedOrganizationId: String!, $productId: String!, $userId: String! ) {
-  addProductToPermissionedOrganization(permissionedOrganizationId: $permissionedOrganizationId, productId: $productId, userId: $userId) {
+const ADD_PRODUCT_TO_PRO_ACCOUNT = gql`mutation AddProductToProAccount($proAccountId: String!, $productId: String!, $userId: String! ) {
+  addProductToProAccount(proAccountId: $proAccountId, productId: $productId, userId: $userId) {
     id
 
 	  }
 }`;
 
-const ADD_USER_TO_PERMISSIONED_ORGANIZATION = gql`mutation addUserToPermissionedOrgWithRole($permissionedOrganizationId: String!, $targetUserId: String!, $currentUserId:String!, $role: String! ) {
-  addUserToPermissionedOrgWithRole(permissionedOrganizationId: $permissionedOrganizationId, targetUserId: $targetUserId, currentUserId: $currentUserId, role: $role) {
+const ADD_USER_TO_PRO_ACCOUNT = gql`mutation addUserToPermissionedOrgWithRole($proAccountId: String!, $targetUserId: String!, $currentUserId:String!, $role: String! ) {
+  addUserToPermissionedOrgWithRole(proAccountId: $proAccountId, targetUserId: $targetUserId, currentUserId: $currentUserId, role: $role) {
     id
   }
 }`;
@@ -406,10 +406,10 @@ module.exports = {
 	UPDATE_PRODUCT,
 	DELETE_PRODUCT,
 	GET_PRODUCT,
-	CREATE_PERMISSIONED_ORGANIZATION,
-	ADD_PRODUCT_TO_PERMISSIONED_ORGANIZATION,
-	ADD_USER_TO_PERMISSIONED_ORGANIZATION,
-	GET_PERMISSIONED_ORGANIZATION,
+	CREATE_PRO_ACCOUNT,
+	ADD_PRODUCT_TO_PRO_ACCOUNT,
+	ADD_USER_TO_PRO_ACCOUNT,
+	GET_PRO_ACCOUNT,
 	CREATE_USER,
 	GET_USER,
 	UPSERT_USER,

@@ -2,7 +2,7 @@ const { AuthenticationError } = require('apollo-server');
 const checkUserAuth = require('../utils/checkUserAuth');
 
 const Mutation = {
-	createPermissionedOrganization: async (parent, args, { req, prisma, emailClient, githubClient  }) => {
+	createProAccount: async (parent, args, { req, prisma, emailClient, githubClient  }) => {
 		
 		const { error, errorMessage } = await checkUserAuth(prisma, req, args, emailClient, githubClient);
 
@@ -11,7 +11,7 @@ const Mutation = {
 		}
 
 
-		return prisma.permissionedOrganization.create({
+		return prisma.proAccount.create({
 			
 			data:{
 				ownerUsers: {
@@ -30,14 +30,14 @@ const Mutation = {
 		});
 		
 	},
-	addProductToPermissionedOrganization: async (parent, args, { req, prisma,   }) => {
+	addProductToProAccount: async (parent, args, { req, prisma,   }) => {
 		if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
 			throw new AuthenticationError();
 		}
 
 
-		return prisma.permissionedOrganization.update({
-			where:{id: args.permissionedOrganizationId},
+		return prisma.proAccount.update({
+			where:{id: args.proAccountId},
 			data:{
 				permissionedProducts: {
 					connect: {id: args.productId}
@@ -48,28 +48,28 @@ const Mutation = {
 		});
 	},
 	addUserToPermissionedOrgWithRole: async (parent, args, {  prisma,   }) => {
-		const currentPermissionedOrganization = await prisma.permissionedOrganization.findUnique({
-			where: {id: args.permissionedOrganizationId},
+		const currentProAccount = await prisma.proAccount.findUnique({
+			where: {id: args.proAccountId},
 		});
 		let userToUpdate ={};
 
 		switch(args.role){
 		case 'ADMIN':
-			if(!currentPermissionedOrganization.ownerUserIds.includes(args.currentUserId)){
+			if(!currentProAccount.ownerUserIds.includes(args.currentUserId)){
 				throw new AuthenticationError('LACKS_PERMISSIONS');
 			}
 			userToUpdate = {adminUsers: {connect: {id: args.targetUserId}},
 				memberUsers: {connect: {id: args.targetUserId}}};
 			break;
 		case 'MEMBER':
-			if(!currentPermissionedOrganization.adminUserIds.includes(args.currentUserId)){		
+			if(!currentProAccount.adminUserIds.includes(args.currentUserId)){		
 				throw new AuthenticationError('LACKS_PERMISSIONS');
 			}
 			userToUpdate = {memberUsers: {connect: {id: args.targetUserId}}};
 		}
 		
-		return prisma.permissionedOrganization.update({
-			where:{id: args.permissionedOrganizationId},
+		return prisma.proAccount.update({
+			where:{id: args.proAccountId},
 			data:{
 				...userToUpdate
 			}
