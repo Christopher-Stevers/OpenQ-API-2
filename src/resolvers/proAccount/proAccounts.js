@@ -3,10 +3,12 @@
 const ProAccounts = {
 	proAccountConnection: async (parent, args, { prisma }) => {
 
+		const filter = parent.ids ? { id: { in: parent.ids }, } : {};
 		const cursor = parent.after ? { address: parent.after } : undefined;
 		const nodes = await prisma.proAccount.findMany({
 			skip: (!parent.after) ? 0 : 1,
 			cursor,
+			where: { ...filter },
 			take: parent.limit,
 			...parent.orderBy && {
 				orderBy: [
@@ -25,10 +27,13 @@ const ProAccounts = {
 
 
 	nodes: async (parent, args, { prisma }) => {
+		console.log(parent.ids);
+		const filter = parent.ids ? { id: { in: parent.ids }, } : {};
 
 		const proAccounts = await prisma.proAccount.findMany({
 			skip: (!parent.after) ? 0 : 1,
 			take: parent.limit,
+			where: { ...filter },
 
 		});
 		return proAccounts;

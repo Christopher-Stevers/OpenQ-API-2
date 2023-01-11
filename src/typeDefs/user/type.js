@@ -40,6 +40,9 @@ const typeDef = gql`
 		otherRoles: [String]
         invoicingEmail: String  @auth
         interests: [String] 
+		adminOrganizations: ProAccounts
+		ownerOrganizations:ProAccounts
+		memberOrganizations:ProAccounts
 	}
 
 	type Users {

@@ -3,7 +3,12 @@ const { gql } = require('apollo-server');
 const queryDef = gql`
 	extend type Query{
 		product(id: String!): Product
-		products(id: String!): Products
+		products(
+			after: ID
+			limit: Int
+			orderBy: String
+			sortOrder: String
+		): Products
 	}
 `;
 

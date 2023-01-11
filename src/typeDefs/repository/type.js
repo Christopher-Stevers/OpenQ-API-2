@@ -15,8 +15,22 @@ const typeDef = gql`
 		): Bounties
 		isContest: Boolean
 		hackathonBlacklisted: Boolean
-		startDate: String
-		registrationDeadline: String
+		registrationDeadline: String		
+   		eventOrganizer:      String
+    	repositoryUrl:      String
+    	isIrl:      Boolean
+    	city:      String
+    	timezone:      String
+    	startDate:      String
+    	endDate:      String
+    	topic:      [String]
+    	website:      String
+    	contactEmail:      String
+    	twitter:      String
+    	discord:      String
+    	telegram:      String
+    	slack:      String
+		
 	}
 	
 	type Repositories {
