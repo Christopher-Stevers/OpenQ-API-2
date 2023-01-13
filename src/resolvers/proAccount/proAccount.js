@@ -13,7 +13,6 @@ const ProAccount = {
 
 	},
 	permissionedProducts: async (parent, args,) => {
-		console.log(parent, args);
 		return { ...args, productIds: parent.permissionedProductIds };
 
 	},

@@ -21,7 +21,7 @@ const verifyGithubOwnership = async (req, userId) => {
 	// eslint-disable-next-line no-async-promise-executor
 	return new Promise(async (resolve, reject) => {
 		try {
-			
+
 			const token = getGithubOAuthToken(req);
 			
 			if (token === null) {

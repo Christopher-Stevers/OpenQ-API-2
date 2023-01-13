@@ -205,10 +205,10 @@ const GET_USER = gql`query GetUser($id: String, $email: String, $github: String)
 		}			
 		}
 		watchedBounties(limit: 10) {
-      bountyConnection{
-        nodes {
-          address
-        }
+      		bountyConnection{
+        		nodes {
+          	address
+        	}
       }
     }
   }

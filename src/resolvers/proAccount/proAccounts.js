@@ -27,7 +27,6 @@ const ProAccounts = {
 
 
 	nodes: async (parent, args, { prisma }) => {
-		console.log(parent.ids);
 		const filter = parent.ids ? { id: { in: parent.ids }, } : {};
 
 		const proAccounts = await prisma.proAccount.findMany({

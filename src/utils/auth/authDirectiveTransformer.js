@@ -13,9 +13,8 @@ function authDirectiveTransformer(schema, directiveName) {
 				fieldConfig.resolve = async function (parent, args, context, info) {
 					try {
 						const idObj = {};
-						const currentGithub = args ? args.github : parent ? parent.github:null;
-						const currentEmail = args ? args.email : parent ? parent.email: null;
-
+						const currentGithub = args?.github ? args?.github : parent?.github ? parent.github:null;
+						const currentEmail = args?.email ? args?.email : parent?.email ? parent.email: null;
 						if(currentGithub|| currentEmail){
 							
 							if(currentGithub) {
