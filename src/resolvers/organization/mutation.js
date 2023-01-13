@@ -1,5 +1,4 @@
 const { AuthenticationError } = require('apollo-server');
-const checkUserAuth = require('../utils/checkUserAuth');
 
 const Mutation = {
 	blacklistOrg: async (parent, args, { req, prisma }) => {
@@ -14,12 +13,7 @@ const Mutation = {
 			}
 		);
 	},
-	starOrg: async (parent, args, { req, prisma, githubClient, emailClient }) => {
-		const { error, errorMessage, id } = await checkUserAuth(prisma, req, args, emailClient, githubClient);
-
-		if (error) {
-			throw new AuthenticationError(errorMessage);
-		}
+	starOrg: async (parent, args, {  prisma, id,  }) => {
 
 		const user = await prisma.user.findUnique({
 			where: { id }
@@ -49,12 +43,7 @@ const Mutation = {
 
 		return organization;
 	},
-	unstarOrg: async (parent, args, { req, prisma, githubClient, emailClient }) => {
-		const { error, errorMessage, id } = await checkUserAuth(prisma, req, args, emailClient, githubClient);
-
-		if (error) {
-			throw new AuthenticationError(errorMessage);
-		}
+	unstarOrg: async (parent, args, { id, prisma,  }) => {
 		// upsert organization
 		await prisma.organization.upsert({
 			where: { id: args.organizationId },

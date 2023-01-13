@@ -14,8 +14,8 @@ const mutationDefs = gql`
 			category: String,
             createdAt: String
 		): Bounty!
-		watchBounty(userId: String!, contractAddress: String!, email: String, github: String): Bounty
-		unwatchBounty(userId: String!, contractAddress: String!, email: String, github: String): Bounty
+		watchBounty(userId: String!, contractAddress: String!, email: String, github: String): Bounty @auth
+		unwatchBounty(userId: String!, contractAddress: String!, email: String, github: String): Bounty @auth
 		updateBountyValuation(
 			address: String!
 			tvl: Float

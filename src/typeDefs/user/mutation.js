@@ -2,7 +2,7 @@ const { gql } = require('apollo-server');
 
 const mutationDefs = gql`
   extend type Mutation {
-		upsertUser(email: String, github: String): User!
+		upsertUser(email: String, github: String): User! @auth
 		updateUser(
       id: String
 			github: String
@@ -29,7 +29,7 @@ const mutationDefs = gql`
       vatRate: Float
       memo: String
       invoicingEmail: String
-		): User!
+		): User!  @auth(roles: ["OWNER", "ADMIN", "MEMBER"])
         combineUsers(
             id: String
             github: String  

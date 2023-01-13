@@ -1,9 +1,8 @@
 
 const { AuthenticationError } = require('apollo-server');
-const checkUserAuth = require('../utils/checkUserAuth');
 
 const Mutation = {
-	createBounty: async (parent, args, { req, prisma }) => {
+	createBounty: async (parent, args, { req, prisma, }) => {
 		if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
 			throw new AuthenticationError();
 		}
@@ -170,12 +169,8 @@ const Mutation = {
 			},
 		});
 	},
-	watchBounty: async (parent, args, { req, prisma, githubClient, emailClient }) => {
-		const { error, errorMessage, id } = await checkUserAuth(prisma, req, args, emailClient, githubClient);
-
-		if (error) {
-			throw new AuthenticationError(errorMessage);
-		}
+	watchBounty: async (parent, args, { prisma, id }) => {
+	
 
 		const bounty = await prisma.bounty.findUnique({
 			where: { address: args.contractAddress },
@@ -199,12 +194,8 @@ const Mutation = {
 			},
 		});
 	},
-	unwatchBounty: async (parent, args, { req, prisma, emailClient, githubClient }) => {
-		const { error, errorMessage, id } = await checkUserAuth(prisma, req, args, emailClient, githubClient);
-
-		if (error) {
-			throw new AuthenticationError(errorMessage);
-		}
+	unwatchBounty: async (parent, args, {  prisma, id }) => {
+		
 
 		const bounty = await prisma.bounty.findUnique({
 			where: { address: args.contractAddress },

@@ -1,14 +1,7 @@
 const { AuthenticationError } = require('apollo-server');
-const checkUserAuth = require('../utils/checkUserAuth');
 
 const Mutation = {
-	createProAccount: async (parent, args, { req, prisma, emailClient, githubClient  }) => {
-		
-		const { error, errorMessage } = await checkUserAuth(prisma, req, args, emailClient, githubClient);
-
-		if (error) {
-			throw new AuthenticationError(errorMessage);
-		}
+	createProAccount: async (parent, args, {  prisma,   }) => {
 
 
 		return prisma.proAccount.create({

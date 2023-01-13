@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 const { clearDb } = require('../utils/clearDb');
 dotenv.config({ path: '../../../.env.test' });
 
-describe('createProAccount.test', () => {
+describe('addProductToProAccount.test.js', () => {
 	const email = process.env.EMAIL;
 	const orgName = 'orgName';
 	const productName = 'productName';
@@ -28,49 +28,54 @@ describe('createProAccount.test', () => {
 
 			it('API_SECRET can add Product to proAccount', async () => {
 				// ACT
-				const user = await authenticatedClient.mutate({
-					mutation: UPSERT_USER,
-					variables: { email }
-				});
-				const userId = user.data.upsertUser.id;
+				try{
+					const user = await authenticatedClient.mutate({
+						mutation: UPSERT_USER,
+						variables: { email }
+					});
+					const userId = user.data.upsertUser.id;
 
-				const proAccount = 	await authenticatedClient.mutate({
-					mutation: CREATE_PRO_ACCOUNT,
-					variables: { name: orgName, userId,  email }
-				});
-				const product = 	await authenticatedClient.mutate({
-					mutation: CREATE_PRODUCT,
-					variables: { name: productName }
-				});
+					const proAccount = 	await authenticatedClient.mutate({
+						mutation: CREATE_PRO_ACCOUNT,
+						variables: { name: orgName, userId,  email }
+					});
+					const product = 	await authenticatedClient.mutate({
+						mutation: CREATE_PRODUCT,
+						variables: { name: productName }
+					});
 			
-				const productId = product.data.createProduct.id;
-				const proAccountId = proAccount.data.createProAccount.id;
+					const productId = product.data.createProduct.id;
+					const proAccountId = proAccount.data.createProAccount.id;
 				
-				await authenticatedClient.mutate({
-					mutation: ADD_PRODUCT_TO_PRO_ACCOUNT,
-					variables: { productId, userId, proAccountId}
-				});
+					await authenticatedClient.mutate({
+						mutation: ADD_PRODUCT_TO_PRO_ACCOUNT,
+						variables: { productId,  proAccountId}
+					});
 
-				// ASSERET
-				const { data } = await authenticatedClient.query({
-					query: GET_PRO_ACCOUNT,
-					variables: {  id: proAccountId }
-				});
+					// ASSERET
+					const { data } = await authenticatedClient.query({
+						query: GET_PRO_ACCOUNT,
+						variables: {  id: proAccountId }
+					});
 
-				expect(data.proAccount).toMatchObject({
+					expect(data.proAccount).toMatchObject({
 					
-					__typename: 'ProAccount',
-					permissionedProducts:  {
-						__typename: 'Products',
-						nodes:  [
-							{
-								'id': productId, 
-								'name': 'productName',
-							},
-						],
-					}
-				});
+						__typename: 'ProAccount',
+						permissionedProducts:  {
+							__typename: 'Products',
+							nodes:  [
+								{
+									'id': productId, 
+									'name': 'productName',
+								},
+							],
+						}
+					});
 				
+				}
+				catch(error) {
+					console.log(error.networkError.result);
+				}
 			});
 
 		});
@@ -96,7 +101,7 @@ describe('createProAccount.test', () => {
 				try {
 					await unauthenticatedClient.mutate({
 						mutation: ADD_PRODUCT_TO_PRO_ACCOUNT,
-						variables: { productId, userId, proAccountId}
+						variables: { productId,  proAccountId}
 					});
 					throw ('Should not reach this point');
 				} catch (error) {

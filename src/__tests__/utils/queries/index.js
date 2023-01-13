@@ -379,8 +379,8 @@ const GET_PRO_ACCOUNT = gql`query GetProAccount($id: String!) {
 		id}
 		}*/
 
-const ADD_PRODUCT_TO_PRO_ACCOUNT = gql`mutation AddProductToProAccount($proAccountId: String!, $productId: String!, $userId: String! ) {
-  addProductToProAccount(proAccountId: $proAccountId, productId: $productId, userId: $userId) {
+const ADD_PRODUCT_TO_PRO_ACCOUNT = gql`mutation AddProductToProAccount($proAccountId: String!, $productId: String! ) {
+  addProductToProAccount(proAccountId: $proAccountId, productId: $productId) {
     id
 
 	  }

@@ -12,10 +12,10 @@ const { makeExecutableSchema } = require('@graphql-tools/schema');
 const authDirectiveTransformer = require('./utils/auth/authDirectiveTransformer');
 const chooseContext = require('./chooseContext');
 
-const authDirectiveTypeDefs = (directiveName) =>  `
-  directive @${directiveName} on FIELD_DEFINITION`;
+const directiveTypeDefs = (directive1) =>  `
+  directive @${directive1}(roles: [String!]) on FIELD_DEFINITION`;
 let schema = makeExecutableSchema({
-	typeDefs: [typeDefs, authDirectiveTypeDefs('auth')],
+	typeDefs: [typeDefs, directiveTypeDefs('auth')],
 	resolvers
 });
 
