@@ -26,9 +26,9 @@ describe('createProAccount.test', () => {
 		});
 		describe('SUCCESS', () => {
 
-			it('adds user to role array(s)', async () => {
+			it.only('adds user to role array(s)', async () => {
+				console.log(process.env.EMAIL_DID_TOKEN, 'email token');
 				// ACT
-
 				const githubUser = await authenticatedClientGithub.mutate({
 					mutation: UPSERT_USER,
 					variables: { github }
@@ -60,6 +60,7 @@ describe('createProAccount.test', () => {
 				expect(memberResult.data.proAccount).toMatchObject({ '__typename': 'ProAccount', 'adminUsers': { 'nodes': [{ 'id': githubUserId, }] }, 'ownerUsers': { 'nodes': [{ 'id': githubUserId, }] }, 'memberUsers': { 'nodes': [{ 'id': githubUserId, }, { 'id': emailUserId, }] } });
 
 
+			
 				await authenticatedClientGithub.mutate({
 					mutation: ADD_USER_TO_PRO_ACCOUNT,
 					variables: { targetUserId: emailUserId, currentUserId: githubUserId, proAccountId, role: 'ADMIN' }
@@ -72,10 +73,10 @@ describe('createProAccount.test', () => {
 
 				expect(adminResult.data.proAccount).toMatchObject({ 'adminUsers': { 'nodes': [{ id: githubUserId }, { id: emailUserId }] }, ownerUsers: { 'nodes': [{ id: githubUserId, }] }, memberUsers: { nodes: [{ id: githubUserId, }, { id: emailUserId }] } });
 				
-
-
-
+	
+				
 			});
+	
 
 		});
 

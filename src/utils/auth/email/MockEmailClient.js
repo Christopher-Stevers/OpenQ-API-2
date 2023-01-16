@@ -11,6 +11,10 @@ const MockEmailClient = {
 			resolve(isValidEmail);
 		});
 	},
+	getEmail(req) {	
+
+		return process.env.EMAIL;
+	}
 };
 
 module.exports = MockEmailClient;

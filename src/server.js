@@ -11,16 +11,17 @@ const apolloLogger = require('./plugins/index.js');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
 const authDirectiveTransformer = require('./utils/auth/authDirectiveTransformer');
 const chooseContext = require('./chooseContext');
+const hasRolesDirectiveTransformer = require('./utils/auth/hasRolesDirectiveTransformer');
 
 const directiveTypeDefs = (directive1) =>  `
   directive @${directive1}(roles: [String!]) on FIELD_DEFINITION`;
 let schema = makeExecutableSchema({
-	typeDefs: [typeDefs, directiveTypeDefs('auth')],
+	typeDefs: [typeDefs, directiveTypeDefs('auth'), directiveTypeDefs('hasRoles')],
 	resolvers
 });
 
 schema = authDirectiveTransformer(schema, 'auth');
-
+schema = hasRolesDirectiveTransformer(schema, 'hasRoles');
 const context = chooseContext(process.env.DEPLOY_ENV);
 
 const server = new ApolloServer({

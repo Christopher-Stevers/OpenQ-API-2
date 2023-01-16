@@ -17,7 +17,7 @@ const {
 /***
  *  Verifies the OAuth token holder matches 
  * ***/
-const verifyGithubOwnership = async (req, userId) => {
+const getGithubFromCookie = async (req,) => {
 	// eslint-disable-next-line no-async-promise-executor
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -25,7 +25,7 @@ const verifyGithubOwnership = async (req, userId) => {
 			const token = getGithubOAuthToken(req);
 			
 			if (token === null) {
-				return reject(NO_GITHUB_OAUTH_TOKEN({ userId }));
+				return reject(NO_GITHUB_OAUTH_TOKEN({ userId: '' }));
 			} 
 			const resultViewer = await axios
 				.post(
@@ -40,25 +40,24 @@ const verifyGithubOwnership = async (req, userId) => {
 					}
 				);
 			if (resultViewer.data.errors && resultViewer.data.errors[0].type == 'RATE_LIMITED') {
-				return reject(RATE_LIMITED({ userId }));
+				return reject(RATE_LIMITED({ userId: '' }));
 			}
 
 			const viewerUserId = resultViewer.data.data.viewer.id;
 			const viewerLogin = resultViewer.data.data.viewer.login;
 
-			if (viewerUserId == userId) {
-				return resolve({ githubIsValid: true, login: viewerLogin });
+			if (viewerUserId ) {
+				return resolve({ github: viewerUserId, login: viewerLogin });
 			} else {
-				return reject(GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES({viewerUserId, userId }));
+				return reject(GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES({viewerUserId, userId: '' }));
 			}
 		} catch (error) {
-			console.log(error);
 			if (error.response && error.response.status == 401) {
-				return reject(INVALID_GITHUB_OAUTH_TOKEN({ userId}));
+				return reject(INVALID_GITHUB_OAUTH_TOKEN({ userId: ''}));
 			}
-			return reject(UNKNOWN_ERROR({ userId, error }));
+			return reject(UNKNOWN_ERROR({ userId: '', error }));
 		}
 	});
 };
 
-module.exports = verifyGithubOwnership;
+module.exports = getGithubFromCookie;

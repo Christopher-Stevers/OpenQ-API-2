@@ -11,6 +11,9 @@ const MockGithubClient = {
 			resolve({ githubIsValid: isValidGithub, login: process.env.GITHUB_USER_LOGIN });
 		});
 	},
+	getGithub(req) {
+		return process.env.GITHUB_USER_ID;
+	},
 	verifyUserCanAdministerRepository: async (req, github) => {
 		return new Promise(async (resolve, reject) => {
 			resolve(isValidGithub);

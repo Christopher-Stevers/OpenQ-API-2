@@ -348,21 +348,18 @@ const GET_PRO_ACCOUNT = gql`query GetProAccount($id: String!) {
 		nodes{
 		id
 		github
-		email
 		}
 	}
 	ownerUsers(limit:10){
 		nodes{
 		id
 		github
-		email
 		}
 	}
 	memberUsers(limit:10){
 		nodes{
 		id
 		github
-		email
 		}
 	}
  	permissionedProducts(limit:10){

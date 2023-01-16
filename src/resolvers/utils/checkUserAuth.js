@@ -62,6 +62,7 @@ const checkUserAuth = async (prisma, req, args, emailClient, githubClient, optio
 				userId = user ? user.id : null;
 				username = args.email;
 			} catch (error) {
+				console.log(error);
 				return { error: true, errorMessage: error };
 			}
 		}
@@ -76,6 +77,7 @@ const checkUserAuth = async (prisma, req, args, emailClient, githubClient, optio
 				userId = user ? user.id : null;
 				username = login;
 			} catch (error) {
+				console.log(error, 'asdfasdf');
 				return { error: true, errorMessage: error };
 			}
 		}

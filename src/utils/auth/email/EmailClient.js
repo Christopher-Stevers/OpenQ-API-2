@@ -1,4 +1,5 @@
 const verifyEmailOwnership = require('./verifyEmailOwnership');
+const getEmailFromCookie = require('./getEmailFromCookie');
 
 class EmailClient {
 	constructor(magic) {
@@ -15,6 +16,26 @@ class EmailClient {
 			}
 		});
 	}
+	getEmail(req) {
+		return new Promise(async (resolve, reject) => {
+			
+
+			try {
+				const result = await getEmailFromCookie(req,  this.magic);
+				resolve(result);
+			} catch (error) {
+				return reject(error);
+			}
+		
+
+		
+		});
+	}
+
+
+
+	
+
 }
 
 module.exports = EmailClient;

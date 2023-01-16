@@ -1,4 +1,5 @@
 const verifyGithubOwnership = require('./verifyGithubOwnership');
+const getGithubFromCookie = require('./getGithubFromCookie');
 const verifyUserCanAdministerRepository = require('./verifyUserCanAdministerRepository');
 const verifyUserIsSubmissionAuthor = require('./verifyUserIsSubmissionAuthor');
 
@@ -13,6 +14,23 @@ const GithubClient = {
 			}
 		});
 	},
+	getGithub(req) {
+		return new Promise(async (resolve, reject) => {
+			
+
+			try {
+				const result = await getGithubFromCookie(req);
+				resolve(result);
+			} catch (error) {
+				return reject(error);
+			}
+		
+
+		
+		});
+	},
+	
+
 	verifyUserCanAdministerRepository: async (req, repoId) => {
 		return new Promise(async (resolve, reject) => {
 			try {
