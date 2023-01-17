@@ -12,7 +12,7 @@ const MockGithubClient = {
 		});
 	},
 	getGithub(req) {
-		return process.env.GITHUB_USER_ID;
+		return isValidGithub ? 'MDQ6VXNlcjcyMTU2Njc5' : '';
 	},
 	verifyUserCanAdministerRepository: async (req, github) => {
 		return new Promise(async (resolve, reject) => {

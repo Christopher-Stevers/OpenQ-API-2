@@ -13,78 +13,54 @@ function hasRolesDirectiveTransformer(schema, directiveName) {
 				fieldConfig.resolve = async function (parent, args,  context, info) {
 					const {req, prisma, emailClient, githubClient } = context;
 					const proAccountId = args.proAccountId ? args.proAccountId : parent.proAccountId? parent.proAccountId: parent.id;
-					const idObj = {};
+		
 					
-					const currentGithub = args?.github ? args?.github : parent?.github ? parent.github:null;
-					const currentEmail = args?.email ? args?.email : parent?.email ? parent.email: null;
-					try{
 
-						const github = 	githubClient.getGithub(req);
-						console.log('my github', github);
-					}
-					catch(error){	
-						console.log(error);		
-					}
+					const github= await 	githubClient.getGithub(req);
+				
 
-					try{
-						console.log('my email', emailClient);
-						const email = 	emailClient.getEmail(req);
-						console.log(email, 'email');
-					}
-					catch(error){
-						console.log(error);					
-					}
+					const	email = 	await emailClient.getEmail(req);			
+					
+					const identity = github ? {github} : email ? {email} : null;
+					if(github|| email){					
+						const user = await prisma.user.findUnique({
+							where: identity,
+						});
+						const {adminOrganizationIds, memberOrganizationIds, ownerOrganizationIds} = user;
+
+
+					
+
+						switch(args.role){
+				
+						case 'MEMBER':
+							if(!memberOrganizationIds.includes(proAccountId)){
+								throw new AuthenticationError('LACKS_MEMBER_PERMISSIONS');
+							}
+							break;
 						
-					if(currentGithub|| currentEmail){
+						
+						case 'OWNER':
+							if(!ownerOrganizationIds.includes(proAccountId)){
+								throw new AuthenticationError('LACKS_OWNER_PERMISSIONS');
+							}
+							break;
+						
+						case 'ADMIN':
+							if(!adminOrganizationIds.includes(proAccountId)){
+								throw new AuthenticationError('LACKS_ADMIN_PERMISSIONS');
 							
-						if(currentGithub) {
-							idObj.github = currentGithub;
-						} else if (currentEmail) {
-							idObj.email = currentEmail;
-						} else {
-							throw new AuthenticationError('Not logged in');                            
+							}
 						}
-
-						const {req, prisma, emailClient, githubClient } = context;
-						const { error, errorMessage,  id } = await checkUserAuth(prisma, req, idObj, emailClient, githubClient);
-
-						if (error) {
-							throw new AuthenticationError(errorMessage);
-						} else {
-							const 		user = await prisma.user.findUnique({
-								where: { id },
-							});
-							console.log(user);
-						}
-
-
-					}
-
-					const value = await checkUserAuth(prisma, req, idObj, {githubClient, emailClient});
-					//	console.log(value, 'value');
-					//	console.log(proAccountId);
-					const currentProAccount = await prisma.proAccount.findUnique({
-						where: {id: proAccountId},
-					});
-					let userToUpdate ={};
-					switch(args.role){
-				
-					case 'MEMBER':
-						if(!currentProAccount.adminUserIds.includes(args.currentUserId)){
-							console.log('isn\'t member');
-							throw new AuthenticationError('LACKS_PERMISSIONS');
-						}
-						userToUpdate = {memberUsers: {connect: {id: args.targetUserId}}};
-						console.log(userToUpdate);
-					}
-				
-					try {
+						
+		
 
 						const result = await resolve(parent, args, context, info);
 						return result;
-						
-					} catch (error) {
-						throw new AuthenticationError(error);
+				
+					}
+					else{
+						throw new AuthenticationError('NOT_LOGGED_IN');
 					}
 				};
 				return fieldConfig;

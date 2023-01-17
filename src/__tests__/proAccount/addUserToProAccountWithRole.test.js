@@ -26,8 +26,8 @@ describe('createProAccount.test', () => {
 		});
 		describe('SUCCESS', () => {
 
-			it.only('adds user to role array(s)', async () => {
-				console.log(process.env.EMAIL_DID_TOKEN, 'email token');
+			it('adds user to role array(s)', async () => {
+
 				// ACT
 				const githubUser = await authenticatedClientGithub.mutate({
 					mutation: UPSERT_USER,
@@ -52,7 +52,7 @@ describe('createProAccount.test', () => {
 					mutation: ADD_USER_TO_PRO_ACCOUNT,
 					variables: { targetUserId: emailUserId, currentUserId: githubUserId, proAccountId, role: 'MEMBER' }
 				});
-				const memberResult = await authenticatedClientGithub.query({
+				const memberResult = await authenticatedClientEmail.query({
 					query: GET_PRO_ACCOUNT,
 					variables: { id: proAccountId }
 				});

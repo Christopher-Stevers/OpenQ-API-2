@@ -18,8 +18,6 @@ class EmailClient {
 	}
 	getEmail(req) {
 		return new Promise(async (resolve, reject) => {
-			
-
 			try {
 				const result = await getEmailFromCookie(req,  this.magic);
 				resolve(result);

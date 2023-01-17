@@ -13,7 +13,7 @@ const MockEmailClient = {
 	},
 	getEmail(req) {	
 
-		return process.env.EMAIL;
+		return isValidEmail ? process.env.EMAIL: '';
 	}
 };
 

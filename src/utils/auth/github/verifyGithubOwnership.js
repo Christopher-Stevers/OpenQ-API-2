@@ -52,7 +52,6 @@ const verifyGithubOwnership = async (req, userId) => {
 				return reject(GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES({viewerUserId, userId }));
 			}
 		} catch (error) {
-			console.log(error);
 			if (error.response && error.response.status == 401) {
 				return reject(INVALID_GITHUB_OAUTH_TOKEN({ userId}));
 			}

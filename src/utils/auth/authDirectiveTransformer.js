@@ -11,50 +11,31 @@ function authDirectiveTransformer(schema, directiveName) {
 			if (authDirective) {
 				const { resolve = defaultFieldResolver } = fieldConfig;
 				fieldConfig.resolve = async function (parent, args, context, info) {
-					//console.log(context);
-					const isMember = context?.roles?.includes('MEMBER');
-					if(isMember){
 					
-						console.log('member', );
-					
-					}
-					try {
-						try{
-							const idObj = {};
-							const currentGithub = args?.github ? args?.github : parent?.github ? parent.github:null;
-							const currentEmail = args?.email ? args?.email : parent?.email ? parent.email: null;
-							if(currentGithub|| currentEmail){
+					try{
+						const idObj = {};
+						const currentGithub = args?.github ? args?.github : parent?.github ? parent.github:null;
+						const currentEmail = args?.email ? args?.email : parent?.email ? parent.email: null;
+						if(currentGithub|| currentEmail){
 							
-								if(currentGithub) {
-									idObj.github = currentGithub;
-								} else if (currentEmail) {
-									idObj.email = currentEmail;
-								} else {
-									throw new AuthenticationError('Not logged in');                            
-								}
-
-								const {req, prisma, emailClient, githubClient } = context;
-								
-								try{const { error, errorMessage, username, id } = await checkUserAuth(prisma, req, idObj, emailClient, githubClient);
-									console.log('happens');
-									if (error) {
-										console.log(error, 'exec');
-										throw new AuthenticationError(errorMessage);
-									} else {
-										console.log('reseovle');
-										const result = await resolve(parent, args, {...context, username, id,}, info);
-									
-										return result;}
-								}
-								catch(error){
-									console.log('my error, ',error);
-								}
-
-
+							if(currentGithub) {
+								idObj.github = currentGithub;
+							} else if (currentEmail) {
+								idObj.email = currentEmail;
+							} else {
+								throw new AuthenticationError('Not logged in');                            
 							}
-						}
-						catch(error){
-							console.log(error);
+
+							const {req, prisma, emailClient, githubClient } = context;
+							const { error, errorMessage, username, id } = await checkUserAuth(prisma, req, idObj, emailClient, githubClient);
+				
+							if (error) {
+								throw new AuthenticationError(errorMessage);
+							} else {
+								const result = await resolve(parent, args, {...context, username, id,}, info);
+									
+								return result;
+							}
 						}
 						if (context.req.headers.authorization === process.env.OPENQ_API_SECRET) {
 							const {req, prisma, emailClient, githubClient } = context;
@@ -64,7 +45,6 @@ function authDirectiveTransformer(schema, directiveName) {
 							return result;
 						} 
 					} catch (error) {
-						console.log(error);
 						throw new AuthenticationError(error);
 					}
 				};

@@ -44,12 +44,12 @@ const getGithubFromCookie = async (req,) => {
 			}
 
 			const viewerUserId = resultViewer.data.data.viewer.id;
-			const viewerLogin = resultViewer.data.data.viewer.login;
 
 			if (viewerUserId ) {
-				return resolve({ github: viewerUserId, login: viewerLogin });
+				return resolve(viewerUserId);
 			} else {
-				return reject(GITHUB_OAUTH_TOKEN_LACKS_PRIVILEGES({viewerUserId, userId: '' }));
+				return resolve('');
+				
 			}
 		} catch (error) {
 			if (error.response && error.response.status == 401) {

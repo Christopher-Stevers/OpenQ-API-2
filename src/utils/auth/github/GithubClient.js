@@ -22,7 +22,7 @@ const GithubClient = {
 				const result = await getGithubFromCookie(req);
 				resolve(result);
 			} catch (error) {
-				return reject(error);
+				resolve('');
 			}
 		
 
