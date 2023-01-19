@@ -71,7 +71,7 @@ const checkUserAuth = async (prisma, req, args, emailClient, githubClient, optio
 		}
 
 		if (args.github !== undefined) {
-			try {console.log(JSON.stringify(req.headers));
+			try {
 				const { githubIsValid, login } = await githubClient.verifyGithub(req, args.github);
 				if (!githubIsValid) {
 					return { error: true, errorMessage: 'Github not authorized' };
@@ -80,7 +80,6 @@ const checkUserAuth = async (prisma, req, args, emailClient, githubClient, optio
 				userId = user ? user.id : null;
 				username = login;
 			} catch (error) {
-				console.log('failed here');
 				return { error: true, errorMessage: error };
 			}
 		}
