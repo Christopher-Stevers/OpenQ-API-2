@@ -17,6 +17,10 @@ const checkUserAuth = async (prisma, req, args, emailClient, githubClient, optio
 	let userId = null;
 	let username = null;
 	const needsBoth =options?.operationName === 'combineUsers';
+	
+	if(req.headers.authorization===process.env.OPENQ_API_SECRET){
+		return {};
+	}
 	if (args.email && args.github && !needsBoth) {
 		// if users have same id
 
@@ -67,7 +71,7 @@ const checkUserAuth = async (prisma, req, args, emailClient, githubClient, optio
 		}
 
 		if (args.github !== undefined) {
-			try {
+			try {console.log(JSON.stringify(req.headers));
 				const { githubIsValid, login } = await githubClient.verifyGithub(req, args.github);
 				if (!githubIsValid) {
 					return { error: true, errorMessage: 'Github not authorized' };
@@ -76,6 +80,7 @@ const checkUserAuth = async (prisma, req, args, emailClient, githubClient, optio
 				userId = user ? user.id : null;
 				username = login;
 			} catch (error) {
+				console.log('failed here');
 				return { error: true, errorMessage: error };
 			}
 		}

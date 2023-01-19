@@ -40,7 +40,8 @@ const Mutation = {
 	},
 	updateUser: async (parent, args, { req, prisma, emailClient, githubClient }) => {
 		const { error, errorMessage, github, email } = await checkUserAuth(prisma, req, args, emailClient, githubClient);
-
+		
+		const {id, ...rest		} = args;
 		if (error) {
 			throw new AuthenticationError(errorMessage);
 		}
@@ -65,6 +66,17 @@ const Mutation = {
 				},
 				update: {
 					...args
+				}
+			});
+		}
+		if(id){
+			return prisma.user.upsert({
+				where: { id },
+				create: {
+					...args
+				},
+				update: {
+					...rest
 				}
 			});
 		}
