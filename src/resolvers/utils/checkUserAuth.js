@@ -17,6 +17,10 @@ const checkUserAuth = async (prisma, req, args, emailClient, githubClient, optio
 	let userId = null;
 	let username = null;
 	const needsBoth =options?.operationName === 'combineUsers';
+	
+	if(req.headers.authorization===process.env.OPENQ_API_SECRET){
+		return {};
+	}
 	if (args.email && args.github && !needsBoth) {
 		// if users have same id
 
