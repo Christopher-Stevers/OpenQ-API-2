@@ -5,6 +5,9 @@ const User = {
 
 	starredOrganizations: async (parent, args,) => {
 		return { ...args, organizationIds: parent.starredOrganizationIds };
+	},
+	requests: async (parent, args) =>{
+		return { ...args, ids: parent.requestIds};
 	}
 };
 

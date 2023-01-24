@@ -17,6 +17,7 @@ const typeDef = gql`
 		createdAt: String
 		repositoryId: String
 		repository: Repository
+		request: Request
 	}
 	
 	type Bounties {

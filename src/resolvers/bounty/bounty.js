@@ -15,6 +15,7 @@ const Bounty = {
 	watchingCount: async (parent) => {
 		return parent.watchingUserIds.length;
 	},
+
 };
 
 module.exports = Bounty;

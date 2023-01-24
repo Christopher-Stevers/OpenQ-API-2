@@ -27,7 +27,18 @@ model Bounty {
   organization    Organization @relation(fields: [organizationId], references: [id])
   organizationId  String
   repository      Repository   @relation(fields: [repositoryId], references: [id])
-  repositoryId    String
+  repositoryId    String 
+  request         Request?    	@relation
+}
+
+model Request {
+  id        				String @id @default(auto()) @map("_id") @db.ObjectId
+  bountyAddress  			String @unique
+  bounty 					Bounty @relation(fields: [bountyAddress], references: [address])
+  requestingUserId  		String @db.ObjectId
+  requestingUser      		User   @relation(fields: [requestingUserId], references: [id])
+  message  					String?
+  createdAt 				DateTime @default(now())
 }
 
 model Submission {
@@ -68,8 +79,8 @@ model User {
   watchedBounties         Bounty[]       @relation(fields: [watchedBountyIds], references: [address])
   starredOrganizationIds  String[]
   starredOrganizations    Organization[] @relation(fields: [starredOrganizationIds], references: [id])
-  repositoryIds           String[]
-
+  Requests				  Request[]		
+  repositoryIds           String[]  
   participantRepositories Repository[]   @relation(fields: [repositoryIds], references: [id])
   company                 String?
   city                    String?
