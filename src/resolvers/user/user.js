@@ -7,9 +7,9 @@ const User = {
 		};
 	},
 	createdBounties: async (parent, args) => {
+		console.log(parent, args);
 		return {
-			organizationId: parent.organizationId,
-			addresses: parent.createdBounties.map((b) => b.address),
+			creatingUserId: parent.id,
 			...args,
 		};
 	},

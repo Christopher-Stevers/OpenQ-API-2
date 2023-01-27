@@ -8,17 +8,17 @@ const Query = {
 		if (args.github) {
 			value = await prisma.user.findUnique({
 				where: { github: args.github },
-				include: { starredOrganizations: true, createdBounties: true },
+				include: { starredOrganizations: true },
 			});
 		} else if (args.email) {
 			value = await prisma.user.findUnique({
 				where: { email: args.email },
-				include: { starredOrganizations: true, createdBounties: true },
+				include: { starredOrganizations: true },
 			});
 		} else {
 			value = await prisma.user.findUnique({
 				where: { id: args.id },
-				include: { starredOrganizations: true, createdBounties: true },
+				include: { starredOrganizations: true },
 			});
 		}
 

@@ -9,7 +9,7 @@ const mutationDefs = gql`
 			type: String!
 			repositoryId: String!
 			category: String
-			creatingUserId: String!
+			creatingUserId: String
 		): Bounty!
 		updateBounty(
 			address: String!
