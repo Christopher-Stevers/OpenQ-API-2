@@ -17,7 +17,12 @@ const typeDef = gql`
 		createdAt: String
 		repositoryId: String
 		repository: Repository
-		request: Request
+		requests(
+			after: ID
+			limit: Int!
+			orderBy: String
+			sortOrder: String
+		): Requests
 	}
 	
 	type Bounties {
