@@ -31,7 +31,7 @@ const Bounties = {
 					}
 				}
 			,
-			include: { organization: true },
+			include: { organization: true, requests: true },
 
 		});
 		return {
@@ -60,7 +60,7 @@ const Bounties = {
 					}
 				}
 			,
-			include: { organization: true },
+			include: { organization: true, requests: true },
 
 		});
 		return bounties;

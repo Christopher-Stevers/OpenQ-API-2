@@ -8,7 +8,7 @@ const typeDef = gql`
 		email: String	@auth	
 	    github: String
         createdAt: String  @auth
-		watchedBountyIds: [String] @auth
+		watchedBountyIds: [String] 
 		watchedBounties(
 			after: ID
 			limit: Int!
@@ -16,7 +16,7 @@ const typeDef = gql`
 			sortOrder: String
 			category: String
 			types: [String]
-		): Bounties! @auth
+		): Bounties! 
 		starredOrganizations: Organizations
 		starredOrganizationIds: [String]
 		province: String	@auth 		
@@ -39,7 +39,13 @@ const typeDef = gql`
 		languages: [String]
 		otherRoles: [String]
         invoicingEmail: String  @auth
-        interests: [String] 
+        interests: [String]
+		requests(
+			after: ID
+			limit: Int!
+			orderBy: String
+			sortOrder: String
+		): Requests
 	}
 
 	type Users {
