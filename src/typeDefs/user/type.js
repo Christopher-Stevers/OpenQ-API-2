@@ -1,14 +1,13 @@
 const { gql } = require('apollo-server');
 
 const typeDef = gql`
-
 	type User {
 		id: ID!
 		username: String
-		email: String	@auth	
-	    github: String
-        createdAt: String  @auth
-		watchedBountyIds: [String] 
+		email: String @auth
+		github: String
+		createdAt: String @auth
+		watchedBountyIds: [String]
 		watchedBounties(
 			after: ID
 			limit: Int!
@@ -16,30 +15,38 @@ const typeDef = gql`
 			sortOrder: String
 			category: String
 			types: [String]
-		): Bounties! 
+		): Bounties!
 		starredOrganizations: Organizations
 		starredOrganizationIds: [String]
-		province: String	@auth 		
- 		postalCode: String 		@auth 
-		billingName: String 	@auth
-		phoneNumber: String 	@auth
-		taxId: String 			@auth
-		vatNumber: String 		@auth
- 		vatRate: Float		@auth 	
-		memo: String    @auth    
-		invoiceNumber: Int    @auth    
-		company: String 	@auth
-		city: String		@auth	 
-		streetAddress: String	@auth
-		country: String		 			
-		twitter:String 
+		province: String @auth
+		postalCode: String @auth
+		billingName: String @auth
+		phoneNumber: String @auth
+		taxId: String @auth
+		vatNumber: String @auth
+		vatRate: Float @auth
+		memo: String @auth
+		invoiceNumber: Int @auth
+		company: String @auth
+		city: String @auth
+		streetAddress: String @auth
+		country: String
+		twitter: String
 		discord: String
-		devRoles: [String]		
+		devRoles: [String]
 		frameworks: [String]
 		languages: [String]
 		otherRoles: [String]
-        invoicingEmail: String  @auth
-        interests: [String]
+		invoicingEmail: String @auth
+		interests: [String]
+		createdBounties(
+			after: ID
+			limit: Int!
+			orderBy: String
+			sortOrder: String
+			category: String
+			types: [String]
+		): Bounties!
 		requests(
 			after: ID
 			limit: Int!
@@ -54,7 +61,7 @@ const typeDef = gql`
 	}
 
 	type UserConnection {
-		nodes:[User]
+		nodes: [User]
 		cursor: ID
 	}
 `;

@@ -1,4 +1,3 @@
-
 const { AuthenticationError } = require('apollo-server');
 const checkUserAuth = require('../utils/checkUserAuth');
 
@@ -20,33 +19,43 @@ const Mutation = {
 				repository: {
 					connectOrCreate: {
 						where: {
-							id: args.repositoryId
+							id: args.repositoryId,
 						},
 						create: {
 							id: args.repositoryId,
-							organizationId: args.organizationId
-						}
+							organizationId: args.organizationId,
+						},
 					},
 				},
 				organization: {
 					connectOrCreate: {
 						where: {
-							id: args.organizationId
+							id: args.organizationId,
 						},
 						create: {
-							id: args.organizationId
-						}
+							id: args.organizationId,
+						},
 					},
-				}
+				},
+				creatingUser: {
+					connectOrCreate: {
+						where: {
+							id: args.creatingUserId,
+						},
+						create: {
+							id: args.creatingUserId,
+						},
+					},
+				},
 			},
-			include: { repository: true, organization: true }
+			include: { repository: true, organization: true },
 		});
 	},
 	updateBounty: async (parent, args, { req, prisma }) => {
 		if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
 			throw new AuthenticationError();
 		}
-		const date = new Date(parseInt(args.createdAt)*1000);
+		const date = new Date(parseInt(args.createdAt) * 1000);
 		const ISOstring = date.toISOString();
 
 		return prisma.bounty.upsert({
@@ -54,45 +63,44 @@ const Mutation = {
 			update: {
 				createdAt: ISOstring,
 				category: args.category || null,
-				...args.tvl && { tvl: args.tvl },
-				...args.tvc && { tvc: args.tvc },
+				...(args.tvl && { tvl: args.tvl }),
+				...(args.tvc && { tvc: args.tvc }),
 				type: args.type,
-				...args.organizationId && {
-					organization: {        
+				...(args.organizationId && {
+					organization: {
 						connectOrCreate: {
 							where: {
-								id: args.organizationId
+								id: args.organizationId,
 							},
 							create: {
 								id: args.organizationId,
-								blacklisted: false
+								blacklisted: false,
 							},
 						},
 					},
-				},
-				...args.repositoryId && {
+				}),
+				...(args.repositoryId && {
 					repository: {
 						connectOrCreate: {
 							where: {
-								id: args.repositoryId
+								id: args.repositoryId,
 							},
 							create: {
 								id: args.repositoryId,
-								organization:
-								{
+								organization: {
 									connectOrCreate: {
 										where: {
-											id: args.organizationId
+											id: args.organizationId,
 										},
 										create: {
-											id: args.organizationId
+											id: args.organizationId,
 										},
 									},
-								}
-							}
-						}
-					}
-				}
+								},
+							},
+						},
+					},
+				}),
 			},
 			create: {
 				type: args.type,
@@ -102,42 +110,41 @@ const Mutation = {
 				tvl: args.tvl || 0,
 				tvc: args.tvc || 0,
 				bountyId: args.bountyId,
-				...args.organizationId && {
+				...(args.organizationId && {
 					organization: {
 						connectOrCreate: {
 							where: {
-								id: args.organizationId
+								id: args.organizationId,
 							},
 							create: {
 								id: args.organizationId,
-								blacklisted: false
+								blacklisted: false,
 							},
 						},
 					},
-				},
-				...args.repositoryId && {
+				}),
+				...(args.repositoryId && {
 					repository: {
 						connectOrCreate: {
 							where: {
-								id: args.repositoryId
+								id: args.repositoryId,
 							},
 							create: {
 								id: args.repositoryId,
-								organization:
-								{
+								organization: {
 									connectOrCreate: {
 										where: {
-											id: args.organizationId
+											id: args.organizationId,
 										},
 										create: {
-											id: args.organizationId
+											id: args.organizationId,
 										},
 									},
-								}
-							}
-						}
-					}
-				}
+								},
+							},
+						},
+					},
+				}),
 			},
 		});
 	},
@@ -145,33 +152,41 @@ const Mutation = {
 		if (req.headers.authorization !== process.env.BANHAMMER) {
 			throw new AuthenticationError();
 		}
-		return prisma.bounty.update(
-			{
-				where: { bountyId: args.bountyId },
-				data: { blacklisted: args.blacklist }
-			}
-		);
+		return prisma.bounty.update({
+			where: { bountyId: args.bountyId },
+			data: { blacklisted: args.blacklist },
+		});
 	},
 	updateBountyValuation: async (parent, args, { req, prisma }) => {
 		if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
 			throw new AuthenticationError();
 		}
-		const { tvl=0, tvc=0, address,  } = args;
-	
+		const { tvl = 0, tvc = 0, address } = args;
+
 		return prisma.bounty.update({
 			where: { address },
 			data: {
-				tvl:{
-					increment: tvl
+				tvl: {
+					increment: tvl,
 				},
-				tvc:{
-					increment: tvc
-				} 
+				tvc: {
+					increment: tvc,
+				},
 			},
 		});
 	},
-	watchBounty: async (parent, args, { req, prisma, githubClient, emailClient }) => {
-		const { error, errorMessage, id } = await checkUserAuth(prisma, req, args, emailClient, githubClient);
+	watchBounty: async (
+		parent,
+		args,
+		{ req, prisma, githubClient, emailClient }
+	) => {
+		const { error, errorMessage, id } = await checkUserAuth(
+			prisma,
+			req,
+			args,
+			emailClient,
+			githubClient
+		);
 
 		if (error) {
 			throw new AuthenticationError(errorMessage);
@@ -187,7 +202,7 @@ const Mutation = {
 				watchedBountyIds: {
 					push: bounty.address,
 				},
-			}
+			},
 		});
 
 		return prisma.bounty.update({
@@ -199,8 +214,18 @@ const Mutation = {
 			},
 		});
 	},
-	unwatchBounty: async (parent, args, { req, prisma, emailClient, githubClient }) => {
-		const { error, errorMessage, id } = await checkUserAuth(prisma, req, args, emailClient, githubClient);
+	unwatchBounty: async (
+		parent,
+		args,
+		{ req, prisma, emailClient, githubClient }
+	) => {
+		const { error, errorMessage, id } = await checkUserAuth(
+			prisma,
+			req,
+			args,
+			emailClient,
+			githubClient
+		);
 
 		if (error) {
 			throw new AuthenticationError(errorMessage);
@@ -235,7 +260,7 @@ const Mutation = {
 				watchingUserIds: { set: newUsers },
 			},
 		});
-	}
+	},
 };
 
 module.exports = Mutation;
