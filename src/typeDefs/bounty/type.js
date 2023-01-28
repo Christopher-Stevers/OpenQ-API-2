@@ -23,6 +23,7 @@ const typeDef = gql`
 			orderBy: String
 			sortOrder: String
 		): Requests
+		creatingUser: User
 	}
 	
 	type Bounties {
