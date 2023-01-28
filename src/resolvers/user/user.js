@@ -7,7 +7,6 @@ const User = {
 		};
 	},
 	createdBounties: async (parent, args) => {
-		console.log(parent, args);
 		return {
 			creatingUserId: parent.id,
 			...args,

@@ -72,7 +72,6 @@ const Bounties = {
 	},
 
 	nodes: async (parent, args, { prisma }) => {
-		console.log(parent, args);
 		const {
 			organizationId,
 			addresses,
@@ -89,7 +88,7 @@ const Bounties = {
 			category,
 			creatingUserId
 		);
-		console.log(filters);
+		console.log(filters, 'filters');
 
 		const bounties = await prisma.bounty.findMany({
 			where: filters,
@@ -111,7 +110,6 @@ const Bounties = {
 				  }),
 			include: { organization: true, requests: true },
 		});
-		console.log(bounties);
 		return bounties;
 	},
 };

@@ -28,6 +28,10 @@ const Bounty = {
 			include: { createdBounties: true, starredOrganizations: true },
 		});
 	},
+	requests: async (parent) => {
+		console.log('parent', parent);
+		return { ids: parent.requests?.map((request) => request.id) || [] };
+	},
 };
 
 module.exports = Bounty;
