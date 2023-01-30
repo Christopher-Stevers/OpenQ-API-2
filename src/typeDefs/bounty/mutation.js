@@ -21,6 +21,7 @@ const mutationDefs = gql`
 			repositoryId: String
 			category: String
 			createdAt: String
+			creatingUserId: String
 		): Bounty!
 		watchBounty(
 			userId: String!

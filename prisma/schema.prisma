@@ -29,8 +29,8 @@ model Bounty {
     repository      Repository   @relation(fields: [repositoryId], references: [id])
     repositoryId    String
     requests        Request[]    @relation
-    creatingUserId  String       @db.ObjectId
-    creatingUser    User         @relation(fields: [creatingUserId], references: [id], name: "creatingUser")
+    creatingUserId  String?      @db.ObjectId
+    creatingUser    User?        @relation(fields: [creatingUserId], references: [id], name: "creatingUser")
 }
 
 model Request {
