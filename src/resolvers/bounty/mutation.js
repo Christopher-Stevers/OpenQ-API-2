@@ -52,6 +52,7 @@ const Mutation = {
 		});
 	},
 	updateBounty: async (parent, args, { req, prisma }) => {
+		console.log(args);
 		if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
 			throw new AuthenticationError();
 		}
@@ -65,6 +66,18 @@ const Mutation = {
 				category: args.category || null,
 				...(args.tvl && { tvl: args.tvl }),
 				...(args.tvc && { tvc: args.tvc }),
+				...(args.creatingUserId && {
+					creatingUser: {
+						connectOrCreate: {
+							where: {
+								id: args.creatingUserId,
+							},
+							create: {
+								id: args.creatingUserId,
+							},
+						},
+					},
+				}),
 				type: args.type,
 				...(args.organizationId && {
 					organization: {
@@ -110,6 +123,18 @@ const Mutation = {
 				tvl: args.tvl || 0,
 				tvc: args.tvc || 0,
 				bountyId: args.bountyId,
+				...(args.creatingUserId && {
+					creatingUser: {
+						connectOrCreate: {
+							where: {
+								id: args.creatingUserId,
+							},
+							create: {
+								id: args.creatingUserId,
+							},
+						},
+					},
+				}),
 				...(args.organizationId && {
 					organization: {
 						connectOrCreate: {
