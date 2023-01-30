@@ -92,6 +92,18 @@ const Mutation = {
 						},
 					},
 				}),
+				...(args.creatingUserId && {
+					organization: {
+						connectOrCreate: {
+							where: {
+								id: args.creatingUserId,
+							},
+							create: {
+								id: args.creatingUserId,
+							},
+						},
+					},
+				}),
 				...(args.repositoryId && {
 					repository: {
 						connectOrCreate: {
