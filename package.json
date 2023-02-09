@@ -5,7 +5,7 @@
 	"private": true,
 	"main": "index.js",
 	"scripts": {
-		"start":  "node ./src/index.js",
+		"start": "node ./src/index.js",
 		"start:dev": "nodemon --ignore generated --ignore src/__tests__/ --exec 'prisma generate && node ./src/index.js'",
 		"test": "docker exec -it openq-api yarn jest --testPathIgnorePatterns src/__tests__/utils/** --runInBand --forceExit",
 		"test:local": "jest"
@@ -20,12 +20,14 @@
 		"@magic-sdk/admin": "1.8.0",
 		"@prisma/client": "4.8.0",
 		"apollo-server": "3.11.1",
+		"apollo-server-express": "^3.11.1",
 		"axios": "0.27.2",
 		"axios-mock-adapter": "1.21.2",
 		"cookie-signature": "1.2.0",
 		"dotenv": "16.0.3",
 		"env-cmd": "10.1.0",
 		"ethers": "5.7.2",
+		"express": "^4.18.2",
 		"gql": "1.1.2",
 		"graphql": "16.6.0",
 		"graphql-type-json": "0.3.2",
