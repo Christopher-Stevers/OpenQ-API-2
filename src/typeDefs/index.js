@@ -10,6 +10,7 @@ const user = require('./user');
 const JSON = require('./JSON');
 const submission = require('./submission');
 const repository = require('./repository');
+const paginationInt = require('./paginationInt');
 
 const schema = [
 	query,
@@ -23,6 +24,7 @@ const schema = [
 	...submission,
 	...repository,
 	...request,
+	...paginationInt,
 ];
 
 module.exports = schema;

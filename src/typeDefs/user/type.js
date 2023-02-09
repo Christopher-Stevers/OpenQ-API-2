@@ -10,7 +10,7 @@ const typeDef = gql`
 		watchedBountyIds: [String]
 		watchedBounties(
 			after: ID
-			limit: Int!
+			limit: PaginationInt!
 			orderBy: String
 			sortOrder: String
 			category: String
@@ -41,7 +41,7 @@ const typeDef = gql`
 		interests: [String]
 		createdBounties(
 			after: ID
-			limit: Int!
+			limit: PaginationInt!
 			orderBy: String
 			sortOrder: String
 			category: String
@@ -49,7 +49,7 @@ const typeDef = gql`
 		): Bounties!
 		requests(
 			after: ID
-			limit: Int!
+			limit: PaginationInt!
 			orderBy: String
 			sortOrder: String
 		): Requests

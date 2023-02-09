@@ -5,7 +5,7 @@ const queryDef = gql`
 		repository(id: String!): Repository
 		repositories(
 			after: ID
-			limit: Int!
+			limit: PaginationInt!
 			orderBy: String
 			sortOrder: String
 			organizationId: String

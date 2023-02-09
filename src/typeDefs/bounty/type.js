@@ -19,7 +19,7 @@ const typeDef = gql`
 		repository: Repository
 		requests(
 			after: ID
-			limit: Int!
+			limit: PaginationInt!
 			orderBy: String
 			sortOrder: String
 		): Requests

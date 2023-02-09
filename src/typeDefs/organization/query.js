@@ -5,7 +5,7 @@ const queryDef = gql`
 		organization(organizationId: String!): Organization
 		organizations(
 			after: ID
-			limit: Int
+			limit: PaginationInt
 			orderBy: String
 			sortOrder: String
 		): Organizations

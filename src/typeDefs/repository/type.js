@@ -7,7 +7,7 @@ const typeDef = gql`
 		organization: Organization
 		bounties(
 			after: ID
-			limit: Int!
+			limit: PaginationInt!
 			orderBy: String
 			sortOrder: String
 			category: String
