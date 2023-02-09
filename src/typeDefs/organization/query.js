@@ -1,7 +1,7 @@
 const { gql } = require('apollo-server');
 
 const queryDef = gql`
-	extend type Query{
+	extend type Query {
 		organization(organizationId: String!): Organization
 		organizations(
 			after: ID
@@ -11,6 +11,5 @@ const queryDef = gql`
 		): Organizations
 	}
 `;
-
 
 module.exports = queryDef;

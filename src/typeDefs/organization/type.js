@@ -8,7 +8,8 @@ const typeDef = gql`
 			after: ID
 			limit: Int!
 			orderBy: String
-			sortOrder: String): Users
+			sortOrder: String
+		): Users
 		bounties(
 			after: ID
 			limit: Int!
@@ -26,14 +27,14 @@ const typeDef = gql`
 			types: [String]
 		): Repositories
 	}
-	
+
 	type Organizations {
 		organizationConnection: OrganizationConnection
 		nodes: [Organization]
 	}
 
 	type OrganizationConnection {
-		nodes:[Organization]
+		nodes: [Organization]
 		cursor: ID
 	}
 `;

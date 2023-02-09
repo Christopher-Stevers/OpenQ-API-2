@@ -25,14 +25,14 @@ const typeDef = gql`
 		): Requests
 		creatingUser: User
 	}
-	
+
 	type Bounties {
 		bountyConnection: BountyConnection
 		nodes: [Bounty]
 	}
 
 	type BountyConnection {
-		nodes:[Bounty]
+		nodes: [Bounty]
 		cursor: ID
 	}
 `;

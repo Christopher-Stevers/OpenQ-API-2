@@ -1,4 +1,3 @@
-
 const query = require('./query');
 const mutation = require('./mutation');
 
@@ -12,6 +11,18 @@ const JSON = require('./JSON');
 const submission = require('./submission');
 const repository = require('./repository');
 
-const schema = [query, mutation, ...bounty, ...organization, ...price, ...user, ...batch, ...JSON, ...submission, ...repository, ...request];
+const schema = [
+	query,
+	mutation,
+	...bounty,
+	...organization,
+	...price,
+	...user,
+	...batch,
+	...JSON,
+	...submission,
+	...repository,
+	...request,
+];
 
 module.exports = schema;

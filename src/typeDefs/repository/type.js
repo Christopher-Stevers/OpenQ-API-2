@@ -18,14 +18,14 @@ const typeDef = gql`
 		startDate: String
 		registrationDeadline: String
 	}
-	
+
 	type Repositories {
 		repositoryConnection: RepositoryConnection
 		nodes: [Repository]
 	}
 
 	type RepositoryConnection {
-		nodes:[Repository]
+		nodes: [Repository]
 		cursor: ID
 	}
 `;
