@@ -11,22 +11,10 @@ async function startApolloServer() {
 	};
 
 	await server.start();
+	app.use(bodyParser.json({ limit: '2.4kb' }));
+	app.use(cors(corsOptions));
 	server.applyMiddleware({ app, cors: corsOptions, path: '/' });
 	// Middleware function to limit the size of incoming requests
-
-	const MAX_REQUEST_SIZE = 1024 * 1024;
-	const limitRequestSize = (req, res, next) => {
-		const payloadSize = Buffer.byteLength(JSON.stringify(req.body));
-		if (payloadSize > MAX_REQUEST_SIZE) {
-			res.status(413).send('Payload too large');
-		} else {
-			next();
-		}
-	};
-
-	// Apply the middleware function to all incoming requests
-	app.use(limitRequestSize);
-	app.use(cors(corsOptions));
 
 	app.listen({ port: 4000 }, () =>
 		console.log(
