@@ -5,7 +5,7 @@ const queryDef = gql`
 		bounty(address: String!): Bounty
 		bounties(
 			after: ID
-			limit: Int!
+			limit: PaginationInt!
 			orderBy: String
 			sortOrder: String
 			organizationId: String

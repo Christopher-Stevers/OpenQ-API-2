@@ -303,7 +303,7 @@ const GET_USER = gql`
 const GET_BOUNTY_PAGE = gql`
 	query BountiesConnection(
 		$after: ID
-		$limit: Int!
+		$limit: PaginationInt!
 		$orderBy: String
 		$sortOrder: String
 		$organizationId: String

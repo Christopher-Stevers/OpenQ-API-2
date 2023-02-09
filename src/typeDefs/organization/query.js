@@ -1,16 +1,15 @@
 const { gql } = require('apollo-server');
 
 const queryDef = gql`
-	extend type Query{
+	extend type Query {
 		organization(organizationId: String!): Organization
 		organizations(
 			after: ID
-			limit: Int
+			limit: PaginationInt
 			orderBy: String
 			sortOrder: String
 		): Organizations
 	}
 `;
-
 
 module.exports = queryDef;

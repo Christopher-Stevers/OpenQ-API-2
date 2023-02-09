@@ -19,20 +19,20 @@ const typeDef = gql`
 		repository: Repository
 		requests(
 			after: ID
-			limit: Int!
+			limit: PaginationInt!
 			orderBy: String
 			sortOrder: String
 		): Requests
 		creatingUser: User
 	}
-	
+
 	type Bounties {
 		bountyConnection: BountyConnection
 		nodes: [Bounty]
 	}
 
 	type BountyConnection {
-		nodes:[Bounty]
+		nodes: [Bounty]
 		cursor: ID
 	}
 `;

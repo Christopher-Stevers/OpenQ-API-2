@@ -52,7 +52,6 @@ const Mutation = {
 		});
 	},
 	updateBounty: async (parent, args, { req, prisma }) => {
-		console.log(args);
 		if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
 			throw new AuthenticationError();
 		}

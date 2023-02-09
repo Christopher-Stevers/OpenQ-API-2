@@ -6,12 +6,13 @@ const typeDef = gql`
 		blacklisted: Boolean
 		starringUsers(
 			after: ID
-			limit: Int!
+			limit: PaginationInt!
 			orderBy: String
-			sortOrder: String): Users
+			sortOrder: String
+		): Users
 		bounties(
 			after: ID
-			limit: Int!
+			limit: PaginationInt!
 			orderBy: String
 			sortOrder: String
 			category: String
@@ -19,21 +20,21 @@ const typeDef = gql`
 		): Bounties
 		repositories(
 			after: ID
-			limit: Int!
+			limit: PaginationInt!
 			orderBy: String
 			sortOrder: String
 			category: String
 			types: [String]
 		): Repositories
 	}
-	
+
 	type Organizations {
 		organizationConnection: OrganizationConnection
 		nodes: [Organization]
 	}
 
 	type OrganizationConnection {
-		nodes:[Organization]
+		nodes: [Organization]
 		cursor: ID
 	}
 `;
