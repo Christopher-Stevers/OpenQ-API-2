@@ -25,7 +25,6 @@ const PaginationInt = new GraphQLScalarType({
 
 	parseLiteral(ast) {
 		if (ast.kind === Kind.INT) {
-			console.log(ast.value);
 			return PaginationIntValue(parseInt(ast.value, 10));
 		}
 

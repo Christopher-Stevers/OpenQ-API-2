@@ -29,7 +29,6 @@ const Bounty = {
 		});
 	},
 	requests: async (parent) => {
-		console.log('parent', parent);
 		return { ids: parent.requests?.map((request) => request.id) || [] };
 	},
 };

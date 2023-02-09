@@ -88,7 +88,6 @@ const Bounties = {
 			category,
 			creatingUserId
 		);
-		console.log(filters, 'filters');
 
 		const bounties = await prisma.bounty.findMany({
 			where: filters,
