@@ -1,6 +1,6 @@
 
 const { getAuthenticatedClient, getAuthenticatedClientIntegration } = require('../utils/configureApolloClient');
-const { CREATE_NEW_BOUNTY, GET_BOUNTY_BY_ID } = require('../utils/queries');
+const { CREATE_NEW_BOUNTY, GET_BOUNTY_BY_ID, UPSERT_USER } = require('../utils/queries');
 
 const { clearDb } = require('../utils/clearDb');
 
@@ -10,7 +10,7 @@ describe('createBounty', () => {
 	const bountyId = 'bountyId';
 	const repositoryId = 'repositoryId';
 	const type = '1';
-
+	const github = process.env.GITHUB_USER_ID;
 	let authenticatedClient;
 	let unauthenticatedClient;
 
@@ -28,9 +28,15 @@ describe('createBounty', () => {
 		});
 
 		it('Authenticated client can create bounty', async () => {
+			// ARRANGE
+			const user = await authenticatedClient.mutate({
+				mutation: UPSERT_USER,
+				variables: { github }
+			});
+			const creatingUserId = user.data.upsertUser.id;
 			await authenticatedClient.mutate({
 				mutation: CREATE_NEW_BOUNTY,
-				variables: { address: contractAddress, organizationId, bountyId, repositoryId, type }
+				variables: { address: contractAddress, organizationId, bountyId, repositoryId, type, creatingUserId }
 			});
 	
 			const { data } = await authenticatedClient.query({
@@ -55,13 +61,15 @@ describe('createBounty', () => {
 
 	describe('Unsuccessful', () => {
 		it('should fail for unauthenticated calls', async () => {
+			let creatingUserId = 'creatingUserId';
 			try {
 				await unauthenticatedClient.mutate({
 					mutation: CREATE_NEW_BOUNTY,
-					variables: { address: contractAddress, organizationId, bountyId, repositoryId, type }
+					variables: { address: contractAddress, organizationId, bountyId, repositoryId, type, creatingUserId }
 				});
 				throw('Should not reach this point');
 			} catch (error) {
+				// eslint-disable-next-line jest/no-conditional-expect
 				expect(error.graphQLErrors[0].extensions.code).toEqual('UNAUTHENTICATED');
 			}
 		});

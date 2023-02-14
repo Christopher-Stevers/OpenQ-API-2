@@ -16,13 +16,13 @@ describe('upsertUser.test', () => {
 		let unauthenticatedClient_INVALID_EMAIL;
 
 		if (process.env.DEPLOY_ENV === 'production') {
-			authenticatedClient = getAuthenticatedClientIntegration(process.env.OPENQ_API_SECRET, process.env.GITHUB_OAUTH_TOKEN, process.env.EMAIL_DID_TOKEN);
-			unauthenticatedClient_INVALID_GITHUB = getAuthenticatedClientIntegration(process.env.OPENQ_API_SECRET, true, 'invalid');
-			unauthenticatedClient_INVALID_EMAIL = getAuthenticatedClientIntegration(process.env.OPENQ_API_SECRET, 'invalid', true);
+			authenticatedClient = getAuthenticatedClientIntegration(null, process.env.GITHUB_OAUTH_TOKEN, process.env.EMAIL_DID_TOKEN);
+			unauthenticatedClient_INVALID_GITHUB = getAuthenticatedClientIntegration(null, true, 'invalid');
+			unauthenticatedClient_INVALID_EMAIL = getAuthenticatedClientIntegration(null, 'invalid', true);
 		} else {
-			authenticatedClient = getAuthenticatedClient(process.env.OPENQ_API_SECRET, true, true);
-			unauthenticatedClient_INVALID_GITHUB = getAuthenticatedClient(process.env.OPENQ_API_SECRET, false, true);
-			unauthenticatedClient_INVALID_EMAIL = getAuthenticatedClient(process.env.OPENQ_API_SECRET, true, false);
+			authenticatedClient = getAuthenticatedClient(null, true, true);
+			unauthenticatedClient_INVALID_GITHUB = getAuthenticatedClient(null, false, true);
+			unauthenticatedClient_INVALID_EMAIL = getAuthenticatedClient(null, true, false);
 		}
 
 		describe('EMAIL', () => {

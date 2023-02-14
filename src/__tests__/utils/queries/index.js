@@ -6,14 +6,15 @@ const CREATE_NEW_BOUNTY = gql`
 		$organizationId: String!
 		$bountyId: String!
 		$repositoryId: String!
-		$type: String!
+		$type: String!, $creatingUserId: String
 	) {
 		createBounty(
 			address: $address
 			organizationId: $organizationId
 			bountyId: $bountyId
 			repositoryId: $repositoryId
-			type: $type
+			type: $type,
+			creatingUserId: $creatingUserId
 		) {
 			address
 			bountyId
@@ -25,7 +26,7 @@ const CREATE_NEW_BOUNTY = gql`
 `;
 
 const UPDATE_BOUNTY = gql`
-mutation UpdateBounty( $address: String!, $organizationId: String!, $bountyId: String!, $repositoryId: String!,  $type: String!, creatingUserId: String) {
+mutation UpdateBounty( $address: String!, $organizationId: String!, $bountyId: String!, $repositoryId: String!,  $type: String!, $creatingUserId: String) {
   createBounty(address: $address, organizationId: $organizationId, bountyId: $bountyId, repositoryId: $repositoryId, type: $type, creatingUserId: $creatingUserId) {
     address
 		bountyId

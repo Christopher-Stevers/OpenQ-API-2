@@ -6,7 +6,6 @@ const Mutation = {
 		if (req.headers.authorization !== process.env.OPENQ_API_SECRET) {
 			throw new AuthenticationError();
 		}
-
 		return prisma.bounty.create({
 			data: {
 				type: args.type,
@@ -204,7 +203,7 @@ const Mutation = {
 		args,
 		{ req, prisma, githubClient, emailClient }
 	) => {
-		const { error, errorMessage, id } = await checkUserAuth(
+		const { error, errorMessage } = await checkUserAuth(
 			prisma,
 			req,
 			args,
@@ -221,7 +220,7 @@ const Mutation = {
 		});
 
 		const user = await prisma.user.update({
-			where: { id },
+			where: { id: args.userId },
 			data: {
 				watchedBountyIds: {
 					push: bounty.address,
@@ -243,7 +242,7 @@ const Mutation = {
 		args,
 		{ req, prisma, emailClient, githubClient }
 	) => {
-		const { error, errorMessage, id } = await checkUserAuth(
+		const { error, errorMessage } = await checkUserAuth(
 			prisma,
 			req,
 			args,
@@ -260,7 +259,7 @@ const Mutation = {
 		});
 
 		const user = await prisma.user.findUnique({
-			where: { id },
+			where: { id: args.userId },
 		});
 
 		const newBounties = user.watchedBountyIds.filter(
@@ -272,7 +271,7 @@ const Mutation = {
 		);
 
 		await prisma.user.update({
-			where: { id },
+			where: { id: args.userId },
 			data: {
 				watchedBountyIds: { set: newBounties },
 			},

@@ -17,14 +17,11 @@ function authDirectiveTransformer(schema, directiveName) {
 							return result;
 						} else {
 							const idObj = {};
-							
 							if(parent.github) {
 								idObj.github = parent.github;
 							} else if (parent.email) {
 								idObj.email = parent.email;
-							} else {
-								throw new AuthenticationError('Not logged in');                            
-							}
+							} 
 
 							const {req, prisma, emailClient, githubClient } = context;
 							

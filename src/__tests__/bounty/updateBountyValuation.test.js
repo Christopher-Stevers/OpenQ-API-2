@@ -1,6 +1,6 @@
 
 const { getAuthenticatedClient, getAuthenticatedClientIntegration } = require('../utils/configureApolloClient');
-const { CREATE_NEW_BOUNTY, GET_BOUNTY_BY_ID, UPDATE_BOUNTY_VALUATION } = require('../utils/queries');
+const { CREATE_NEW_BOUNTY, GET_BOUNTY_BY_ID, UPDATE_BOUNTY_VALUATION, UPSERT_USER } = require('../utils/queries');
 
 const { clearDb } = require('../utils/clearDb');
 
@@ -13,12 +13,17 @@ describe('createBounty', () => {
 
 	let authenticatedClient;
 	let unauthenticatedClient;
+	let authenticatedClientGithub;
 
 	if(process.env.DEPLOY_ENV === 'production') {
 		authenticatedClient = getAuthenticatedClientIntegration(process.env.OPENQ_API_SECRET, process.env.GITHUB_OAUTH_TOKEN, process.env.EMAIL_DID_TOKEN);
+		authenticatedClientGithub = getAuthenticatedClient(null, process.env.GITHUB_OAUTH_TOKEN, process.env.EMAIL_DID_TOKEN);
+
 		unauthenticatedClient = getAuthenticatedClientIntegration('incorrect_secret', 'invalid_oauth_token', 'invalid_email_oauth');
 	} else  {
 		authenticatedClient = getAuthenticatedClient(process.env.OPENQ_API_SECRET, true, true);
+		authenticatedClientGithub = getAuthenticatedClient(null,true, true);
+
 		unauthenticatedClient  = getAuthenticatedClient('incorrect_secret', 'signature', false, false);
 	}
 
@@ -28,9 +33,15 @@ describe('createBounty', () => {
 		});
 
 		it('Authenticated client can create bounty', async () => {
+			const github = process.env.GITHUB_USER_ID;
+			const user = await authenticatedClientGithub.mutate({
+				mutation: UPSERT_USER,
+				variables: { github }
+			});
+			const creatingUserId = user.data.upsertUser.id;
 			await authenticatedClient.mutate({
 				mutation: CREATE_NEW_BOUNTY,
-				variables: { address: contractAddress, organizationId, bountyId, repositoryId, type }
+				variables: { address: contractAddress, organizationId, bountyId, repositoryId, type, creatingUserId }
 			});
 			
 			await authenticatedClient.mutate({

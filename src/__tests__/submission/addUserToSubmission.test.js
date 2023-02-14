@@ -30,7 +30,7 @@ describe('addContributor', () => {
 		});
 
 		// eslint-disable-next-line jest/no-focused-tests
-		it.only('Authenticated client can add user to repository', async () => {
+		it('Authenticated client can add user to repository', async () => {
 			const user = await authenticatedClient.mutate({
 				mutation: UPSERT_USER,
 				variables: { github }

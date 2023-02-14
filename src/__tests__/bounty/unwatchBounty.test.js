@@ -34,16 +34,16 @@ describe('unwatchBounty', () => {
 			it('Authorized user can unwatch a bounty', async () => {
 				// ARRANGE
 
-				await authenticatedClient.mutate({
-					mutation: CREATE_NEW_BOUNTY,
-					variables: { address: contractAddress, organizationId, bountyId, repositoryId, type }
-				});
 
 				const user = await authenticatedClient.mutate({
 					mutation: CREATE_USER,
 					variables: { github }
 				});
-
+				const creatingUserId  = user.data.upsertUser.id;
+				await authenticatedClient.mutate({
+					mutation: CREATE_NEW_BOUNTY,
+					variables: { address: contractAddress, organizationId, bountyId, repositoryId, type, creatingUserId }
+				});
 				const userId = user.data.upsertUser.id;
 				await authenticatedClient.mutate({
 					mutation: WATCH_BOUNTY,
@@ -150,17 +150,18 @@ describe('unwatchBounty', () => {
 
 			it('Authorized user can unwatch a bounty', async () => {
 				// ARRANGE
-				await authenticatedClient.mutate({
-					mutation: CREATE_NEW_BOUNTY,
-					variables: { address: contractAddress, organizationId, bountyId, repositoryId, type }
-				});
 
 				const user = await authenticatedClient.mutate({
 					mutation: CREATE_USER,
 					variables: { email }
 				});
-
 				const userId = user.data.upsertUser.id;
+
+
+				await authenticatedClient.mutate({
+					mutation: CREATE_NEW_BOUNTY,
+					variables: { address: contractAddress, organizationId, bountyId, repositoryId, type, creatingUserId: userId }
+				});
 
 				await authenticatedClient.mutate({
 					mutation: WATCH_BOUNTY,

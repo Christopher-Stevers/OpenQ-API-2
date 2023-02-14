@@ -6,11 +6,10 @@ const dotenv = require('dotenv');
 const { clearDb } = require('../utils/clearDb');
 dotenv.config({ path: '../../../.env.test' });
 
-describe('upsertUser.test', () => {
-	describe('upsertUser', () => {
+describe('combineUser.test', () => {
+	describe('combineUser', () => {
 		const email = process.env.EMAIL;
 		const github = process.env.GITHUB_USER_ID;
-		const username = process.env.GITHUB_USER_LOGIN;
 
 		let authenticatedClient;
 		let authenticatedClient_VALID_GITHUB;
@@ -20,19 +19,19 @@ describe('upsertUser.test', () => {
 
 		if (process.env.DEPLOY_ENV === 'production') {
 			authenticatedClient = getAuthenticatedClientIntegration(process.env.OPENQ_API_SECRET, process.env.GITHUB_OAUTH_TOKEN, process.env.EMAIL_DID_TOKEN);
-			authenticatedClient_VALID_GITHUB = getAuthenticatedClientIntegration(process.env.OPENQ_API_SECRET, process.env.GITHUB_OAUTH_TOKEN, 'invalid');
-			authenticatedClient_VALID_EMAIL = getAuthenticatedClientIntegration(process.env.OPENQ_API_SECRET, 'invalid', process.env.EMAIL_DID_TOKEN);
-			unauthenticatedClient_INVALID_GITHUB = getAuthenticatedClientIntegration(process.env.OPENQ_API_SECRET, true, 'invalid');
-			unauthenticatedClient_INVALID_EMAIL = getAuthenticatedClientIntegration(process.env.OPENQ_API_SECRET, 'invalid', true);
+			authenticatedClient_VALID_GITHUB = getAuthenticatedClientIntegration(null, process.env.GITHUB_OAUTH_TOKEN, 'invalid');
+			authenticatedClient_VALID_EMAIL = getAuthenticatedClientIntegration(null, 'invalid', process.env.EMAIL_DID_TOKEN);
+			unauthenticatedClient_INVALID_GITHUB = getAuthenticatedClientIntegration(null, true, 'invalid');
+			unauthenticatedClient_INVALID_EMAIL = getAuthenticatedClientIntegration(null, 'invalid', true);
 		} else {
 			authenticatedClient = getAuthenticatedClient(process.env.OPENQ_API_SECRET, true, true);
-			authenticatedClient_VALID_GITHUB = getAuthenticatedClient(process.env.OPENQ_API_SECRET, false, true);
-			authenticatedClient_VALID_EMAIL = getAuthenticatedClient(process.env.OPENQ_API_SECRET, true, false);
-			unauthenticatedClient_INVALID_GITHUB = getAuthenticatedClient(process.env.OPENQ_API_SECRET, false, true);
-			unauthenticatedClient_INVALID_EMAIL = getAuthenticatedClient(process.env.OPENQ_API_SECRET, true, false);
+			authenticatedClient_VALID_GITHUB = getAuthenticatedClient(null, false, true);
+			authenticatedClient_VALID_EMAIL = getAuthenticatedClient(null, true, false);
+			unauthenticatedClient_INVALID_GITHUB = getAuthenticatedClient(null, false, true);
+			unauthenticatedClient_INVALID_EMAIL = getAuthenticatedClient(null, true, false);
 		}
 
-		describe('EMAIL', () => {
+		describe('EMAIL && GITHUB', () => {
 			describe('SUCCESS', () => {
 				afterEach(async () => {
 					await clearDb();
@@ -73,11 +72,14 @@ describe('upsertUser.test', () => {
 				});
 			});
 
+		
+		});
+		describe('EMAIL', () => {
 			describe('FAIL', () => {
 				it('should fail for unauthenticated calls - EMAIL WITH NO AUTH', async () => {
 					try {
 						await unauthenticatedClient_INVALID_EMAIL.mutate({
-							mutation: UPSERT_USER,
+							mutation: COMBINE_USERS,
 							variables: { email }
 						});
 						throw ('Should not reach this point');
@@ -90,37 +92,12 @@ describe('upsertUser.test', () => {
 		});
 
 		describe('GITHUB', () => {
-			describe('SUCCESS', () => {
-				afterEach(async () => {
-					await clearDb();
-				});
-				
-				it('Authenticated client can create user with github and valid oauth', async () => {
-					// ARRANGE
-					await authenticatedClient.mutate({
-						mutation: UPSERT_USER,
-						variables: { github }
-					});
-
-					// ASSERT
-					const { data } = await authenticatedClient.query({
-						query: GET_USER,
-						variables: { github }
-					});
-
-					expect(data.user).toMatchObject({
-						__typename: 'User',
-						github,
-						username
-					});
-				});
-			});
 
 			describe('should fail for unauthenticated calls', () => {
 				it('should fail for unauthenticated calls - GITHUB UNAUTHORIZED', async () => {
 					try {
 						await unauthenticatedClient_INVALID_GITHUB.mutate({
-							mutation: UPSERT_USER,
+							mutation: COMBINE_USERS,
 							variables: { github }
 						});
 						throw ('Should not reach this point');

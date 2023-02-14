@@ -9,6 +9,7 @@
  * @returns If valid, returns userId. If invalid, returns an error message.
  */
 const checkUserAuth = async (prisma, req, args, emailClient, githubClient, options) => {
+
 	const noIdentifier = !(args.email || args.github);
 	if (noIdentifier) {
 		return { error: true, errorMessage: 'Must provide a an email OR github' };
@@ -18,8 +19,17 @@ const checkUserAuth = async (prisma, req, args, emailClient, githubClient, optio
 	let username = null;
 	const needsBoth =options?.operationName === 'combineUsers';
 	
-	if(req.headers.authorization===process.env.OPENQ_API_SECRET){
-		return {};
+	if(req?.headers?.authorization===process.env.OPENQ_API_SECRET){
+		let idObj={};
+		if(args.github){
+			idObj.github = args.github;
+		}
+		if(args.email){
+			idObj.email = args.email;
+		}
+		if(Object.keys(idObj).length!==0){
+			return idObj;
+		}
 	}
 	if (args.email && args.github && !needsBoth) {
 		// if users have same id

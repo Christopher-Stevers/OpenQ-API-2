@@ -14,12 +14,16 @@ describe('watchBounty', () => {
 	const github = process.env.GITHUB_USER_ID;
 	const email = process.env.EMAIL;
 
-	let authenticatedClient;
+	let authenticatedClient, authenticatedClientGithub;
 
 	if (process.env.DEPLOY_ENV === 'production') {
 		authenticatedClient = getAuthenticatedClientIntegration(process.env.OPENQ_API_SECRET, process.env.GITHUB_OAUTH_TOKEN, process.env.EMAIL_DID_TOKEN);
+		authenticatedClientGithub = getAuthenticatedClient(null, process.env.GITHUB_OAUTH_TOKEN, process.env.EMAIL_DID_TOKEN);
+
 	} else {
 		authenticatedClient = getAuthenticatedClient(process.env.OPENQ_API_SECRET, true, true);
+		authenticatedClientGithub = getAuthenticatedClient(null, true, true);
+
 	}
 
 	describe('GITHUB', () => {
@@ -30,20 +34,21 @@ describe('watchBounty', () => {
 
 			it('Authorized user can watch a bounty', async () => {
 				// ARRANGE
-				await authenticatedClient.mutate({
-					mutation: CREATE_NEW_BOUNTY,
-					variables: { address: contractAddress, organizationId, bountyId, repositoryId, type }
-				});
 
-				const user = await authenticatedClient.mutate({
+				const user = await authenticatedClientGithub.mutate({
 					mutation: CREATE_USER,
 					variables: { github }
+				});
+
+				await authenticatedClient.mutate({
+					mutation: CREATE_NEW_BOUNTY,
+					variables: { address: contractAddress, organizationId, bountyId, repositoryId, type, creatingUserId: user.data.upsertUser.id }
 				});
 
 				const userId = user.data.upsertUser.id;
 
 				// ACT
-				await authenticatedClient.mutate({
+				await authenticatedClientGithub.mutate({
 					mutation: WATCH_BOUNTY,
 					variables: { contractAddress, userId, github }
 				});
@@ -103,10 +108,6 @@ describe('watchBounty', () => {
 
 			it('Authorized user can watch a bounty', async () => {
 				// ARRANGE
-				await authenticatedClient.mutate({
-					mutation: CREATE_NEW_BOUNTY,
-					variables: { address: contractAddress, organizationId, bountyId, repositoryId, type }
-				});
 
 				const user = await authenticatedClient.mutate({
 					mutation: CREATE_USER,
@@ -114,6 +115,10 @@ describe('watchBounty', () => {
 				});
 
 				const userId = user.data.upsertUser.id;
+				await authenticatedClient.mutate({
+					mutation: CREATE_NEW_BOUNTY,
+					variables: { address: contractAddress, organizationId, bountyId, repositoryId, type, creatingUserId: userId }
+				});
 
 				// ACT
 				await authenticatedClient.mutate({
